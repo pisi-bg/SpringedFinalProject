@@ -20,6 +20,7 @@ public class UserDao {
 
 	@Autowired
 	DBManager db;
+	
 	@Autowired
 	private ProductDao pd;
 
@@ -74,7 +75,7 @@ public class UserDao {
 			ps.setString(2, u.getLastName());
 			ps.setString(3, u.getEmail());
 			ps.setString(4, u.getPassword());
-			if (u.isMale()) {
+			if (u.getIsMale()) {
 				ps.setInt(5, 1);
 			} else {
 				ps.setInt(5, 0);
@@ -167,7 +168,7 @@ public class UserDao {
 			stmt.setString(3, u.getEmail());
 			stmt.setString(4, u.getPassword());
 			stmt.setBoolean(5, u.isAdmin());
-			stmt.setBoolean(6, u.isMale());
+			stmt.setBoolean(6, u.getIsMale());
 			stmt.setLong(7, u.getId());
 			return stmt.executeUpdate() == 1 ? true : false;
 		} catch (SQLException e) {

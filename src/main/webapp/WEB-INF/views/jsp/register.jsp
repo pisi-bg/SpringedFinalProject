@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,15 +10,17 @@
 </head>
 <body>
 	<h1>Please fill all fields:</h1>
-	<form action="register" method="post">
-		First name<input type="text" name="first_name" required><br>
-		Last name<input type="text" name="last_name" required><br>
-		Email<input type="email" name="email" required><br>
-		Password<input type="password" name="password" required><br>
-		Gender: <input type="radio" name="gender" value="true" checked>
-		Male <input type="radio" name="gender" value="false"> Female<br>
-		<input type="submit" value="Register">
-	</form>
-	<a href="index.jsp"><button>Home</button></a>
+	
+	<f:form commandName="user">
+		First name:<f:input path="firstName"/><br>
+		Last name:<f:input path="lastName"/><br>
+		Email:<f:input path="email"/><br>
+		Password:<f:password path="password"/><br>
+		Gender: <f:radiobutton path="isMale" value="true" label="Male"/>
+		<f:radiobutton path="isMale" value="false" label="Female"/>	<br>
+		<input type="submit" value="Register">			
+	</f:form>		
+	<a href= "<c:url value='/index'/>"><button>Home</button></a>
+	
 </body>
 </html>
