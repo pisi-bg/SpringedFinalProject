@@ -20,7 +20,7 @@
 			<c:if test="${sessionScope.user == null}">
 				<a href="user/login" title="LogIn" class="nav_user"
 					style="text-decoration: none">ВХОД</a> &nbsp;
-				<a href="regiser.html" title="Register" class="nav_user"
+				<a href="user/register" title="Register" class="nav_user"
 					style="text-decoration: none">РЕГИСТРАЦИЯ</a> &nbsp;
 				<a href="lostpass.jsp" title="LostPass" class="nav_user"
 					style="text-decoration: none">ЗАБРАВЕНА ПАРОЛА</a> &nbsp;
