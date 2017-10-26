@@ -40,14 +40,12 @@
 	<div class="img">
 		<nav>
 		<h3 style="display: inline-block; text-transform:">
-			<a href="index.jsp"><img src="D:\images\buttons\Logo2.png"
-				alt="Home" title="Logo" width="20%" height="auto"></a>
-
-			<form action="cart" method="post" style="display: inline;">
-				<input type="image" name="submit" width="15%" height="auto"
-					src="D:\images\buttons\catCart2_black.png" alt="КОЛИЧКА"
-					title="Cart" align="right" style="display: inline;">
-			</form>
+			<a href="index.jsp" style="text-decoration: none">
+				<img src="D:\images\buttons\Logo2.png" alt="Home" title="Logo" width="20%" height="auto">
+			</a>				
+			<a href="cart/cart" style="text-decoration: none">
+				<img src="D:\images\buttons\catCart2_black.png" alt="КОЛИЧКА" title="cart" width="15%" height="auto" align="right">
+			</a>			
 		</h3>
 		</nav>
 	</div>
@@ -55,13 +53,13 @@
 	<div class="products">
 		<nav>
 		<h3 style="display: inline-block;">
-					   
-				&nbsp; <a href="products?animal=2" title="Cats" class="products" style="text-decoration: none">КОТКИ</a>
-				&nbsp; <a href="products?animal=3" title="Dogs" class="products" style="text-decoration: none">КУЧЕТА</a>
-				&nbsp; <a href="products?animal=4" title="LittleFellows" class="products" style="text-decoration: none">МАЛКИ ЖИВОТНИ</a>
-				&nbsp; <a href="products?animal=1" title="Aquaristics" class="products" style="text-decoration: none">АКВАРИСТИКА</a> 
-				&nbsp; <a href="products?animal=5" title="Birds" class="products" style="text-decoration: none">ПТИЦИ</a> 
-				&nbsp; <a href="products?animal=6" title="Reptiles" class="products" style="text-decoration: none">ТЕРАРИСТИКА</a> &nbsp;
+					    
+				&nbsp; <a href="<c:url value='/products/animal/2'/>" title="Cats" class="products" style="text-decoration: none">КОТКИ</a>
+				&nbsp; <a href="<c:url value='/products/animal/3'/>" title="Dogs" class="products" style="text-decoration: none">КУЧЕТА</a>
+				&nbsp; <a href="<c:url value='/products/animal/4'/>" title="LittleFellows" class="products" style="text-decoration: none">МАЛКИ ЖИВОТНИ</a>
+				&nbsp; <a href="<c:url value='/products/animal/1'/>" title="Aquaristics" class="products" style="text-decoration: none">АКВАРИСТИКА</a> 
+				&nbsp; <a href="<c:url value='/products/animal/5'/>" title="Birds" class="products" style="text-decoration: none">ПТИЦИ</a> 
+				&nbsp; <a href="<c:url value='/products/animal/6'/>" title="Reptiles" class="products" style="text-decoration: none">ТЕРАРИСТИКА</a> &nbsp;
 		</h3>
 		</nav>
 	</div>
