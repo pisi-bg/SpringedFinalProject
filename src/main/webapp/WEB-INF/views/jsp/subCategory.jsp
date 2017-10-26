@@ -13,7 +13,7 @@
 	<jsp:include page="header.jsp"></jsp:include><br><br>
 	<jsp:include page="categories.jsp"></jsp:include>
 
-	<c:forEach items="${ sessionScope.products }" var="pro">		
+	<c:forEach items="${ sessionScope.productsS }" var="pro">		
 		<table border="1">
 			<tr>			
 					<td><a href="productdetail?productId=${pro.id}">${pro.name }</a></td>	

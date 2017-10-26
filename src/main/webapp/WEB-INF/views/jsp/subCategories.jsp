@@ -12,8 +12,8 @@
 
 				<!-- AQUARISTICS -->
 	<c:if test="${ sessionScope.animal == 1 }">
-		<c:if test="${ requestScope.id == 1 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=1&subId=1" style="text-decoration: none">ХРАНА</a>
+		<c:if test="${ requestScope.id == 1 }">		
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animal }/catId/1/subcatId/1'/>" style="text-decoration: none">ХРАНА</a>
 		</c:if>
 		
 		<!-- here we place other sub categories like above when we fill DB with testing info and subId="sub category id in the db" -->		
@@ -24,32 +24,30 @@
 	<c:if test="${ sessionScope.animal == 2 }">
 					<!-- FOOD  -->
 		<c:if test="${ requestScope.id == 1 }">		
-			<a href="subcategory?animal=${ sessionScope.animal }&id=1&subId=6" style="text-decoration: none">КОНСЕРВИРАНА ХРАНА</a>
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animal }/catId/1/subcatId/6'/>" style="text-decoration: none">КОНСЕРВИРАНА ХРАНА</a>
 		</c:if>
 		<c:if test="${ requestScope.id == 1 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=1&subId=15" style="text-decoration: none">ХРАНА НА ГРАНУЛИ</a>
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animal }/catId/1/subcatId/15'/>" style="text-decoration: none">ХРАНА НА ГРАНУЛИ</a>
 		</c:if>
 				<!-- ACCESSOARIES -->
 		<c:if test="${ requestScope.id == 2 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=2&subId=8" style="text-decoration: none">ТРАНСПОРТ</a>
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animal }/catId/2/subcatId/8'/>" style="text-decoration: none">ТРАНСПОРТ</a>
 		</c:if>
 		<c:if test="${ requestScope.id == 2 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=2&subId=11" style="text-decoration: none"> ПОВОДИ И КАИШКИ</a>
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animal }/catId/2/subcatId/11'/>" style="text-decoration: none"> ПОВОДИ И КАИШКИ</a>
 		</c:if>
 		<c:if test="${ requestScope.id == 2 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=2&subId=12" style="text-decoration: none">ДРЕХИ</a>
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animal }/catId/2/subcatId/12'/>" style="text-decoration: none">ДРЕХИ</a>
 		</c:if>
 					<!-- COSMETICS -->
 		<c:if test="${ requestScope.id == 3 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=3&subId=7" style="text-decoration: none">ЧЕТКИ И ГРЕБЕНИ</a>
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animal }/catId/3/subcatId/7'/>" style="text-decoration: none">ЧЕТКИ И ГРЕБЕНИ</a>
 		</c:if>			<!-- To be listed more -->
 				
 				<!-- HYGIENE -->
 		<c:if test="${ requestScope.id == 4 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=4&subId=56" style="text-decoration: none">КОЗМЕТИКА</a>
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animal }/catId/4/subcatId/56'/>" style="text-decoration: none">КОЗМЕТИКА</a>
 		</c:if>						<!-- Toilets is just an example we don't have it in the database -->
-		
-		
 		
 	</c:if>
 	
@@ -57,30 +55,30 @@
 	<c:if test="${ sessionScope.animal == 3 }">
 					<!-- FOOD  -->
 		<c:if test="${ requestScope.id == 1 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=1&subId=6" style="text-decoration: none">КОНСЕРВИРАНА ХРАНА</a>
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animal }/catId/1/subcatId/6'/>" style="text-decoration: none">КОНСЕРВИРАНА ХРАНА</a>
 			
 		</c:if>
 		<c:if test="${ requestScope.id == 1 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=1&subId=15" style="text-decoration: none">ХРАНА НА ГРАНУЛИ</a>
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animal }/catId/1/subcatId/15'/>" style="text-decoration: none">ХРАНА НА ГРАНУЛИ</a>
 		</c:if>
 				<!-- ACCESSOARIES -->
 		<c:if test="${ requestScope.id == 2 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=2&subId=8" style="text-decoration: none">ТРАНСПОРТ</a>
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animal }/catId/2/subcatId/8'/>" style="text-decoration: none">ТРАНСПОРТ</a>
 		</c:if>
 		<c:if test="${ requestScope.id == 2 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=2&subId=11" style="text-decoration: none">ПОВОДИ И КАИШКИ</a>
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animal }/catId/2/subcatId/11'/>" style="text-decoration: none">ПОВОДИ И КАИШКИ</a>
 		</c:if>
 		<c:if test="${ requestScope.id == 2 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=2&subId=12" style="text-decoration: none">ДРЕХИ</a>
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animal }/catId/2/subcatId/12'/>" style="text-decoration: none">ДРЕХИ</a>
 		</c:if>
 					<!-- COSMETICS -->
 		<c:if test="${ requestScope.id == 3 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=3&subId=7" style="text-decoration: none">ЧЕТКИ И ГРЕБЕНИ</a>
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animal }/catId/3/subcatId/7'/>" style="text-decoration: none">ЧЕТКИ И ГРЕБЕНИ</a>
 		</c:if>			<!-- To be listed more -->
 				
 				<!-- HYGIENE -->
 		<c:if test="${ sessionScope.id == 4 }">
-			<a href="subcategory?animal=${ sessionScope.animal }&id=4&subId=56" >КОЗМЕТИКА</a>
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animal }/catId/4/subcatId/56'/>" >КОЗМЕТИКА</a>
 		</c:if>						<!-- Toilets is just an example we don't have it in the database -->
 		
 	</c:if>

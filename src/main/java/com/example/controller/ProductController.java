@@ -26,7 +26,8 @@ public class ProductController {
 	ProductDao pd;
 
 	@RequestMapping(value = "/animal/{animalId}", method = RequestMethod.GET)
-	public String productsGet(HttpServletRequest request, HttpSession s, @PathVariable("animalId") Integer animalId) {
+	public String productsGetAnimal(HttpServletRequest request, HttpSession s,
+			@PathVariable("animalId") Integer animalId) {
 		try {
 			HashMap<String, ArrayList<Product>> products = pd.getProductsByAnimal(animalId);
 			s.setAttribute("products", products);
@@ -39,16 +40,17 @@ public class ProductController {
 		return "products";
 	}
 
-	@RequestMapping(value = "/category/animal/{animalId}/{id}", method = RequestMethod.GET)
-	public String productsGet(HttpServletRequest request, HttpSession s, @PathVariable("animalId") Integer animalId,
-			@PathVariable("id") Integer categoryId) {
+	// /products/category/animal/${sessionScope.animal }/category/1
+	@RequestMapping(value = "/animal/{animalId}/category/{catId}", method = RequestMethod.GET)
+	public String productsGetSubCategory(HttpServletRequest request, HttpSession s,
+			@PathVariable("animalId") Integer animalId, @PathVariable("catId") Integer categoryId) {
 		// int category = Integer.parseInt(request.getParameter("id"));
 		// int animal = Integer.parseInt(request.getParameter("animalId"));
 		Map<String, List<Product>> products = new HashMap<>();
 
 		try {
 			products = pd.getProductsByAnimalAndParentCategory(animalId, categoryId);
-			s.setAttribute("productsForCategory", products);
+			s.setAttribute("products", products);
 			request.setAttribute("id", categoryId);
 			// in request so every time you change animal category
 			// sub-categories will be not remembered
@@ -60,11 +62,38 @@ public class ProductController {
 
 	}
 
+	// http://localhost:8080/ProjectPisi/subcategory/animal/3/catId/1/subcatId/6
+	@RequestMapping(value = "/subcategory/animal/{animalId}/catId/{catId}/subcatId/{subCatId}", method = RequestMethod.GET)
+	public String productsGetCategory(HttpServletRequest request, HttpSession s,
+			@PathVariable("animalId") Integer animalId, @PathVariable("catId") Integer categoryId,
+			@PathVariable("subCatId") Integer subCategoryId) {
+
+		// int animal = Integer.parseInt(request.getParameter("animal"));
+		// int id = Integer.parseInt(request.getParameter("subId"));
+		// Object temp = request.getAttribute("categoryId"); // idea of this is
+		// to be set in
+		// request so when subCategories.jsp check for
+		// id to represent matching sub-categories, unfortunately it didn't work
+		// .... CHECK IT LATER !!!
+
+		try {
+			List<Product> products = pd.getProductsByAnimalAndSubCategory(animalId, subCategoryId);
+			request.getSession().setAttribute("productsS", products);
+			request.setAttribute("id", categoryId);
+			System.out.println("vlazoh v productsGetCategory");
+		} catch (SQLException e) {
+			// TODO redirect to error page and re-throw e;
+			e.printStackTrace();
+		}
+		return "subCategory";
+
+	}
+
 	// productdetail/productId/${pro.id}
 
 	// @RequestMapping(value = "productdetail/productId/{id}", method =
 	// RequestMethod.GET)
-	// public String productsGet(HttpServletRequest request, HttpSession s,
+	// public String productDetailGet(HttpServletRequest request, HttpSession s,
 	// @PathVariable("id") Integer productId) {
 	//
 	// // get product details

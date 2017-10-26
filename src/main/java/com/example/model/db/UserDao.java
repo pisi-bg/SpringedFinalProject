@@ -14,13 +14,12 @@ import org.springframework.stereotype.Component;
 
 import com.example.model.pojo.User;
 
-
 @Component
 public class UserDao {
 
 	@Autowired
 	DBManager db;
-	
+
 	@Autowired
 	private ProductDao pd;
 
