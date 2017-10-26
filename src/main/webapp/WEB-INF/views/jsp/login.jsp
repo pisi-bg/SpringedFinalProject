@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>LogIn</title>
 </head>
 <body>
 <h1 style="background-color: purple" align="center">Welcome to pisi.bg</h1><br>
