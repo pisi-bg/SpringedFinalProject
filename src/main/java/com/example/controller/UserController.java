@@ -41,14 +41,14 @@ public class UserController {
 		
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
-				
+		
 		// validate email and password in spring form
 		
-		if (!UserDao.isValidEmailAddress(email)) {
-//			response.getWriter().append("Invalid email");
-//			response.
-			return "login";
-		}
+//		if (!UserDao.isValidEmailAddress(email)) {
+////			response.getWriter().append("Invalid email");
+//			return "login";
+//		}
+		
 		if (password.isEmpty()) {
 //			response.getWriter().append("Empty password");
 			return "login";
