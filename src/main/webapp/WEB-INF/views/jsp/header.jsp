@@ -18,18 +18,18 @@
 			<a href="<c:url value='contacts.jsp'/>" title="Контакти"
 				class="nav_user" style="text-decoration: none">КОНТАКТИ</a> &nbsp;
 			<c:if test="${sessionScope.user == null}">
-				<a href="<c:url value='user/login'/>" title="LogIn" class="nav_user"
+
+				<a href="<c:url value='/user/login'/>" title="LogIn" class="nav_user"
 					style="text-decoration: none">ВХОД</a> &nbsp;
-				<a href="<c:url value='user/register'/>" title="Register" class="nav_user"
-					style="text-decoration: none">РЕГИСТРАЦИЯ</a> &nbsp;
+				<a href="<c:url value='/user/register'/>" title="Register" class="nav_user" style="text-decoration: none">РЕГИСТРАЦИЯ</a> &nbsp;
 				<a href="<c:url value='lostpass.jsp'/>" title="LostPass" class="nav_user"
 					style="text-decoration: none">ЗАБРАВЕНА ПАРОЛА</a> &nbsp;
 			</c:if>
 			<c:if test="${sessionScope.user != null}">
-				<a href="<c:url value='logout.jsp'/>" title="LogOut" class="nav_user"
+
+				<a href="<c:url value='/user/logout'/>" title="LogOut" class="nav_user"
 					style="text-decoration: none">ИЗХОД</a> &nbsp;
-				<a href="<c:url value='profile.jsp'/>" title="Profile" class="nav_user"
-					style="text-decoration: none">ПРОФИЛ</a> &nbsp;
+				<a href="<c:url value='/user/profile'/>" title="Profile" class="nav_user" style="text-decoration: none">ПРОФИЛ</a> &nbsp;
 				<a href="<c:url value='favorites.jsp'/>" title="Favorites" class="nav_user"
 					style="text-decoration: none">ЛЮБИМИ</a> &nbsp;
 			</c:if>
@@ -40,10 +40,10 @@
 	<div class="img">
 		<nav>
 		<h3 style="display: inline-block; text-transform:">
-			<a href="<c:url value='index.jsp'/>" style="text-decoration: none">
+			<a href="<c:url value='/index'/>" style="text-decoration: none">
 				<img src="<c:url value='/img/buttons/pisi.png'/>" alt="HOME" title="Logo" width="20%" height="auto">
 			</a>				
-			<a href="<c:url value='cart/cart'/>" style="text-decoration: none">
+			<a href="<c:url value='/cart/cart'/>" style="text-decoration: none">
 				<img src="/img/buttons/catCart2_black.png" alt="КОЛИЧКА" title="cart" width="15%" height="auto" align="right">
 			</a>			
 		</h3>

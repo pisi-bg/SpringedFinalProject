@@ -32,35 +32,36 @@ public class UserController {
 
 	// this method check if login form is correctly filled and then check if
 	// user exist in the database
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String loginUser(HttpServletRequest request, HttpServletResponse response, HttpSession ses) {
 
-		String email = request.getParameter("email");
-		String password = request.getParameter("password");
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public String loginUser(@ModelAttribute User user, HttpServletRequest request, HttpServletResponse response,
+			HttpSession ses) {
+
+		String email = user.getEmail();
+		String password = user.getPassword();
 
 		// validate email and password in spring form
 
-		if (!ud.isValidEmailAddress(email)) {
-			// response.getWriter().append("Invalid email");
-			// response.
-			return "login";
-		}
-		if (password.isEmpty()) {
-			// response.getWriter().append("Empty password");
+		if (!UserDao.isValidEmailAddress(email)) {
+			request.setAttribute("wrongEmail", true);
 			return "login";
 		}
 
-		User user = new User(email, password);
+		if (password.isEmpty()) {
+			return "login";
+		}
+
 		try {
 			if (ud.userExist(user)) {
 				user = ud.getUser(email);
 				ses.setAttribute("user", user);
+				ses.setMaxInactiveInterval(-1);
 				// TODO update session to remain logged in and
 				return "products";
 
 			} else {
-				// return to login page with massage for wrong data
-				return "forward:login";
+				request.setAttribute("wrongUser", true);
+				return "login";
 			}
 		} catch (SQLException e) {
 
@@ -78,7 +79,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String registerUser(@ModelAttribute User user, HttpServletRequest request) {
+	public String registerUser(@ModelAttribute User user) {
 
 		try {
 			ud.insertUser(user);
@@ -86,5 +87,36 @@ public class UserController {
 			// TODO error page
 		}
 		return "forward:index";
+	}
+
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public String logout(HttpSession sess) {
+		sess.invalidate();
+		return "index";
+	}
+
+	@RequestMapping(value = "/profile", method = RequestMethod.GET)
+	public String viewProfile() {
+		return "profile";
+	}
+
+	@RequestMapping(value = "/update", method = RequestMethod.GET)
+	public String updateForm(Model m, HttpSession sess) {
+		User u = (User) sess.getAttribute("user");
+		m.addAttribute("user", u);
+		return "updateProfile";
+	}
+
+	@RequestMapping(value = "/profile", method = RequestMethod.POST)
+	public String updateProfile(@ModelAttribute User user, HttpSession sess) {
+		try {
+			user.setId(((User) sess.getAttribute("user")).getId());
+			ud.updateUser(user);
+			sess.setAttribute("user", user);
+		} catch (SQLException e) {
+			// TODO error page
+			e.printStackTrace();
+		}
+		return "redirect:/user/profile";
 	}
 }

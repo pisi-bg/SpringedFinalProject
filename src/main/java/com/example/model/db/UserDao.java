@@ -68,7 +68,6 @@ public class UserDao {
 		Connection con = db.getConnection();
 		String query = "INSERT INTO pisi.users (first_name,last_name,email,password,gender, isAdmin) VALUES (?,?,?,?,?,?)";
 		ResultSet rs = null;
-
 		try (PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
 			ps.setString(1, u.getFirstName());
 			ps.setString(2, u.getLastName());
@@ -159,8 +158,7 @@ public class UserDao {
 	// in the servlet
 	public boolean updateUser(User u) throws SQLException {
 		Connection con = db.getConnection();
-		String query = "UPDATE pisi.users SET first_name = ?, last_name = ?, email = ?, password = ?, isAdmin = ?, gender= ? WHERE users_id= ?;";
-
+		String query = "UPDATE pisi.users SET first_name = ?, last_name = ?, email = ?, password = ?, isAdmin = ?, gender= ? WHERE user_id= ?;";		
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			stmt.setString(1, u.getFirstName());
 			stmt.setString(2, u.getLastName());
@@ -170,7 +168,7 @@ public class UserDao {
 			stmt.setBoolean(6, u.getIsMale());
 			stmt.setLong(7, u.getId());
 			return stmt.executeUpdate() == 1 ? true : false;
-		} catch (SQLException e) {
+		} catch (SQLException e) {		
 			throw e;
 		}
 
