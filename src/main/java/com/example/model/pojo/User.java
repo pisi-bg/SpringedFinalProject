@@ -20,6 +20,11 @@ public class User {
 		this.email = email;
 		this.password = pass;
 	}
+	
+	// constructor for spring form
+	public User() {
+		
+	}
 
 	// constructor with all fields
 	public User(long id, String firstName, String lastName, String email, String password, boolean isMale,
@@ -34,14 +39,14 @@ public class User {
 		this.favorites = favorites;
 	}
 
-	// constructor for register
-	public User(String firstName, String lastName, String email, String password, boolean isMale) {
-		this(email, password);
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.isMale = isMale;
-		this.isAdmin = false;
-	}
+//	// constructor for register
+//	public User(String firstName, String lastName, String email, String password, boolean isMale) {
+//		this(email, password);
+//		this.firstName = firstName;
+//		this.lastName = lastName;
+//		this.isMale = isMale;
+//		this.isAdmin = false;
+//	}
 
 	// check if user is admin
 	public boolean isAdmin() {
@@ -59,7 +64,7 @@ public class User {
 	}
 
 	// return true if user is male and false if user is female
-	public boolean isMale() {
+	public boolean getIsMale() {
 		return this.isMale;
 	}
 
@@ -102,5 +107,36 @@ public class User {
 		}
 		return false;
 	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setMale(boolean isMale) {
+		this.isMale = isMale;
+	}
+
+	public void setAdmin(boolean isAdmin) {
+		this.isAdmin = isAdmin;
+	}
+
+	public void setFavorites(Set<Product> favorites) {
+		this.favorites = favorites;
+	}
+	
+	
+	
 
 }
