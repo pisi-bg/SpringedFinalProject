@@ -11,20 +11,18 @@
 </head>
 <body>
 
-	<jsp:include page="header.jsp"></jsp:include><br>
-	<br>
-
-	<c:if test="${ sessionScope.products != null }">
-
+		<jsp:include page="header.jsp"></jsp:include><br>
+		<br>
 		<jsp:include page="categories.jsp"></jsp:include>
-
-		<c:forEach items="${ sessionScope.products }" var="products">
-			<h4>${ products.key }</h4>
+	
+		
+		<c:if test="${ sessionScope.products != null }">
+		
 			<table border="1">
-				<c:forEach items="${ products.value }" var="pro">
+				<c:forEach items="${ sessionScope.products }" var="pro">
 
-					<tr>
-						<td><a href="productdetail?productId=${pro.id}">${pro.name }</a></td>
+					<tr>					
+						<td><a href="<c:url value='/products/productdetail/productId/${pro.id}'/>">${pro.name }</a></td>
 						<td>${pro.description }</td>
 						<td>${pro.price }лв.</td>
 						<c:if test="${pro.rating != 0 }">
@@ -34,13 +32,13 @@
 							<td>No rating</td>
 						</c:if>
 						<td>${pro.rating }</td>
+						<td>  <img src="${ pro.image }" alt="oops no image here" width="311" height="319" /><br /> </td>
+						
 					</tr>
 
 				</c:forEach>
 			</table>
-			<hr>
-		</c:forEach>
-
+				
 	</c:if>
 
 </body>

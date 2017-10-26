@@ -41,10 +41,10 @@
 		<nav>
 		<h3 style="display: inline-block; text-transform:">
 			<a href="<c:url value='index.jsp'/>" style="text-decoration: none">
-				<img src="D:\images\buttons\Logo2.png" alt="Home" title="Logo" width="20%" height="auto">
+				<img src="<c:url value='/img/buttons/pisi.png'/>" alt="HOME" title="Logo" width="20%" height="auto">
 			</a>				
 			<a href="<c:url value='cart/cart'/>" style="text-decoration: none">
-				<img src="D:\images\buttons\catCart2_black.png" alt="КОЛИЧКА" title="cart" width="15%" height="auto" align="right">
+				<img src="/img/buttons/catCart2_black.png" alt="КОЛИЧКА" title="cart" width="15%" height="auto" align="right">
 			</a>			
 		</h3>
 		</nav>

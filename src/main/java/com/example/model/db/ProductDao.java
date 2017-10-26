@@ -6,10 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +22,12 @@ public class ProductDao {
 	DBManager db;
 	@Autowired
 	private RatingDao rd;
-	
+
 	private static ProductDao instance;
 
-
-	// hashmap for specific animal type by category for products ...... to be
-	// decided if this will stay map or list !!!!
-	public HashMap<String, ArrayList<Product>> getProductsByAnimal(int animalId) throws SQLException {
-		HashMap<String, ArrayList<Product>> products = new HashMap<>();
+	// returns list of products for specific animal category type
+	public ArrayList<Product> getProductsByAnimal(int animalId) throws SQLException {
+		ArrayList<Product> products = new ArrayList<>();
 
 		Connection con = db.getConnection();
 		String query = "SELECT p.product_id AS id, p.product_name AS name , c.category_name AS category , p.price AS price, "
@@ -46,15 +42,10 @@ public class ProductDao {
 			stmt.setInt(1, animalId);
 			rs = stmt.executeQuery();
 			String category = null;
-
 			while (rs.next()) {
-				category = rs.getString("category");
-				if (!products.containsKey(category)) {
-					products.put(category, new ArrayList<>());
-				}
 				double rating = rd.getProductRating(rs.getLong("id"));
-				products.get(category).add(new Product(rs.getLong("id"), rs.getString("name"),
-						rs.getString("description"), rs.getDouble("price"), category, rating, rs.getString("image")));
+				products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
+						rs.getDouble("price"), category, rating, rs.getString("image")));
 			}
 			return products;
 		} catch (SQLException e) {
@@ -67,11 +58,11 @@ public class ProductDao {
 
 	}
 
-	// this method returns all product for given animal id and given parent
-	// category ID
-	public Map<String, List<Product>> getProductsByAnimalAndParentCategory(long animalId, long parentCategoryId)
+	// returns list of products for specific animal category type and given
+	// parent category ID
+	public List<Product> getProductsByAnimalAndParentCategory(long animalId, long parentCategoryId)
 			throws SQLException {
-		Map<String, List<Product>> temp = new HashMap<>();
+		ArrayList<Product> products = new ArrayList<>();
 		Connection con = db.getConnection();
 		String query = "SELECT p.product_id as id, p.product_name as name , a.animal_name as animal, c.category_name as category , p.price,"
 				+ " p.description, pc.category_name as parent_category, p.image_url as image "
@@ -87,18 +78,12 @@ public class ProductDao {
 			stmt.setLong(2, animalId);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
-				String category = rs.getString("category");
-
-				if (!temp.containsKey(category)) {
-					temp.put(category, new ArrayList<>());
-				}
 				double rating = rd.getProductRating(rs.getLong("id"));
 				Product p = new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
 						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image"));
-				temp.get(category).add(p);
-
+				products.add(p);
 			}
-			return temp;
+			return products;
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -109,8 +94,8 @@ public class ProductDao {
 
 	}
 
-	// this method returns list of product for given animal id and sub-category
-	// id;
+	// returns list of products for specific animal category type and
+	// sub-category id;
 	public List<Product> getProductsByAnimalAndSubCategory(long animalId, long categoryId) throws SQLException {
 		ArrayList<Product> products = new ArrayList<>();
 		Connection con = db.getConnection();
@@ -128,8 +113,6 @@ public class ProductDao {
 			stmt.setLong(2, animalId);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
-				// check if there is a problem with returning a null from db for
-				// rating !!!
 				double rating = rd.getProductRating(rs.getLong("id"));
 				products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
 						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image")));
@@ -200,8 +183,6 @@ public class ProductDao {
 			stmt.setInt(1, brand_id);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
-				// check if there is a problem with returning a null from db for
-				// rating !!!
 				double rating = rd.getProductRating(rs.getLong("id"));
 				products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
 						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image")));
@@ -231,8 +212,6 @@ public class ProductDao {
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			rs = stmt.executeQuery();
 			while (rs.next()) {
-				// check if there is a problem with returning a null from db for
-				// rating !!!
 				double rating = rd.getProductRating(rs.getLong("id"));
 				products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
 						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image")));
@@ -300,48 +279,40 @@ public class ProductDao {
 				+ "JOIN pisi.product_categories as pc ON(c.parent_category_id = pc.product_category_id) "
 				+ "JOIN pisi.brands as b ON(p.brand_id = b.brand_id)"
 				+ "WHERE p.product_name LIKE ? OR p.description LIKE ? ";
-		
-		if(word.length != 1){
-			for (int i = 0; i < word.length-1; i++) {
+
+		if (word.length != 1) {
+			for (int i = 0; i < word.length - 1; i++) {
 				query = query.concat(" or p.product_name LIKE ? OR p.description LIKE ?");
 			}
 		}
 		query = query.concat(";");
-		
+
 		ResultSet rs = null;
 
 		System.out.println(query);
 
-		try (PreparedStatement stmt = con.prepareStatement(query);){
+		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			int control = 1;
 			for (int i = 0; i < word.length; i++) {
-				
-				
+
 				System.out.println("word is ====== " + word[i]);
-				
-				
-				
-				stmt.setString(control++, "%"+word[i]+"%");
-				stmt.setString(control++, "%"+word[i]+"%");
-			}	
+
+				stmt.setString(control++, "%" + word[i] + "%");
+				stmt.setString(control++, "%" + word[i] + "%");
+			}
 			rs = stmt.executeQuery();
-			
+
 			System.out.println("before rs loop");
-			
-			
+
 			while (rs.next()) {
-				
-				
+
 				System.out.println("in rs loop");
-				
-				
-				
-				
-				double rating = rd.getProductRating(rs.getLong("id"));				
+
+				double rating = rd.getProductRating(rs.getLong("id"));
 				Product p = new Product().setName(rs.getString("name")).setDescription(rs.getString("description"))
 						.setPrice(rs.getDouble("price")).setCategory(rs.getString("category")).setRating(rating)
 						.setImage(rs.getString("image"));
-				p.setId(rs.getLong("id"));				
+				p.setId(rs.getLong("id"));
 				products.add(p);
 			}
 			return products;
