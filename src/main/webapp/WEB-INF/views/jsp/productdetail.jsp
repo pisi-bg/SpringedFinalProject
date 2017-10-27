@@ -37,7 +37,7 @@
 				test="${( (sessionScope.user == null) || (sessionScope.user != null && (!sessionScope.isFavorite)))}">
 				<form action="addFavorite" method="post">
 					<button type="submit" name='addFavorit'>Добави в любими</button>
-					<input type="hidden" value="${product.id }" name="productCurrent">
+					<input type="hidden" value="${productCurrent.id }" name="productCurrent">
 				</form>
 			</c:if>
 			
@@ -63,16 +63,14 @@
 			
 			<span style="padding-left: 68px;"></span>
 			
-			<form action="addInCart" method="post">
-				<button type="submit" name="productId">Добави в количка</button>
+			<!-- <form action="addInCart" method="post">
+				<button type="submit" name="productId">Добави в количка</button> -->
 				
-				<a href="<c:url value='/addInCart//${sessionScope.animal }'/>" title="Контакти"
-				class="nav_user" style="text-decoration: none">КОНТАКТИ</a>
-				
-				<!-- input type="image" width="40" height="40"
-					src="D:\pisi_images\buttons\shopping_cart_racing.png"
-					alt="Submit Form" name='addInCart' /-->
-			</form>
+				<a href="<c:url value='/products/addInCart/${productCurrent.id}'/>" >
+					<img src="<c:url value='/img/buttons/shopping_cart.png'/>" alt="ADD IN CART" title="addInCart" width="20%" height="auto">  
+				</a>	
+								
+			<!-- </form> -->
 		</c:if>
 		
 		<c:if test="${sessionScope.user.isAdmin() }">
