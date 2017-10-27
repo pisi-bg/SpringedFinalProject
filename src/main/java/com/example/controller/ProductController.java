@@ -24,13 +24,14 @@ public class ProductController {
 	@Autowired
 	ProductDao pd;
 
+	
 	@RequestMapping(value = "/animal/{animalId}", method = RequestMethod.GET)
 	public String productsGetAnimal(HttpServletRequest request, HttpSession s,
 			@PathVariable("animalId") Integer animalId) {
 		try {
 			List<Product> products = pd.getProductsByAnimal(animalId);
 			s.setAttribute("products", products);
-			s.setAttribute("animal", animalId);
+			s.setAttribute("animalId", animalId);
 		} catch (SQLException e) {
 			// TODO redirect to error page and re-throw e;
 			e.printStackTrace();
@@ -106,6 +107,8 @@ public class ProductController {
 		} else {
 			cart = (HashSet<Product>) o;
 		}
+		
+		
 
 		return "productdetail";
 	}

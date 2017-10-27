@@ -24,7 +24,7 @@
 		<br /> <img src="${ productCurrent.image }" alt="oops no image here"
 			width="311" height="319" /><br /> 
 			<span> <fmt:formatNumber
-				type="number" pattern="#####.##" value="${ productCurrent.price }" />лв.
+				type="number" pattern="#####.##" value="${ productCurrent.price }"/> лв.
 			</span>
 	</div>
 	<div class="description">
@@ -74,12 +74,10 @@
 		</c:if>
 		
 		<c:if test="${sessionScope.user.isAdmin() }">
-			<a href="delete"><button>Изтрий артикул</button></a>
+			<a href='<c:url value='/user/admin/removeProduct'></c:url>'><button>Изтрий артикул</button></a>
+			<br>
 			
-			<form action="addquantity" method="post">
-			
-				<!--   Check if type = number work properly !!!!  -->
-			
+			<form action="${pageContext.request.contextPath}/user/admin/quantity" method="post">
 				<input type="number" name ="quantity" placeholder="Количество" >
 				<input type="submit" value="Добави">
 			</form>
