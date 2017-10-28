@@ -98,7 +98,7 @@ public class ProductController {
 	@RequestMapping(value = "/addInCart/{id}", method = RequestMethod.GET)
 	public String addInCart(HttpServletRequest request, HttpSession s, @PathVariable("id") Integer productId) {
 
-		Object o = request.getSession().getAttribute("cart");
+		Object o = s.getAttribute("cart");
 		HashSet<Product> cart;
 		if (o == null) {
 			cart = new HashSet<Product>();
