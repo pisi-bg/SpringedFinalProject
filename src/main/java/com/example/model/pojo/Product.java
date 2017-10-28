@@ -13,13 +13,14 @@ public class Product implements Serializable {
 	private String brand;
 	private String brandImage;
 	private double rating;
+	private int countRating;
 	private int inStock;
 	private String image;
 	private int discount; // in percent
 
-	public Product(){		
+	public Product() {
 	}
-	
+
 	public Product(long id, String name, String description, double price, String animal, String category, String brand,
 			String brandImage, double rating, int isStock, String image, int discount) {
 		this(id, name, description, price, discount, animal, category, image, rating, brand);
@@ -61,7 +62,8 @@ public class Product implements Serializable {
 	// for demo purpose
 	@Override
 	public String toString() {
-		return this.name + " " + this.description + " " + this.animal + " " + this.category + " " + this.price + " " + this.discount;
+		return this.name + " " + this.description + " " + this.animal + " " + this.category + " " + this.price + " "
+				+ this.discount;
 	}
 
 	@Override
@@ -128,10 +130,14 @@ public class Product implements Serializable {
 	public int getDiscount() {
 		return discount;
 	}
-	
-	//   ** SETTERS ****
-	
-											// TODO VALIDATION !!!!!
+
+	public int getCountRating() {
+		return countRating;
+	}
+
+	// ** SETTERS ****
+
+	// TODO VALIDATION !!!!!
 
 	public Product setName(String name) {
 		this.name = name;
@@ -182,6 +188,11 @@ public class Product implements Serializable {
 		this.image = image;
 		return this;
 	}
-	
+
+	public void setCountRating(int countRating) {
+		if (countRating >= 0) {
+			this.countRating = countRating;
+		}
+	}
 
 }

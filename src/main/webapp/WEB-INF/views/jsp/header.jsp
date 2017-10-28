@@ -47,7 +47,7 @@
 			<a href="<c:url value='/index'/>" style="text-decoration: none">
 				<img src="<c:url value='/img/buttons/pisi.png'/>" alt="HOME" title="Logo" width="20%" height="auto">
 			</a>				
-			<a href="<c:url value='/cart/cart'/>" style="text-decoration: none">
+			<a href="<c:url value='/cart/view'/>" style="text-decoration: none">
 				<img src="<c:url value='/img/buttons/catCart.png'/>" alt="КОЛИЧКА" title="cart" width="15%" height="auto" align="right">
 			</a>			
 		</h3>

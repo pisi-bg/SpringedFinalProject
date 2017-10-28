@@ -33,13 +33,9 @@ public class UserDao {
 			stmt.setLong(1, u.getId());
 			stmt.setLong(2, product_id);
 			result = stmt.executeUpdate();
-			// add product to the User POJO to be keep in session
-			// u.addToFavorites(ProductDao.getInstance().getProduct(product_id));
-
 		} catch (SQLException e) {
 			throw e;
 		}
-
 		return result == 1 ? true : false;
 
 	}
@@ -158,7 +154,7 @@ public class UserDao {
 	// in the servlet
 	public boolean updateUser(User u) throws SQLException {
 		Connection con = db.getConnection();
-		String query = "UPDATE pisi.users SET first_name = ?, last_name = ?, email = ?, password = ?, isAdmin = ?, gender= ? WHERE user_id= ?;";		
+		String query = "UPDATE pisi.users SET first_name = ?, last_name = ?, email = ?, password = ?, isAdmin = ?, gender= ? WHERE user_id= ?;";
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			stmt.setString(1, u.getFirstName());
 			stmt.setString(2, u.getLastName());
@@ -168,7 +164,7 @@ public class UserDao {
 			stmt.setBoolean(6, u.getIsMale());
 			stmt.setLong(7, u.getId());
 			return stmt.executeUpdate() == 1 ? true : false;
-		} catch (SQLException e) {		
+		} catch (SQLException e) {
 			throw e;
 		}
 

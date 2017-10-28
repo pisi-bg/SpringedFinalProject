@@ -11,6 +11,10 @@ public class DeliveryInfo {
 	private String recieverPhone;
 	private String notes;
 
+	public DeliveryInfo() {
+		// TODO Auto-generated constructor stub
+	}
+
 	// constructor to send info in DB
 	public DeliveryInfo(String address, int zipCode, String city, String recieverFirstName, String recieverLastName,
 			String recieverPhone, String notes) {

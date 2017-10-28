@@ -32,7 +32,7 @@
 							<td>No rating</td>
 						</c:if>
 						<td>${pro.rating }</td>
-						<td>  <img src="${ pro.image }" alt="oops no image here" width="311" height="319" /><br /> </td>
+						<td>  <img src="${ pro.image }" alt="oops no image here" width="100" height="auto" /><br /> </td>
 						
 					</tr>
 

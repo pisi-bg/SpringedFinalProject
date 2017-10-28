@@ -21,7 +21,7 @@ public class ProductDao {
 	@Autowired
 	DBManager db;
 	@Autowired
-	private RatingDao rd;
+	RatingDao rd;
 
 	private static ProductDao instance;
 
@@ -149,11 +149,12 @@ public class ProductDao {
 				if (rating.equals(null)) {
 					rating = new Double(0);
 				}
-
-				return new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
+				Product p = new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
 						rs.getInt("price"), rs.getString("animal"), rs.getString("category"), rs.getString("brand"),
 						rs.getString("brandlogo"), rating, rs.getInt("unit"), rs.getString("image"),
 						rs.getInt("discount"));
+				p.setCountRating(rd.getCountOfRatings(rs.getLong("id")));
+				return p;
 			} else {
 				// TODO throw InvalidDataException
 				return null;
@@ -666,37 +667,37 @@ public class ProductDao {
 		}
 
 	}
-	
+
 	// this method returns all sub categories
 	public List<String> getCategories() throws SQLException {
 		List<String> categories = new ArrayList<>();
 		String query = "SELECT category_name AS name FROM pisi.product_categories WHERE parent_category_id IS NOT NULL";
 		ResultSet rs = null;
-		try(PreparedStatement stmt = db.getConnection().prepareStatement(query)){
+		try (PreparedStatement stmt = db.getConnection().prepareStatement(query)) {
 			rs = stmt.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				categories.add(rs.getString("name"));
 			}
 		} finally {
-			if(rs != null){
+			if (rs != null) {
 				rs.close();
 			}
 		}
 		return categories;
 	}
-	
-	//this method returns all brands name
+
+	// this method returns all brands name
 	public List<String> getBrands() throws SQLException {
 		List<String> brands = new ArrayList<>();
 		String query = "SELECT brand_name AS name FROM pisi.brands";
 		ResultSet rs = null;
-		try(PreparedStatement stmt = db.getConnection().prepareStatement(query)){
+		try (PreparedStatement stmt = db.getConnection().prepareStatement(query)) {
 			rs = stmt.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				brands.add(rs.getString("name"));
 			}
 		} finally {
-			if(rs != null){
+			if (rs != null) {
 				rs.close();
 			}
 		}
@@ -708,13 +709,13 @@ public class ProductDao {
 		List<String> animals = new ArrayList<>();
 		String query = "SELECT animal_name AS name FROM pisi.animals";
 		ResultSet rs = null;
-		try(PreparedStatement stmt = db.getConnection().prepareStatement(query)){
+		try (PreparedStatement stmt = db.getConnection().prepareStatement(query)) {
 			rs = stmt.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				animals.add(rs.getString("name"));
 			}
 		} finally {
-			if(rs != null){
+			if (rs != null) {
 				rs.close();
 			}
 		}
