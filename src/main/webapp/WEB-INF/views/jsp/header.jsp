@@ -26,12 +26,16 @@
 					style="text-decoration: none">ЗАБРАВЕНА ПАРОЛА</a> &nbsp;
 			</c:if>
 			<c:if test="${sessionScope.user != null}">
-
 				<a href="<c:url value='/user/logout'/>" title="LogOut" class="nav_user"
 					style="text-decoration: none">ИЗХОД</a> &nbsp;
 				<a href="<c:url value='/user/profile'/>" title="Profile" class="nav_user" style="text-decoration: none">ПРОФИЛ</a> &nbsp;
 				<a href="<c:url value='favorites.jsp'/>" title="Favorites" class="nav_user"
 					style="text-decoration: none">ЛЮБИМИ</a> &nbsp;
+			</c:if>
+			
+			<c:if test="${ sessionScope.user.isAdmin() }">
+				<a href="${pageContext.request.contextPath}/user/admin/addProduct" title="Add Product" class="nav_user"
+					style="text-decoration: none">ДОБАВИ ПРОДУКТ</a> &nbsp;
 			</c:if>
 		</h4>
 		</nav>

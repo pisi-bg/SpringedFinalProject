@@ -20,21 +20,20 @@ public class CartController {
 
 	@Autowired
 	CartDao cd;
-	@Autowired
-	HttpSession httpSession;
+	
 
 	@RequestMapping(value = "/cart", method = RequestMethod.GET)
-	public String cart(HttpRequest request, HttpSession s, Model m) {
+	public String cart() {
 
-		Object oCart = s.getAttribute("cart");
-		HashMap<Product, Integer> cart = null;
-		if (oCart != null) {
-			cart = (HashMap<Product, Integer>) oCart;
-			double priceForCart = cd.calculatePriceForCart(cart);
-			s.setAttribute("priceForCart", priceForCart);
-		} else {
-			cart = new HashMap<>();
-		}
+//		Object oCart = s.getAttribute("cart");
+//		HashMap<Product, Integer> cart = null;
+//		if (oCart != null) {
+//			cart = (HashMap<Product, Integer>) oCart;
+//			double priceForCart = cd.calculatePriceForCart(cart);
+//			s.setAttribute("priceForCart", priceForCart);
+//		} else {
+//			cart = new HashMap<>();
+//		}
 		return "cart";
 
 		// retrieve all products that have been chosen for purchase
@@ -50,5 +49,7 @@ public class CartController {
 		// }
 		// return "cart";
 	}
+	
+	
 
 }

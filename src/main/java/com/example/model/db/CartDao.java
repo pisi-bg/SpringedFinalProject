@@ -30,7 +30,7 @@ public class CartDao {
 			double cartPrice = 0;
 			for (Entry<Product, Integer> entry : products.entrySet()) {
 				Product product = entry.getKey();
-				int quantity = (int) entry.getValue();
+				int quantity = entry.getValue();
 				double productPrice = product.getPrice();
 				if (product.getDiscount() != 0) {
 					productPrice = product.calcDiscountedPrice();

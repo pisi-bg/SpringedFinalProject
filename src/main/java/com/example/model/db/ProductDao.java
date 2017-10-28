@@ -666,5 +666,59 @@ public class ProductDao {
 		}
 
 	}
+	
+	// this method returns all sub categories
+	public List<String> getCategories() throws SQLException {
+		List<String> categories = new ArrayList<>();
+		String query = "SELECT category_name AS name FROM pisi.product_categories WHERE parent_category_id IS NOT NULL";
+		ResultSet rs = null;
+		try(PreparedStatement stmt = db.getConnection().prepareStatement(query)){
+			rs = stmt.executeQuery();
+			while(rs.next()){
+				categories.add(rs.getString("name"));
+			}
+		} finally {
+			if(rs != null){
+				rs.close();
+			}
+		}
+		return categories;
+	}
+	
+	//this method returns all brands name
+	public List<String> getBrands() throws SQLException {
+		List<String> brands = new ArrayList<>();
+		String query = "SELECT brand_name AS name FROM pisi.brands";
+		ResultSet rs = null;
+		try(PreparedStatement stmt = db.getConnection().prepareStatement(query)){
+			rs = stmt.executeQuery();
+			while(rs.next()){
+				brands.add(rs.getString("name"));
+			}
+		} finally {
+			if(rs != null){
+				rs.close();
+			}
+		}
+		return brands;
+	}
+
+	// this method returns all animals name
+	public List<String> getAnimals() throws SQLException {
+		List<String> animals = new ArrayList<>();
+		String query = "SELECT animal_name AS name FROM pisi.animals";
+		ResultSet rs = null;
+		try(PreparedStatement stmt = db.getConnection().prepareStatement(query)){
+			rs = stmt.executeQuery();
+			while(rs.next()){
+				animals.add(rs.getString("name"));
+			}
+		} finally {
+			if(rs != null){
+				rs.close();
+			}
+		}
+		return animals;
+	}
 
 }

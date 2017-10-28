@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import java.sql.SQLException;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +30,7 @@ public class ProductController {
 		try {
 			List<Product> products = pd.getProductsByAnimal(animalId);
 			s.setAttribute("products", products);
-			s.setAttribute("animal", animalId);
+			s.setAttribute("animalId", animalId);
 		} catch (SQLException e) {
 			// TODO redirect to error page and re-throw e;
 			e.printStackTrace();
@@ -98,15 +98,22 @@ public class ProductController {
 	@RequestMapping(value = "/addInCart/{id}", method = RequestMethod.GET)
 	public String addInCart(HttpServletRequest request, HttpSession s, @PathVariable("id") Integer productId) {
 
-		Object o = s.getAttribute("cart");
-		HashSet<Product> cart;
-		if (o == null) {
-			cart = new HashSet<Product>();
-			request.getSession().setAttribute("cart", cart);
-		} else {
-			cart = (HashSet<Product>) o;
+		Product pro = (Product) s.getAttribute("productCurrent");
+		if (pro == null) {
+			return "error";
 		}
-
+		HashMap<Product, Integer> cart = (HashMap<Product, Integer>) s.getAttribute("cart");
+		if (cart == null) {
+			cart = new HashMap<>();
+		}
+		if (cart.containsKey(pro)) {
+			Integer quantity = cart.get(pro);
+			quantity++;
+			cart.put(pro, quantity);
+		} else {
+			cart.put(pro, new Integer(1));
+		}
+		s.setAttribute("cart", cart);
 		return "productdetail";
 	}
 
