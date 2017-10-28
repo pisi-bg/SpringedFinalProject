@@ -52,7 +52,7 @@
 		
 					<!-- More to be added -->
 					
-			<option value="Консервна храна" >Консервна храна</option>
+			<option value="Консервирана храна" >Консервирана храна</option>
 			<option value="Суха храна">Суха храна</option>
 			<option value="Четки и гребени" >Четки и гребени</option>
 			<option value="Транспорт" >Транспорт</option>

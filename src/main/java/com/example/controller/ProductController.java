@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import java.sql.SQLException;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -98,16 +98,35 @@ public class ProductController {
 
 	@RequestMapping(value = "/addInCart/{id}", method = RequestMethod.GET)
 	public String addInCart(HttpServletRequest request, HttpSession s, @PathVariable("id") Integer productId) {
+		
+		System.out.println("in add to cart");
+		
+		Product pro = (Product) s.getAttribute("productCurrent");
+		if(pro == null){
+			return "error";
+		}
 
-		Object o = request.getSession().getAttribute("cart");
-		HashSet<Product> cart;
-		if (o == null) {
-			cart = new HashSet<Product>();
-			request.getSession().setAttribute("cart", cart);
+		System.out.println("this is the product " + pro);
+		HashMap<Product, Integer> cart = (HashMap<Product, Integer>) s.getAttribute("cart");
+
+		System.out.println("this is the cart before adding the product " + cart);
+		if(cart == null){
+			cart = new HashMap<>();
+		}
+		
+		if(cart.containsKey(pro)){
+			Integer quantity = cart.get(pro);
+			quantity++;
+			cart.put(pro, quantity);
 		} else {
-			cart = (HashSet<Product>) o;
-		}		
+			cart.put(pro, new Integer(1));
+		}
+		
+		s.setAttribute("cart", cart);
 
+		System.out.println(cart);
+		
+		
 		return "productdetail";
 	}
 
