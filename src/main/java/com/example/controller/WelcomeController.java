@@ -15,4 +15,6 @@ public class WelcomeController {
 		System.out.println("alooo");
 		return "index";
 	}
+	
+	
 }

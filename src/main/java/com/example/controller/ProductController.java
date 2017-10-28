@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.example.model.db.ProductDao;
 import com.example.model.pojo.Product;
 import com.example.model.pojo.User;
+import com.example.utils.EmailSender;
 
 @Controller
 @RequestMapping(value = "/products")
@@ -212,4 +213,19 @@ public class ProductController {
 		}
 		return "products";
 	}
+
+	
+	
+	
+	
+	
+	
+	@RequestMapping(value="/test")
+	public String testEmail(){
+		EmailSender.toPromotion();
+		return "index";
+	}
+	
+	
+	
 }

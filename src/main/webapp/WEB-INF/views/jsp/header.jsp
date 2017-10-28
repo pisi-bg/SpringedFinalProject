@@ -22,7 +22,7 @@
 				<a href="<c:url value='/user/login'/>" title="LogIn" class="nav_user"
 					style="text-decoration: none">ВХОД</a> &nbsp;
 				<a href="<c:url value='/user/register'/>" title="Register" class="nav_user" style="text-decoration: none">РЕГИСТРАЦИЯ</a> &nbsp;
-				<a href="<c:url value='lostpass.jsp'/>" title="LostPass" class="nav_user"
+				<a href="<c:url value='/user/password'/>" title="LostPass" class="nav_user"
 					style="text-decoration: none">ЗАБРАВЕНА ПАРОЛА</a> &nbsp;
 			</c:if>
 			<c:if test="${sessionScope.user != null}">
@@ -50,7 +50,7 @@
 			
 			&nbsp;&nbsp;&nbsp;&nbsp;<form action="${pageContext.request.contextPath}/products/search" method="post">
 					<input type="text" name="word">
-				<input type="submit">
+				<input type="submit" value="Търси">
 			</form>	&nbsp;&nbsp;&nbsp;&nbsp;				
 			<a href="<c:url value='/cart/cart'/>" style="text-decoration: none">
 				<img src="<c:url value='/img/buttons/catCart.png'/>" alt="КОЛИЧКА" title="cart" width="15%" height="auto" align="right">
