@@ -2,8 +2,11 @@ package com.example.controller;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -22,6 +25,7 @@ import com.example.model.db.UserDao;
 import com.example.model.pojo.Product;
 import com.example.model.pojo.Rating;
 import com.example.model.pojo.User;
+import com.example.utils.EmailSender;
 
 @Controller
 @RequestMapping(value = "/products")
@@ -201,6 +205,99 @@ public class ProductController {
 		}
 
 		return "redirect:/products/productdetail/productId/" + product.getId();
+	}
+
+	@RequestMapping(value = "/sort/name/{order}")
+	public String sortByName(@PathVariable String order, HttpSession sess) {
+
+		if (!order.equals("asc") && !order.equals("desc")) {
+			return "error1";
+		}
+
+		Collection<Product> products = (Collection) sess.getAttribute("products");
+		if (products == null) {
+			return "error2";
+		}
+		TreeSet<Product> ordered = new TreeSet<>(new Comparator<Product>() {
+
+			@Override
+			public int compare(Product o1, Product o2) {
+				if (order.equals("asc")) {
+					if (o1.getName().equals(o2.getName())) {
+						return -1;
+					}
+					return o1.getName().compareToIgnoreCase(o2.getName());
+				} else {
+					if (o1.getName().equals(o2.getName())) {
+						return -1;
+					}
+					return o2.getName().compareToIgnoreCase(o1.getName());
+				}
+
+			}
+		});
+
+		ordered.addAll(products);
+
+		sess.setAttribute("products", ordered);
+		return "products";
+	}
+
+	@RequestMapping(value = "/sort/price/{order}")
+	public String sortByPrice(HttpSession sess, @PathVariable String order) {
+
+		if (!order.equals("asc") && !order.equals("desc")) {
+			return "error1";
+		}
+		Collection products = (Collection) sess.getAttribute("products");
+		if (products == null) {
+			return "error2";
+		}
+		TreeSet<Product> ordered = new TreeSet<>(new Comparator<Product>() {
+
+			@Override
+			public int compare(Product o1, Product o2) {
+				if (order.equals("asc")) {
+					if (o1.getPrice() == o2.getPrice()) {
+						return -1;
+					}
+					return Double.compare(o1.getPrice(), o2.getPrice());
+				} else {
+					if (o1.getPrice() == o2.getPrice()) {
+						return -1;
+					}
+					return Double.compare(o2.getPrice(), o1.getPrice());
+				}
+			}
+		});
+
+		ordered.addAll(products);
+		sess.setAttribute("products", ordered);
+		return "products";
+	}
+
+	@RequestMapping(value = "/search")
+	public String searchProduct(HttpServletRequest req, HttpSession sess) {
+		if (req.getParameter("word") == null || sess.getAttribute("products") == null) {
+			return "index";
+		}
+		String[] words = req.getParameter("word").split(" ");
+		Collection<Product> products = null;
+
+		try {
+			products = pd.searchProductByWord(words);
+			sess.setAttribute("products", products);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return "error";
+		}
+		return "products";
+	}
+
+	@RequestMapping(value = "/test")
+	public String testEmail() {
+		EmailSender.toPromotion();
+		return "index";
 	}
 
 }

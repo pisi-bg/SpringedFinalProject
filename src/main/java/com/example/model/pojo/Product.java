@@ -66,20 +66,32 @@ public class Product implements Serializable {
 				+ this.discount;
 	}
 
-	@Override
-	public int hashCode() {
-		return (int) this.id;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		return this.id == ((Product) o).getId();
-	}
-
 	public double calcDiscountedPrice() {
 		double newPrice = price * ((100 - discount) / 100.0);
 
 		return newPrice;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (id ^ (id >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Product other = (Product) obj;
+		if (id != other.id)
+			return false;
+		return true;
 	}
 
 	// getters

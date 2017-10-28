@@ -30,6 +30,7 @@ import com.example.model.db.ProductDao;
 import com.example.model.db.UserDao;
 import com.example.model.pojo.Product;
 import com.example.model.pojo.User;
+import com.example.utils.EmailSender;
 
 @Controller
 @MultipartConfig
@@ -235,6 +236,7 @@ public class UserController {
 	public String addQuantity(HttpSession sess, HttpServletRequest req){		
 		int quantity = Integer.parseInt(req.getParameter("quantity"));
 		if(quantity < 1){
+			
 			return "error";
 		}
 		Product pro = (Product)sess.getAttribute("productCurrent");
@@ -262,4 +264,26 @@ public class UserController {
 		}
 		return "products";
 	}
+	
+	
+	@RequestMapping(value="/password", method=RequestMethod.GET)
+	public String forgottenPassword(){
+		return "password";
+	}
+	
+	@RequestMapping(value="/password", method=RequestMethod.POST)
+	public String sendPassword(HttpServletRequest req){
+		String email = req.getParameter("email");
+		if(email == null ){
+			return "error1";
+		}
+		try {
+			User user = ud.getUser(email);
+			EmailSender.passwordTo(user);
+		} catch (SQLException e) {
+			return "error2";
+		}		
+		return "index";
+	}
+	
 }

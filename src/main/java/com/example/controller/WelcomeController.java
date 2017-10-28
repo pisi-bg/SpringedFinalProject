@@ -14,4 +14,6 @@ public class WelcomeController {
 		ses.setMaxInactiveInterval(45 * 60); // 45 mins
 		return "index";
 	}
+	
+	
 }

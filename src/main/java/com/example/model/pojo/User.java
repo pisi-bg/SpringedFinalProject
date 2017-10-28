@@ -116,8 +116,9 @@ public class User {
 		this.lastName = lastName;
 	}
 
-	public void setEmail(String email) {
+	public User setEmail(String email) {
 		this.email = email;
+		return this;
 	}
 
 	public void setPassword(String password) {

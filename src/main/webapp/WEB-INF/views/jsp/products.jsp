@@ -17,7 +17,15 @@
 	
 		
 		<c:if test="${ sessionScope.products != null }">
-		
+			
+			<c:set var="asc" value="asc"></c:set>
+			<c:set var="desc" value="desc"></c:set>
+			<br>
+			&nbsp;<a href="${pageContext.request.contextPath}/products/sort/name/${asc}" class="nav_user" style="text-decoration: none">А-Я</a>&nbsp;
+			&nbsp;<a href="${pageContext.request.contextPath}/products/sort/name/${desc}" class="nav_user" style="text-decoration: none">Я-А</a>&nbsp;
+		&nbsp;<a href="${pageContext.request.contextPath}/products/sort/price/${asc}" class="nav_user" style="text-decoration: none">Въз.</a>&nbsp;
+		&nbsp;<a href="${pageContext.request.contextPath}/products/sort/price/${desc}" class="nav_user" style="text-decoration: none">Низ.</a>&nbsp;
+		 	
 			<table border="1">
 				<c:forEach items="${ sessionScope.products }" var="pro">
 

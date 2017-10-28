@@ -153,7 +153,7 @@
 		<p class="cart_navigation  clearfix inner-top" style=float:right;  >
 			<c:if test="${not empty sessionScope.user}">
 				<form action="<c:url value='/cart/deliveryInfo'/>" method="get" >
-					<button type="submit" name="submit_fast_registration" >
+					<button type="submit" >
 						Потвърди поръчката
 					</button>
 				</form>
