@@ -234,6 +234,9 @@ public class UserController {
 	@RequestMapping(value="/admin/quantity", method = RequestMethod.POST)
 	public String addQuantity(HttpSession sess, HttpServletRequest req){		
 		int quantity = Integer.parseInt(req.getParameter("quantity"));
+		if(quantity < 1){
+			return "error";
+		}
 		Product pro = (Product)sess.getAttribute("productCurrent");
 		try {
 			pd.addQuantity(pro.getId(), quantity);
@@ -242,5 +245,21 @@ public class UserController {
 			return "sqlError";
 		}
 		return "index";
+	}
+	
+	@RequestMapping(value="/admin/discount", method= RequestMethod.POST)
+	public String addDiscount(HttpSession sess, HttpServletRequest req){
+		int discount = Integer.parseInt(req.getParameter("discount"));
+		if(discount < 0 || discount > 99){
+			return "error";
+		}
+		Product pro = (Product) sess.getAttribute("productCurrent");
+		long id = pro.getId();
+		try {
+			pd.setInPromotion(id, discount);
+		} catch (SQLException e) {
+			return "error";
+		}
+		return "products";
 	}
 }

@@ -78,7 +78,11 @@
 			<br>
 			
 			<form action="${pageContext.request.contextPath}/user/admin/quantity" method="post">
-				<input type="number" name ="quantity" placeholder="Количество" >
+				<input type="number" name ="quantity" placeholder="Количество" min="1" >
+				<input type="submit" value="Добави">
+			</form>
+			<form action="${pageContext.request.contextPath}/user/admin/discount" method="post">
+				<input type="number" name="discount" placeholder="Отстъпка %" min="0" max="99">
 				<input type="submit" value="Добави">
 			</form>
 			

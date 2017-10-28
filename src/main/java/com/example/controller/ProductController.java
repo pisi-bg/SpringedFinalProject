@@ -106,9 +106,7 @@ public class ProductController {
 			request.getSession().setAttribute("cart", cart);
 		} else {
 			cart = (HashSet<Product>) o;
-		}
-		
-		
+		}		
 
 		return "productdetail";
 	}
