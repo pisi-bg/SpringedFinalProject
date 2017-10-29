@@ -7,27 +7,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>TESTING</title>
 </head>
 <body>
 
-		<jsp:include page="header.jsp"></jsp:include><br>
-		<br>
-		<jsp:include page="categories.jsp"></jsp:include>
-	
-		
-		<c:if test="${ sessionScope.products != null }">
-			
-			<c:set var="asc" value="asc"></c:set>
-			<c:set var="desc" value="desc"></c:set>
-			<br>
-			&nbsp;<a href="${pageContext.request.contextPath}/products/sort/name/${asc}" class="nav_user" style="text-decoration: none">А-Я</a>&nbsp;
-			&nbsp;<a href="${pageContext.request.contextPath}/products/sort/name/${desc}" class="nav_user" style="text-decoration: none">Я-А</a>&nbsp;
-		&nbsp;<a href="${pageContext.request.contextPath}/products/sort/price/${asc}" class="nav_user" style="text-decoration: none">Въз.</a>&nbsp;
-		&nbsp;<a href="${pageContext.request.contextPath}/products/sort/price/${desc}" class="nav_user" style="text-decoration: none">Низ.</a>&nbsp;
-		 	
+
 			<table border="1">
-				<c:forEach items="${ sessionScope.products }" var="pro">
+				<c:forEach items="${ productList.getPageList() }" var="pro">
 
 					<tr>					
 						<td><a href="<c:url value='/products/productdetail/productId/${pro.id}'/>">${pro.name }</a></td>
@@ -46,8 +32,31 @@
 
 				</c:forEach>
 			</table>
-				
-	</c:if>
+			
+		 <div>
+		    <span style="float:left;">
+			    <c:choose>
+			        <c:when test="${productList.firstPage}"></c:when>
+			        <c:otherwise><a href="${pageContext.request.contextPath}/page/-2">Prev</a></c:otherwise>
+			    </c:choose>
+		    </span>
+		    <span>
+			    <c:forEach begin="0" end="${productList.pageCount-1}" varStatus="loop">
+				    &nbsp;
+				    <c:choose>
+				        <c:when test="${loop.index == productList.page}">${loop.index+1}</c:when>
+				        <c:otherwise><a href="${pageContext.request.contextPath}/page/${loop.index}">${loop.index+1}</a></c:otherwise>
+				    </c:choose>
+			    &nbsp;
+			    </c:forEach>
+		    </span>
+		    <span>
+			    <c:choose>
+			        <c:when test="${productList.lastPage}"></c:when>
+			        <c:otherwise><a href="${pageContext.request.contextPath}/page/-1">Next</a></c:otherwise>
+			    </c:choose>
+		    </span>
+		   </div>
 
 </body>
 </html>

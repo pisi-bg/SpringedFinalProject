@@ -1,8 +1,12 @@
 package com.example.model.pojo;
 
+import java.awt.print.PageFormat;
+import java.awt.print.Pageable;
+import java.awt.print.Printable;
 import java.io.Serializable;
+import java.util.List;
 
-public class Product implements Serializable {
+public class Product implements Serializable, Pageable {
 
 	private long id;
 	private String name;
@@ -13,13 +17,14 @@ public class Product implements Serializable {
 	private String brand;
 	private String brandImage;
 	private double rating;
+	private int countRating;
 	private int inStock;
 	private String image;
 	private int discount; // in percent
 
-	public Product(){		
+	public Product() {
 	}
-	
+
 	public Product(long id, String name, String description, double price, String animal, String category, String brand,
 			String brandImage, double rating, int isStock, String image, int discount) {
 		this(id, name, description, price, discount, animal, category, image, rating, brand);
@@ -61,23 +66,36 @@ public class Product implements Serializable {
 	// for demo purpose
 	@Override
 	public String toString() {
-		return this.name + " " + this.description + " " + this.animal + " " + this.category + " " + this.price + " " + this.discount;
-	}
-
-	@Override
-	public int hashCode() {
-		return (int) this.id;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		return this.id == ((Product) o).getId();
+		return this.name + " " + this.description + " " + this.animal + " " + this.category + " " + this.price + " "
+				+ this.discount;
 	}
 
 	public double calcDiscountedPrice() {
 		double newPrice = price * ((100 - discount) / 100.0);
 
 		return newPrice;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (id ^ (id >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Product other = (Product) obj;
+		if (id != other.id)
+			return false;
+		return true;
 	}
 
 	// getters
@@ -128,10 +146,14 @@ public class Product implements Serializable {
 	public int getDiscount() {
 		return discount;
 	}
-	
-	//   ** SETTERS ****
-	
-											// TODO VALIDATION !!!!!
+
+	public int getCountRating() {
+		return countRating;
+	}
+
+	// ** SETTERS ****
+
+	// TODO VALIDATION !!!!!
 
 	public Product setName(String name) {
 		this.name = name;
@@ -182,6 +204,39 @@ public class Product implements Serializable {
 		this.image = image;
 		return this;
 	}
+
+	public void setCountRating(int countRating) {
+		if (countRating >= 0) {
+			this.countRating = countRating;
+		}
+	}
+
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@Override
+	public int getNumberOfPages() {				
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public PageFormat getPageFormat(int pageIndex) throws IndexOutOfBoundsException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Printable getPrintable(int pageIndex) throws IndexOutOfBoundsException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

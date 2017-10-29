@@ -3,6 +3,9 @@ package com.example.utils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class DateTimeJavaSqlConvertor {
 
 	private DateTimeJavaSqlConvertor() {

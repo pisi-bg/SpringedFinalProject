@@ -46,13 +46,15 @@
 		<h3 style="display: inline-block; text-transform:">
 			<a href="<c:url value='/index'/>" style="text-decoration: none">
 				<img src="<c:url value='/img/buttons/pisi.png'/>" alt="HOME" title="Logo" width="20%" height="auto">
-			</a>
-			
-			&nbsp;&nbsp;&nbsp;&nbsp;<form action="${pageContext.request.contextPath}/products/search" method="post">
-					<input type="text" name="word">
+			</a>					
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<form action="${pageContext.request.contextPath}/products/search" method="post">
+				<input type="text" name="word">
 				<input type="submit" value="Търси">
-			</form>	&nbsp;&nbsp;&nbsp;&nbsp;				
-			<a href="<c:url value='/cart/cart'/>" style="text-decoration: none">
+			</form>	
+			&nbsp;&nbsp;&nbsp;&nbsp;				
+			
+			<a href="<c:url value='/cart/view'/>" style="text-decoration: none">
 				<img src="<c:url value='/img/buttons/catCart.png'/>" alt="КОЛИЧКА" title="cart" width="15%" height="auto" align="right">
 			</a>			
 		</h3>

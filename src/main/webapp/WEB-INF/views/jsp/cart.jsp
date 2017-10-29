@@ -42,61 +42,78 @@
 			<tbody>
 				<c:forEach items="${ sessionScope.cart }" var="productEntry">
 					<c:set var="product" value="${productEntry.key}" />
-					<tr>
+					<tr>    
 						<td class="cart_product"><a
-							href="productdetail?productId=${product.id}"> <img
+							href="<c:url value='/products/productdetail/productId/${product.id}'/>"> <img
 								src="${product.image }" alt="${product.description }" width="98"
 								height="98">
 						</a></td>
 						<td class="cart_description">
 							<p class="product-name" align="center">
-								<a href="productdetail?productId=${product.id}">${product.description }</a>
+								<a href="<c:url value='/products/productdetail/productId/${product.id}'/>">${product.description }</a>
 							</p>
 						</td>
 						<td class="cart_unit"><c:if test="${ product.discount == 0 }">
 								<ul style="list-style-type: none">
-									<li class="price regular-price"><span> <fmt:formatNumber
-												type="number" pattern="#####.##" value="${ product.price }" />лв.
-									</span></li>
+									<li class="price regular-price">
+										<span> 
+											<fmt:formatNumber type="number" pattern="#####.##" value="${ product.price }" />лв.
+										</span>
+									</li>
 								</ul>
-							</c:if> <c:if test="${  product.discount != 0 }">
+							</c:if>
+							<c:if test="${  product.discount != 0 }">
 								<ul style="list-style-type: none">
-									<li class="price regular-price"><span> <strike>
-												<fmt:formatNumber type="number" pattern="#####.##"
-													value="${ product.price }" /> лв.
-										</strike>
-									</span></li>
+									<li class="price regular-price">
+										<span> 
+											<del>
+												<fmt:formatNumber type="number" pattern="#####.##" value="${ product.price }" /> лв.
+											</del>
+										</span>
+									</li>
 									<li style="color: red">нова цена</li>
-									<li class="price special-price"><span> <fmt:formatNumber
-												type="number" pattern="#####.##"
-												value="${product.calcDiscountedPrice() }" /> лв.
-									</span></li>
+									<li class="price special-price">
+										<span> 
+											<fmt:formatNumber type="number" pattern="#####.##" value="${product.calcDiscountedPrice() }" /> лв.
+										</span>
+									</li>
 								</ul>
 							</c:if></td>
 						<td>
-							<form action="updateCart" method="post">
-								<input type="hidden" value="${ product.id }" name=productId>
-								<input type="text"
-									style="width: 35px; height: 35px; font-size: 14px; border: 1px solid #C0C0C0;"
-									name="count" size="2" value="${productEntry.value}"
-									maxlength="2"> <input type="image" name="submit"
-									src="D:\images\buttons\update.png" alt="Update" title="Update">
+						
+						<%-- 	<a href="<c:url value='/cart/updateCart'/>">
+								<img src="<c:url value='/img/buttons/update.png'/>" alt="UPDATE" title="Update" width="5%" height="auto">
+							</a> --%>
+						
+						
+						
+							<form action="<c:url value='/cart/updateCart'/>" method="get">
+								<input type="hidden" value="${ product.id }" name=productId> 
+								<input type="text" style="width: 35px; height: 35px; font-size: 14px; border: 1px solid #C0C0C0;"
+									name="count" size="2" value="${productEntry.value}" maxlength="2">
+								 <input type="image" name="submit"
+									src="<c:url value='/img/buttons/update.png'/>" alt="UPDATE" title="Update">									
 							</form>
-						</td>
+							
+						</td>	
 						<td>
-							<form action="removeFromCart" method="post">
+						
+							<%-- <a href="<c:url value='/cart/removeFromCart'/>">
+								<img src="<c:url value='/img/buttons/icon_trash.png'/>" alt="REMOVE" title="Remove" width="5%" height="auto">
+							</a> --%>
+						
+							<form action="<c:url value='/cart/removeFromCart/${ product.id }'/>" method="post">
 								<input type="image" name="submit" width="25" height="auto"
-									src="D:\images\buttons\icon_trash.png" alt="Remove"
-									title="Remove"> <input type="hidden"
-									value="${ product.id }" name="productId">
+									src="<c:url value='/img/buttons/icon_trash.png'/>" alt="REMOVE" title="Remove"> 
+									<%-- <input type="hidden" value="${ product.id }" name="productId"> --%>
 							</form>
 						</td>
 						<td width="10%"></td>
 						<td align="right"><c:if test="${ product.discount == 0 }">
-								<fmt:formatNumber type="number" pattern="#####.##"
+								<fmt:formatNumber type="number" pattern="#####.00"
 									value="${ product.price * productEntry.value }" />лв.									
 							</c:if> <c:if test="${ product.discount != 0 }">
-								<fmt:formatNumber type="number" pattern="#####.##"
+								<fmt:formatNumber type="number" pattern="#####.00"
 									value="${ product.calcDiscountedPrice()  *  productEntry.value }" />лв.									 
 							</c:if></td>
 					</tr>
@@ -120,7 +137,7 @@
 				<td class="cart_total item text-right" rowspan="3" colspan="2"
 					class="price" id="total_price_container"><span
 					id="total_price" style="font-size: 24px;"> <fmt:formatNumber
-							type="number" pattern="#####.##"
+							type="number" pattern="#####.00"
 							value="${ sessionScope.priceForCart }" />лв.
 				</span></td>
 
@@ -135,18 +152,17 @@
 			
 		<p class="cart_navigation  clearfix inner-top" style=float:right;  >
 			<c:if test="${not empty sessionScope.user}">
-				<form action="deliveryInfo" method="get" >
-					<button type="submit" name="submit_fast_registration" >
-						Потвърди поръчката</button>
+				<form action="<c:url value='/cart/deliveryInfo'/>" method="get" >
+					<button type="submit" >
+						Потвърди поръчката
+					</button>
 				</form>
 			</c:if>
 			<c:if test="${ empty sessionScope.user }">
-				<a href="login.jsp" title="LogIn" class="nav_user"
+				<a href="<c:url value='/user/login'/>" title="LogIn" class="nav_user"
 					style="text-decoration: none">ВХОД</a> &nbsp;
-				<a href="regiser.html" title="Register" class="nav_user"
-					style="text-decoration: none">РЕГИСТРАЦИЯ</a> &nbsp;
-				<a href="lostpass.jsp" title="LostPass" class="nav_user"
-					style="text-decoration: none">ЗАБРАВЕНА ПАРОЛА</a> &nbsp;											
+				<a href="<c:url value='/user/register'/>" title="Register" class="nav_user"
+					style="text-decoration: none">РЕГИСТРАЦИЯ</a> &nbsp;														
 			</c:if>
 		</p>
 		
