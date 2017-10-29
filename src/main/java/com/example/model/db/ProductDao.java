@@ -289,24 +289,15 @@ public class ProductDao {
 
 		ResultSet rs = null;
 
-		System.out.println(query);
-
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			int control = 1;
 			for (int i = 0; i < word.length; i++) {
-
-				System.out.println("word is ====== " + word[i]);
-
 				stmt.setString(control++, "%" + word[i] + "%");
 				stmt.setString(control++, "%" + word[i] + "%");
 			}
 			rs = stmt.executeQuery();
 
-			System.out.println("before rs loop");
-
 			while (rs.next()) {
-
-				System.out.println("in rs loop");
 
 				double rating = rd.getProductRating(rs.getLong("id"));
 				Product p = new Product().setName(rs.getString("name")).setDescription(rs.getString("description"))

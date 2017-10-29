@@ -198,10 +198,13 @@ public class ProductController {
 
 	@RequestMapping(value="/search")
 	public String searchProduct(HttpServletRequest req, HttpSession sess){
-		if(req.getParameter("word") == null || sess.getAttribute("products") == null){
-			return "index";
-		}
+		
+		if(req.getParameter("word") == null){						
+			return "index"; // or to the previous page
+		}				
+		
 		String[] words = req.getParameter("word").split(" ");
+				
 		Collection<Product> products = null;				
 		
 		try {

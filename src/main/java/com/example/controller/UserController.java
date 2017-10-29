@@ -274,7 +274,7 @@ public class UserController {
 	@RequestMapping(value="/password", method=RequestMethod.POST)
 	public String sendPassword(HttpServletRequest req){
 		String email = req.getParameter("email");
-		if(email == null ){
+		if(email == null || !UserDao.isValidEmailAddress(email)){
 			return "error1";
 		}
 		try {
