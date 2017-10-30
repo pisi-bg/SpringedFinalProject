@@ -9,19 +9,20 @@
 <title>Insert title here</title>
 </head>
 <body>	
-	<h1>Please fill all fields:</h1>
+	<h2>ПРОМЕНИ ИНФОРМАЦИЯ В ПРОФИЛ:</h2>
+	<h3>попълни всички полета:</h3>
 	
 	<f:form commandName="user" >
-		First name:<f:input path="firstName"/><br>
-		Last name:<f:input path="lastName"/><br>
-		Email:<f:input path="email"/><br>
-		Password:<f:password path="password"/><br>
-		Gender: <f:radiobutton path="isMale" value="true" label="Male"/>
-		<f:radiobutton path="isMale" value="false" label="Female"/>	<br>
+		Име :<f:input path="firstName"/><br>
+		Фамилия:<f:input path="lastName"/><br>
+		email:<f:input path="email"/><br>
+		парола:<f:password path="password"/><br>
+		пол: <f:radiobutton path="isMale" value="true" label="мъж"/>
+		<f:radiobutton path="isMale" value="false" label="жена"/>	<br>
 		<input type="submit" value="Update">			
 	</f:form>	
 		
-	<a href= "<c:url value='/index'/>"><button>Home</button></a>
+<%-- 	<a href= "<c:url value='/index'/>"><button>Home</button></a> --%>
 	
 </body>
 </html>

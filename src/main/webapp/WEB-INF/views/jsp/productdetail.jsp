@@ -22,7 +22,7 @@
 	<br>
 	<div id="item">
 		<h1 style="font-size: 24px;">${ productCurrent.name }</h1>
-		<br /> <img src="${ productCurrent.image }" alt="oops no image here"
+		<br /> <img src="<c:url value='D:/images/products/${ productCurrent.image }'/>" alt="oops no image here"
 			width="60%" height="auto" /><br /> <span> <fmt:formatNumber
 				type="number" pattern="#####.##" value="${ productCurrent.price }" />
 			лв.
@@ -92,8 +92,8 @@
 			<br>
 			<br>
 			<a href="<c:url value='/products/addInCart/${productCurrent.id}'/>">
-				<img src="<c:url value='/img/buttons/shopping_cart.png'/>"
-				alt="ADD IN CART" title="addInCart" width="5%" height="auto">
+				<img src="<c:url value='/img/buttons/shopping_cart - color.png'/>"
+				alt="ADD IN CART" title="addInCart" width="auto" height="40">
 			</a>
 		
 		</c:if>

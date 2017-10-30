@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import com.example.model.pojo.Order;
 import com.example.model.pojo.Product;
 import com.example.utils.DateTimeJavaSqlConvertor;
+import com.example.utils.NotEnoughQuantityException;
 
 @Component
 public class OrderDao {
@@ -24,12 +25,15 @@ public class OrderDao {
 	@Autowired
 	RatingDao rd;
 
-	// @Autowired
-	// OrderDao od;
+	@Autowired
+	ProductDao productDao;
+
+	@Autowired
+	DBManager DBmanager;
 
 	public TreeSet<Order> getOrdersForUser(long user_id) throws SQLException {
-		Connection con = DBManager.getInstance().getConnection();
-		String query = "SELECT * FROM pisi.orders WHERE user_id =6;";
+		Connection con = DBmanager.getConnection();
+		String query = "SELECT * FROM pisi.orders WHERE user_id =?;";
 
 		ResultSet rs = null;
 
@@ -46,8 +50,9 @@ public class OrderDao {
 			while (rs.next()) {
 				HashMap<Product, Integer> products = this.getProductsForOrder(rs.getLong("order_id"));
 				orders.add(new Order(rs.getLong("order_id"), user_id,
-						DateTimeJavaSqlConvertor.sqlToLocalDateTime(rs.getString("dateTime")),
-						rs.getBigDecimal("price").doubleValue(), products));
+						DateTimeJavaSqlConvertor.sqlToLocalDateTime(rs.getString("dateTime_created")),
+						rs.getBigDecimal("final_price").doubleValue(), products));
+
 			}
 			return orders;
 		} catch (Exception e) {
@@ -61,7 +66,7 @@ public class OrderDao {
 	}
 
 	public HashMap<Product, Integer> getProductsForOrder(long orderId) throws SQLException {
-		Connection con = DBManager.getInstance().getConnection();
+		Connection con = DBmanager.getConnection();
 		PreparedStatement ps = con
 				.prepareStatement("SELECT p.product_id AS product_id,  p.product_name AS name, p.price AS price,"
 						+ "p.discount AS discount, p.description AS description, c.category_name AS category, "
@@ -93,24 +98,24 @@ public class OrderDao {
 	}
 
 	public void insertOrderForUser(Order order) throws SQLException {
-		Connection con = DBManager.getInstance().getConnection();
+		Connection con = DBmanager.getAdminCon();
 		String query = "INSERT INTO pisi.orders ( user_id, dateTime_created , final_price, delivery_info_id) "
 				+ " VALUES (?,?,?,?)";
 		ResultSet rs = null;
 
 		try (PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
-
 			ps.setLong(1, order.getUser().getId());
 			ps.setString(2, DateTimeJavaSqlConvertor.localDateTimeToSql(order.getDateTime()));
 			ps.setDouble(3, order.getFinalPrice());
 			ps.setLong(4, order.getDeliveryInfoId());
 
 			ps.executeUpdate();
-			con.commit();
 			rs = ps.getGeneratedKeys();
 			rs.next();
 			order.setId(rs.getInt(1));
+
 		} catch (SQLException e) {
+			e.printStackTrace();
 			throw e;
 		} finally {
 			if (rs != null) {
@@ -119,29 +124,38 @@ public class OrderDao {
 		}
 	}
 
-	public void insertProductsFromOrder(long orderId, HashMap<Product, Integer> cart) throws SQLException {
-		Connection con = DBManager.getInstance().getConnection();
+	public void insertProductsFromOrder(long orderId, HashMap<Product, Integer> cart)
+			throws SQLException, NotEnoughQuantityException {
+		Connection con = DBmanager.getAdminCon();
 
 		for (Entry<Product, Integer> entry : cart.entrySet()) {
-			long productId = entry.getKey().getId();
+			Product product = entry.getKey();
+			// long productId = product.getId();
 			int quantity = (int) entry.getValue();
+			productDao.removeQuantity(product.getId(), quantity);
+			// if (quantity > product.getInStock()) {
+			// throw new
+			// NotEnoughQuantityException(NotEnoughQuantityException.NOT_ENOUGH_QUANTITY);
+			// }
 
 			String query = "INSERT INTO pisi.orders_has_products (product_id, order_id, product_quantity) "
 					+ " VALUES (?,?,?)";
-			PreparedStatement ps = con.prepareStatement(query);
 
-			ps.setLong(1, productId);
-			ps.setLong(2, orderId);
-			ps.setInt(3, quantity);
+			try (PreparedStatement ps = con.prepareStatement(query);) {
 
-			ps.executeUpdate();
-			con.commit();
+				ps.setLong(1, product.getId());
+				ps.setLong(2, orderId);
+				ps.setInt(3, quantity);
+				ps.executeUpdate();
+			} catch (SQLException e) {
+				throw e;
+			}
 		}
 	}
 
 	public ArrayList<String> getCitiesNames() throws SQLException {
 		ArrayList<String> cities = new ArrayList<>();
-		Connection con = DBManager.getInstance().getConnection();
+		Connection con = DBmanager.getConnection();
 		String query = "SELECT city_name FROM pisi.cities;";
 		ResultSet rs = null;
 

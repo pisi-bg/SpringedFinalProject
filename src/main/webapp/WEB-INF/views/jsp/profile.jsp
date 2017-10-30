@@ -18,43 +18,52 @@
 
 	<jsp:include page="header.jsp"></jsp:include>
 
-	<h2>Your previous orders:</h2>
+	<!-- <h2>Your previous orders:</h2>
 
 	<a href="sortOrders?sort=desc"><button>Newest to oldest</button></a>
 	<a href="sortOrders?sort=asc"><button>Oldest to newest</button></a>
-	<hr>
-	<c:if test="${ sessionScope.orders != null }">
-		<c:forEach items="${ sessionScope.orders }" var="order">
-			<h4>${ order.datetime }</h4>
-			<table border="1">
-				<c:forEach items="${ order.products }" var="productEntry">
-					<c:set var="product" value="${productEntry.key}" />
-					<tr>
-						<td>Снимка</td>
-						<td>Име</td>
-						<td>Описание</td>
-						<td>Марка</td>
-						<td>Цена</td>
-						<td>Количество</td>
-						<td>Обща цена за продукта</td>
-						<td>Намаление</td>
-					</tr>
-					<tr>
-						<td>${product.image }</td>
-						<td>${product.name }</td>
-						<td>${product.description }</td>
-						<td>${product.brand }</td>
-						<td>${product.price }</td>
-						<td>${productEntry.value }</td>
-						<td>смятай</td>
-						<td>${product.discount }</td>
-					</tr>
-				</c:forEach>
-				<h4>${ order.finalPrice }</h4>
-			</table>
-			<hr>
-		</c:forEach>
-	</c:if>
+	<hr> -->
+		<form action="${pageContext.request.contextPath}/user/profile/showOrders" method="post" style="display:inline;">		
+				<h2 >	ПРЕДИШНИ ПОРЪЧКИ 		
+					<input type="image" name="submit"	src="<c:url value='/img/buttons/arrow.png'/>" alt="ЦЪК" title="drop down" width="50" height="auto" >	
+				</h2>
+		</form>			
+	 	<%-- <c:if test="${empty sessionScope.orders}">
+			<h4 >	НЯМА ПРЕДИШНИ ПОРЪЧКИ 	</h4>
+		</c:if>  --%>
+		
+		<c:if test="${not empty sessionScope.orders}">
+				<form action="deliveryInfo" method="get" >				
+								<table border="1">
+									<thead class="">
+										<tr>
+											<th class="cart_product first_item">Дата</th>
+											<th class="cart_description item">Цена</th>											
+											<th class="cart_quantity item text-center">Продукти</th>
+										</tr>
+									</thead>						
+									<tbody>			
+										<c:forEach items="${ sessionScope.orders }" var="order">
+											<tr>
+												<td>${ order.dateTime }</td>
+												<td>${order.finalPrice }</td>
+												<td>
+													<ul style="list-style-type: none">
+														<c:forEach items="${ order.products }" var="productEntry">
+															<li>	
+																	${productEntry.key.name } - ${productEntry.value }
+															</li>
+														</c:forEach>														
+													</ul>			
+												</td>
+											</tr>
+										</c:forEach>	
+									</tbody>
+								</table>
+							<br>
+										
+				</form>
+		</c:if>	
 <!-- 
 	<h1>Please update all fields:</h1>
 	<form action="register" method="post">
@@ -67,8 +76,16 @@
 		<input type="submit" value="Update">
 	</form> -->
 	
-	 <jsp:include page="${request.contextPath}/user/update"></jsp:include>
-	
+		<%-- <form action="${request.contextPath}/user/update" method="get" style="display:inline;">		
+				<h2 >	ПРОМЕНИ ИНФОРМАЦИЯ В ПРОФИЛА 		
+					<input type="image" name="submit"	src="<c:url value='/img/buttons/arrow.png'/>" alt="ЦЪК" title="drop down" width="50" height="auto" >	
+				</h2>
+		</form>	 --%>
+		<%-- <c:if test="${requestScope.update ==1}"> --%>
+		
+	 		<jsp:include page="${request.contextPath}/user/update"></jsp:include>
+	 		
+	<%-- 	</c:if> --%>
 
 </body>
 </html>

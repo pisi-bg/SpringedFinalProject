@@ -8,8 +8,25 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Cart</title>
+
+	<script type="text/javascript">
+	
+	function checkQuantities() {
+		 alert("Няма налично количество от " + productNoQuantity.name );
+	
+	<%-- //	var productNoQuantity = '<%= session.getAttribute("productNotEnoughQuantity") %>'; --%>
+	//	 var persons = ${personsJson};
+	//	 ${sessionScope.list}
+		var productNoQuantity =  ${sessionScope.productNotEnoughQuantity} ;
+	//	 application.getAttribute("name")
+		
+		if(productNoQuantity != null ){
+	 	   alert("Няма налично количество от " + productNoQuantity.name );
+		}
+	}
+	</script>
 </head>
-<body>
+<body onload="checkQuantities()">
 
 
 	<jsp:include page="header.jsp"></jsp:include><br>
@@ -53,7 +70,8 @@
 								<a href="<c:url value='/products/productdetail/productId/${product.id}'/>">${product.description }</a>
 							</p>
 						</td>
-						<td class="cart_unit"><c:if test="${ product.discount == 0 }">
+						<td class="cart_unit">
+							<c:if test="${ product.discount == 0 }">
 								<ul style="list-style-type: none">
 									<li class="price regular-price">
 										<span> 
@@ -63,45 +81,55 @@
 								</ul>
 							</c:if>
 							<c:if test="${  product.discount != 0 }">
-								<ul style="list-style-type: none">
-									<li class="price regular-price">
-										<span> 
-											<del>
-												<fmt:formatNumber type="number" pattern="#####.##" value="${ product.price }" /> лв.
-											</del>
-										</span>
-									</li>
-									<li style="color: red">нова цена</li>
-									<li class="price special-price">
-										<span> 
-											<fmt:formatNumber type="number" pattern="#####.##" value="${product.calcDiscountedPrice() }" /> лв.
-										</span>
-									</li>
-								</ul>
+								
+									<img src="<c:url value='/img/buttons/sale_piggy.png'/>" alt="SALE" title="SALE" width="auto" height="40" align="left">
+									
+								
+									<ul style="list-style-type: none">
+										<%-- <li style="color: maroon">	<img src="<c:url value='/img/buttons/sale.png'/>" alt="SALE" title="SALE" width="auto" height="40"></li> --%>
+										<li class="price regular-price">
+											<span> 
+												<del>
+													<fmt:formatNumber type="number" pattern="#####.##" value="${ product.price }" /> лв.
+												</del>
+											</span>
+										</li>
+										<!-- <li style="color: red">нова цена</li> -->
+									
+										<li class="price special-price" style="color: maroon">
+											<span> 
+												<fmt:formatNumber type="number" pattern="#####.##" value="${product.calcDiscountedPrice() }" /> лв.
+											</span>
+										</li>
+									</ul>
+								
 							</c:if></td>
-						<td>
-						
-						<%-- 	<a href="<c:url value='/cart/updateCart'/>">
-								<img src="<c:url value='/img/buttons/update.png'/>" alt="UPDATE" title="Update" width="5%" height="auto">
-							</a> --%>
-						
-						
-						
+						<td>						
 							<form action="<c:url value='/cart/updateCart'/>" method="get">
 								<input type="hidden" value="${ product.id }" name=productId> 
-								<input type="text" style="width: 35px; height: 35px; font-size: 14px; border: 1px solid #C0C0C0;"
-									name="count" size="2" value="${productEntry.value}" maxlength="2">
+								
+								
+								
+						<%-- 		<c:if test="${productEntry.value > product.inStock}">
+										<input type="text" style="width: 35px; height: 35px; font-size: 14px; border: 1px solid #C0C0C0;"
+											name="count" size="2" value="${product.inStock}" maxlength="2">
+								</c:if>
+								
+								<c:if test="${productEntry.value <= product.inStock}"> --%>
+								
+										<input type="text" style="width: 35px; height: 35px; font-size: 14px; border: 1px solid #C0C0C0;"
+											name="count" size="2" value="${productEntry.value}" maxlength="2">
+											
+								<%-- </c:if> --%>
+								
+								
+									
 								 <input type="image" name="submit"
 									src="<c:url value='/img/buttons/update.png'/>" alt="UPDATE" title="Update">									
 							</form>
 							
 						</td>	
-						<td>
-						
-							<%-- <a href="<c:url value='/cart/removeFromCart'/>">
-								<img src="<c:url value='/img/buttons/icon_trash.png'/>" alt="REMOVE" title="Remove" width="5%" height="auto">
-							</a> --%>
-						
+						<td>						
 							<form action="<c:url value='/cart/removeFromCart/${ product.id }'/>" method="post">
 								<input type="image" name="submit" width="25" height="auto"
 									src="<c:url value='/img/buttons/icon_trash.png'/>" alt="REMOVE" title="Remove"> 
@@ -121,11 +149,9 @@
 			</tbody>
 			<tfoot class="">
 				<tr class="cart_total_price">
-					<td rowspan="2" colspan="2"
-						style="border: 1px solid #ccc; color: #000; background-color: #FFF">
-						<h3 style="text-transform: uppercase">Заплащане</h3> <br>
-						Заплащането се извършва с наложен платеж при получаване на
-						доставката <br>
+					<td rowspan="2" colspan="2" style="border: 1px solid #ccc; color: #000; background-color: #FFF">
+						<h3 style="text-transform: uppercase">Заплащане</h3> 
+						<br> Заплащането се извършва с наложен платеж при получаване на доставката <br>
 					</td>
 				</tr>
 
@@ -145,18 +171,17 @@
 		</table>
 		<hr>
 		
-		<h3 style=" color: #000; background-color: #FFF">ПОРЪЧКА</h3> 
+		
 			<c:if test="${ empty sessionScope.user }">
+				<h3 style=" color: #000; background-color: #FFF">ПОРЪЧКА</h3> 
 				<br> Поръчки се приемта само от регистрирани потребители <br>
 			</c:if>
 			
-		<p class="cart_navigation  clearfix inner-top" style=float:right;  >
+		<p class="cart_navigation  clearfix inner-top" align="center"  >
 			<c:if test="${not empty sessionScope.user}">
-				<form action="<c:url value='/cart/deliveryInfo'/>" method="get" >
-					<button type="submit" >
-						Потвърди поръчката
-					</button>
-				</form>
+				<a href="<c:url value='/cart/deliveryInfo'/>">
+					<img src="<c:url value='/img/buttons/submit_order.png'/>" alt="ПОТВЪРДИ" title="submit order" width="auto" height="40">
+				</a>
 			</c:if>
 			<c:if test="${ empty sessionScope.user }">
 				<a href="<c:url value='/user/login'/>" title="LogIn" class="nav_user"

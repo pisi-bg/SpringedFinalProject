@@ -11,8 +11,8 @@
 	
 	<jsp:include page="header.jsp"></jsp:include>
 	
-	<h3>Моля, въведете имейла си и ще получите съобщение на вашата поща.</h3>
-	<h4>Ако не получите такова, моля пише те на pisi.bg.shop@gmail.com и екипът на pisi.bg ще се свърже с вас</h4>
+	<h3>Моля, въведете имейла си,за да получите съобщение на вашата поща.</h3>
+	<h4>Ако не получите такова, моля пишете на pisi.bg.shop@gmail.com и екипът на pisi.bg ще се свърже с вас</h4>
 	<f:form>
 		<input type="email" name="email" required> &nbsp;&nbsp;
 		<input type="submit" value="Изпрати">

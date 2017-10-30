@@ -9,16 +9,20 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h1>Please fill all fields:</h1>
+
+	<jsp:include page="header.jsp"></jsp:include>
+	
+	<h2>ФОРМА ЗА РЕГИСТРАЦИЯ</h2>
+	<h3>МОЛЯ, ПОПЪЛНЕТЕ ВСИЧКИ ПОЛЕТА:</h3>
 	
 	<f:form commandName="user">
-		First name:<f:input path="firstName"/><br>
-		Last name:<f:input path="lastName"/><br>
-		Email:<f:input path="email"/><br>
-		Password:<f:password path="password"/><br>
-		Gender: <f:radiobutton path="isMale" value="true" label="Male"/>
-		<f:radiobutton path="isMale" value="false" label="Female"/>	<br>
-		<input type="submit" value="Register">			
+		Име:<f:input path="firstName"/><br>
+		Фамилия:<f:input path="lastName"/><br>
+		Майл:<f:input path="email"/><br>
+		Парола:<f:password path="password"/><br>
+		Пол: <f:radiobutton path="isMale" value="true" label="мъж"/>
+		<f:radiobutton path="isMale" value="false" label="жена"/>	<br>
+		<input type="submit" value="РЕГИСТРИРАЙ МЕ">			
 	</f:form>		
 	<a href= "<c:url value='/index'/>"><button>Home</button></a>
 	

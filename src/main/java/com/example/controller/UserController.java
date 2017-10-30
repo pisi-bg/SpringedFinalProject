@@ -1,33 +1,30 @@
 package com.example.controller;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.util.TreeSet;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.WebInitializer;
+import com.example.model.db.OrderDao;
 import com.example.model.db.ProductDao;
 import com.example.model.db.UserDao;
+import com.example.model.pojo.Order;
 import com.example.model.pojo.Product;
 import com.example.model.pojo.User;
 import com.example.utils.EmailSender;
@@ -39,9 +36,12 @@ public class UserController {
 
 	@Autowired
 	UserDao ud;
-	
+
 	@Autowired
 	ProductDao pd;
+
+	@Autowired
+	OrderDao orderDao;
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(Model m) {
@@ -115,13 +115,41 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/profile", method = RequestMethod.GET)
-	public String viewProfile() {
+	public String viewProfile(HttpSession session) {
+
+		User u = (User) session.getAttribute("user");
+		if (u == null) {
+			return "redirect:/user/login";
+		}
+		if (!u.getFavorites().isEmpty()) {
+			session.setAttribute("favorites", u.getFavorites());
+		}
+		return "profile";
+	}
+
+	@RequestMapping(value = "/profile/showOrders", method = RequestMethod.POST)
+	public String viewOrders(HttpSession session) {
+
+		User u = (User) session.getAttribute("user");
+		if (u == null) {
+			return "redirect:/user/login";
+		}
+		try {
+			TreeSet<Order> orders = orderDao.getOrdersForUser(u.getId());
+			if (!orders.isEmpty()) {
+				session.setAttribute("orders", orders);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return "error3";
+		}
 		return "profile";
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.GET)
-	public String updateForm(Model m, HttpSession sess) {
+	public String updateForm(Model m, HttpSession sess, HttpServletRequest req) {
 		User u = (User) sess.getAttribute("user");
+		req.setAttribute("update", 1);
 		m.addAttribute("user", u);
 		return "updateProfile";
 	}
@@ -139,21 +167,45 @@ public class UserController {
 		return "redirect:/user/profile";
 	}
 
-	@RequestMapping(value = "/admin/removeProduct", method= RequestMethod.GET)
-	public String removeProduct(HttpSession sess){
-		
-		if(sess.getAttribute("user") == null){
+	@RequestMapping(value = "/favorites", method = RequestMethod.GET)
+	public String viewFavorites(HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		if (user == null) {
+			return "redirect:/user/login";
+		}
+		if (!user.getFavorites().isEmpty()) {
+			session.setAttribute("favorites", user.getFavorites());
+		}
+		return "favorites";
+	}
+
+	@RequestMapping(value = "/contactForm", method = RequestMethod.GET)
+	public String sendMail(HttpSession session, Model m) {
+		User user = (User) session.getAttribute("user");
+		if (user == null) {
+			return "redirect:/user/login";
+		}
+
+		// session.setAttribute("favorites", user.getFavorites());
+
+		return "contactForm";
+	}
+
+	@RequestMapping(value = "/admin/removeProduct", method = RequestMethod.GET)
+	public String removeProduct(HttpSession sess) {
+
+		if (sess.getAttribute("user") == null) {
 			return "index";
 		}
-		
-		User user = (User) sess.getAttribute("user");		
-		
-		if(!user.isAdmin()){
+
+		User user = (User) sess.getAttribute("user");
+
+		if (!user.isAdmin()) {
 			return "forward:index";
 		}
-		
-		Product pro = (Product)sess.getAttribute("productCurrent");
-		if(pro != null){
+
+		Product pro = (Product) sess.getAttribute("productCurrent");
+		if (pro != null) {
 			try {
 				pd.removeProduct(pro);
 			} catch (SQLException e) {
@@ -161,27 +213,28 @@ public class UserController {
 				e.printStackTrace();
 			}
 			return "index";
-		}else {
-			
-			// make an error page .... 
+		} else {
+
+			// make an error page ....
 			return "error";
-		}		
+		}
 	}
-	
-	@RequestMapping(value ="/admin/addProduct", method =RequestMethod.GET)
-	public String addProductForm(Model m){
+
+	@RequestMapping(value = "/admin/addProduct", method = RequestMethod.GET)
+	public String addProductForm(Model m) {
 		return "addproduct";
 	}
-	
-	@RequestMapping(value= "/admin/addProduct", method = RequestMethod.POST)
-	public String addProduct(HttpServletResponse resp, HttpServletRequest req, @RequestParam("image") MultipartFile file) {	
+
+	@RequestMapping(value = "/admin/addProduct", method = RequestMethod.POST)
+	public String addProduct(HttpServletResponse resp, HttpServletRequest req,
+			@RequestParam("image") MultipartFile file) {
 		try {
 			req.setCharacterEncoding("UTF-8");
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 			return "encodingError";
 		}
-		
+
 		String name = req.getParameter("name");
 		String animal = req.getParameter("animal");
 		String category = req.getParameter("category");
@@ -190,17 +243,20 @@ public class UserController {
 		String brand = req.getParameter("brand");
 		int instock = Integer.parseInt(req.getParameter("instock_count"));
 		int discount = Integer.parseInt(req.getParameter("discount"));
-				
-		String imageFileName = name.replaceAll(" ",	""); // consider using some regex to escape sequence in file system
-		
-		
-//		String[] temp = file.getOriginalFilename().split(".");    it doesn't split it and i don't know why......
-		
+
+		String imageFileName = name.replaceAll(" ", ""); // consider using some
+															// regex to escape
+															// sequence in file
+															// system
+
+		// String[] temp = file.getOriginalFilename().split("."); it doesn't
+		// split it and i don't know why......
+
 		String imageType = ".jpg";
-		String imageURL = imageFileName.concat(imageType);			
-		
+		String imageURL = imageFileName.concat(imageType);
+
 		File imageFile = new File(WebInitializer.LOCATION + imageFileName + imageType);
-		
+
 		try {
 			file.transferTo(imageFile);
 		} catch (IllegalStateException e1) {
@@ -210,7 +266,7 @@ public class UserController {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		Product p = new Product();
 		p.setName(name);
 		p.setAnimal(animal);
@@ -221,38 +277,38 @@ public class UserController {
 		p.setInStock(instock);
 		p.setDiscount(discount);
 		p.setImage(imageURL);
-		
+
 		try {
 			pd.addProduct(p);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return "error";
 		}
-				
+
 		return "index";
 	}
 
-	@RequestMapping(value="/admin/quantity", method = RequestMethod.POST)
-	public String addQuantity(HttpSession sess, HttpServletRequest req){		
+	@RequestMapping(value = "/admin/quantity", method = RequestMethod.POST)
+	public String addQuantity(HttpSession sess, HttpServletRequest req) {
 		int quantity = Integer.parseInt(req.getParameter("quantity"));
-		if(quantity < 1){
-			
+		if (quantity < 1) {
+
 			return "error";
 		}
-		Product pro = (Product)sess.getAttribute("productCurrent");
+		Product pro = (Product) sess.getAttribute("productCurrent");
 		try {
 			pd.addQuantity(pro.getId(), quantity);
-		} catch (SQLException e) {			
+		} catch (SQLException e) {
 			e.printStackTrace();
 			return "sqlError";
 		}
 		return "index";
 	}
-	
-	@RequestMapping(value="/admin/discount", method= RequestMethod.POST)
-	public String addDiscount(HttpSession sess, HttpServletRequest req){
+
+	@RequestMapping(value = "/admin/discount", method = RequestMethod.POST)
+	public String addDiscount(HttpSession sess, HttpServletRequest req) {
 		int discount = Integer.parseInt(req.getParameter("discount"));
-		if(discount < 0 || discount > 99){
+		if (discount < 0 || discount > 99) {
 			return "error";
 		}
 		Product pro = (Product) sess.getAttribute("productCurrent");
@@ -264,17 +320,16 @@ public class UserController {
 		}
 		return "products";
 	}
-	
-	
-	@RequestMapping(value="/password", method=RequestMethod.GET)
-	public String forgottenPassword(){
+
+	@RequestMapping(value = "/password", method = RequestMethod.GET)
+	public String forgottenPassword() {
 		return "password";
 	}
-	
-	@RequestMapping(value="/password", method=RequestMethod.POST)
-	public String sendPassword(HttpServletRequest req){
+
+	@RequestMapping(value = "/password", method = RequestMethod.POST)
+	public String sendPassword(HttpServletRequest req) {
 		String email = req.getParameter("email");
-		if(email == null ){
+		if (email == null) {
 			return "error1";
 		}
 		try {
@@ -282,8 +337,8 @@ public class UserController {
 			EmailSender.passwordTo(user);
 		} catch (SQLException e) {
 			return "error2";
-		}		
+		}
 		return "index";
 	}
-	
+
 }

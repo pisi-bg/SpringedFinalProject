@@ -7,6 +7,26 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<style type="text/css">
+	
+		/* 	* {
+		      font-family: sans-serif;
+		    } */
+		   
+		@font-face {
+		    font-family: "Comfortaa";
+		    src: url('../fonts/Comfortaa-Bold.ttf') format('truetype') ;
+		    src: url('/fonts/Comfortaa-Bold.ttf') format('truetype') ;
+		}
+		p.customfont { 
+		    font-family: "Comfortaa", Verdana, Tahoma;
+		}
+		body {
+		 	 font-family: 'Comfortaa';
+		 	  src: url('/fonts/Comfortaa-Bold.ttf') format('truetype') ;
+		}
+
+</style>
 </head>
 <body>
 
@@ -15,7 +35,7 @@
 	<div class="nav">
 		<nav>		
 		<h4 style="display: inline-block; text-transform:">
-			<a href="<c:url value='contacts.jsp'/>" title="Контакти"
+			<a href="<c:url value='/user/contactForm'/>" title="Контакти"
 				class="nav_user" style="text-decoration: none">КОНТАКТИ</a> &nbsp;
 			<c:if test="${sessionScope.user == null}">
 
@@ -29,7 +49,7 @@
 				<a href="<c:url value='/user/logout'/>" title="LogOut" class="nav_user"
 					style="text-decoration: none">ИЗХОД</a> &nbsp;
 				<a href="<c:url value='/user/profile'/>" title="Profile" class="nav_user" style="text-decoration: none">ПРОФИЛ</a> &nbsp;
-				<a href="<c:url value='favorites.jsp'/>" title="Favorites" class="nav_user"
+				<a href="<c:url value='/user/favorites'/>" title="Favorites" class="nav_user"
 					style="text-decoration: none">ЛЮБИМИ</a> &nbsp;
 			</c:if>
 			
@@ -45,17 +65,21 @@
 		<nav>
 		<h3 style="display: inline-block; text-transform:">
 			<a href="<c:url value='/index'/>" style="text-decoration: none">
-				<img src="<c:url value='/img/buttons/pisi.png'/>" alt="HOME" title="Logo" width="20%" height="auto">
-			</a>					
+				<img src="<c:url value='/img/buttons/pisi.png'/>" alt="HOME" title="Logo" width="15%" height="auto">
+			</a>		
+			
+						
 			&nbsp;&nbsp;&nbsp;&nbsp;
-			<form action="${pageContext.request.contextPath}/products/search" method="post">
+			<form action="${pageContext.request.contextPath}/products/search" method="post" style="display:inline;">
 				<input type="text" name="word">
-				<input type="submit" value="Търси">
+				<!-- <input type="submit" value="Търси"> -->
+				<input type="image" name="submit"	src="<c:url value='/img/buttons/search2.png'/>" alt="ТЪРСИ" title="търси" width="35" height="auto">	
+				
 			</form>	
-			&nbsp;&nbsp;&nbsp;&nbsp;				
+			&nbsp;				
 			
 			<a href="<c:url value='/cart/view'/>" style="text-decoration: none">
-				<img src="<c:url value='/img/buttons/catCart.png'/>" alt="КОЛИЧКА" title="cart" width="15%" height="auto" align="right">
+				<img src="<c:url value='/img/buttons/catCart.png'/>" alt="КОЛИЧКА" title="cart" width="12%" height="auto" align="right">
 			</a>			
 		</h3>
 		</nav>

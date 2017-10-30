@@ -22,25 +22,26 @@ import org.springframework.web.servlet.view.JstlView;
 @EnableWebMvc
 @ComponentScan("com.example")
 public class SpringWebConfig extends WebMvcConfigurerAdapter {
-	
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/css/**").addResourceLocations("/static/css/");
-        registry.addResourceHandler("/img/**").addResourceLocations("/static/img/");
-        registry.addResourceHandler("/pdfs/**").addResourceLocations("/static/pdf/");
-        registry.addResourceHandler("/html/**").addResourceLocations("/static/html/");
-    }
-	
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/css/**").addResourceLocations("/static/css/");
+		registry.addResourceHandler("/img/**").addResourceLocations("/static/img/");
+		registry.addResourceHandler("/pdfs/**").addResourceLocations("/static/pdf/");
+		registry.addResourceHandler("/html/**").addResourceLocations("/static/html/");
+		registry.addResourceHandler("/font/**").addResourceLocations("/static/font/");
+	}
+
 	@Bean
 	public InternalResourceViewResolver getInternalResourceViewResolver() {
 		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
 		resolver.setViewClass(JstlView.class);
 		resolver.setPrefix("/WEB-INF/views/jsp/");
 		resolver.setSuffix(".jsp");
-		
+
 		return resolver;
 	}
-	
+
 	// localization configuration
 	@Bean
 	public MessageSource messageSource() {
@@ -48,24 +49,24 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
 		messageSource.setBasename("messages");
 		return messageSource;
 	}
-	
+
 	@Bean
 	public LocaleResolver localeResolver() {
 		SessionLocaleResolver resolver = new SessionLocaleResolver();
 		resolver.setDefaultLocale(Locale.ENGLISH);
 		return resolver;
 	}
-	
+
 	@Bean(name = "multipartResolver")
-    public StandardServletMultipartResolver resolver() {
-	    return new StandardServletMultipartResolver();
-    }
-	
+	public StandardServletMultipartResolver resolver() {
+		return new StandardServletMultipartResolver();
+	}
+
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		LocaleChangeInterceptor changeInterceptor = new LocaleChangeInterceptor();
 		changeInterceptor.setParamName("language");
 		registry.addInterceptor(changeInterceptor);
 	}
-	
+
 }

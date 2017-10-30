@@ -3,6 +3,7 @@ package com.example.model.pojo;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Order {
 
@@ -60,8 +61,30 @@ public class Order {
 		return deliveryInfoId;
 	}
 
-	public HashMap<Product, Integer> getProducts() {
-		return (HashMap<Product, Integer>) Collections.unmodifiableMap(products);
+	public Map<Product, Integer> getProducts() {
+		return (Map<Product, Integer>) Collections.unmodifiableMap(products);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (orderId ^ (orderId >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Order other = (Order) obj;
+		if (orderId != other.orderId)
+			return false;
+		return true;
 	}
 
 }

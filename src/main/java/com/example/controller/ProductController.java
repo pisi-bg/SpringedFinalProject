@@ -124,8 +124,9 @@ public class ProductController {
 	public String addInCart(HttpServletRequest request, HttpSession s, @PathVariable("id") Integer productId) {
 
 		Product pro = (Product) s.getAttribute("productCurrent");
-		if (pro == null) {
-			return "error";
+		if (pro == null || pro.getInStock() == 0) {
+			// TODO pop up
+			return "redirect:/products";
 		}
 		HashMap<Product, Integer> cart = (HashMap<Product, Integer>) s.getAttribute("cart");
 		if (cart == null) {
@@ -134,6 +135,9 @@ public class ProductController {
 		if (cart.containsKey(pro)) {
 			Integer quantity = cart.get(pro);
 			quantity++;
+			if (quantity > pro.getInStock()) {
+				quantity = pro.getInStock();
+			}
 			cart.put(pro, quantity);
 		} else {
 			cart.put(pro, new Integer(1));

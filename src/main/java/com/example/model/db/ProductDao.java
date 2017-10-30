@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.model.pojo.Product;
+import com.example.utils.NotEnoughQuantityException;
 
 @Component
 public class ProductDao {
@@ -396,42 +397,24 @@ public class ProductDao {
 		}
 	}
 
-	// public double calcDiscountedPrice(Product p) {
-	// double newPrice = p.getPrice() * ((100 - p.getDiscount()) / 100.0);
-	// return newPrice;
-	// }
-
 	// updating in stock quantity for product
-	public synchronized boolean removeQuantity(long productId, int quantityToRemove) throws SQLException {
+	public synchronized void removeQuantity(long productId, int quantityToRemove)
+			throws SQLException, NotEnoughQuantityException {
 		int result = -1;
-		Connection con = db.getConnection();
-		String selectQuery = "SELECT instock_count FROM pisi.products WHERE product_id = ?";
-		String updateQuery = "UPDATE pisi.products SET instock_count = ? WHERE product_id = ? ";
+		Connection con = db.getAdminCon();
+
+		String updateQuery = "UPDATE pisi.products SET instock_count = instock_count - ? WHERE product_id = ? ";
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 
 		try {
-			// checks if there is enough quantity
-			stmt = con.prepareStatement(selectQuery);
-			stmt.setLong(1, productId);
-			rs = stmt.executeQuery();
-			int currentInstockCount = rs.getInt("instock_count");
-			if (quantityToRemove >= currentInstockCount) {
-				stmt = con.prepareStatement(updateQuery); // check later if
-															// there is problem
-															// with this !!!
-				int newQuantity = currentInstockCount - quantityToRemove;
-				stmt.setLong(1, newQuantity);
-				stmt.setLong(2, productId);
-				result = stmt.executeUpdate();
-				if (newQuantity == 0) {
-					// TODO throw update 'Not In stock' in the Web view
-				}
-			} else {
-				// ?throw NotEnoughQuantityException
-				return false;
+			stmt = con.prepareStatement(updateQuery);
+			stmt.setLong(1, quantityToRemove);
+			stmt.setLong(2, productId);
+			result = stmt.executeUpdate();
+			if (result != 1) {
+				throw new NotEnoughQuantityException(NotEnoughQuantityException.NOT_ENOUGH_QUANTITY);
 			}
-			return result == 1 ? true : false;
 		} catch (SQLException e) {
 			throw e;
 		} finally {

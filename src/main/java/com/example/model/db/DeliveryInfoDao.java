@@ -6,7 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashSet;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.model.pojo.DeliveryInfo;
@@ -14,12 +16,12 @@ import com.example.model.pojo.DeliveryInfo;
 @Component
 public class DeliveryInfoDao {
 
-	// @Autowired
-	// DeliveryInfoDao deliveryInfoDao;
+	@Autowired
+	DBManager DBmanager;
 
 	public void insertDelivInfoOrder(DeliveryInfo delivInfo) throws SQLException {
-		Connection con = DBManager.getInstance().getConnection();
-		String query = "INSERT INTO pisi.deliveries_info_id ( address, zip_code, city_id, reciever_first_name, reciever_last_name, reciever_phone, notes) VALUES (?,?,?,?,?,?,?)";
+		Connection con = DBmanager.getAdminCon();
+		String query = "INSERT INTO pisi.deliveries ( address, zip_code, city_id, reciever_first_name, reciever_last_name, reciever_phone, notes) VALUES (?,?,?,?,?,?,?)";
 		String cityName = delivInfo.getCity();
 		int cityId = retrieveCityId(cityName);
 		ResultSet rs = null;
@@ -44,18 +46,18 @@ public class DeliveryInfoDao {
 	}
 
 	public ArrayList<DeliveryInfo> getListDeliveryInfosForUser(long userId) throws SQLException {
-		Connection con = DBManager.getInstance().getConnection();
+		Connection con = DBmanager.getConnection();
 		String query = "SELECT delivery_info_id FROM pisi.orders WHERE user_id =?;";
 		ResultSet rs = null;
-		ArrayList<DeliveryInfo> listDeliveries = null;
+
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			stmt.setLong(1, userId);
 			rs = stmt.executeQuery();
-			listDeliveries = new ArrayList<>();
+			HashSet<DeliveryInfo> setDeliveries = new HashSet<DeliveryInfo>();
 			while (rs.next()) {
-				listDeliveries.add(this.getDeliveryInfo(rs.getInt("delivery_info_id")));
+				setDeliveries.add(this.getDeliveryInfo(rs.getInt("delivery_info_id")));
 			}
-			return listDeliveries;
+			return new ArrayList<>(setDeliveries);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -67,8 +69,8 @@ public class DeliveryInfoDao {
 
 	public DeliveryInfo getDeliveryInfo(long deliveryInfoId) throws SQLException {
 
-		Connection con = DBManager.getInstance().getConnection();
-		String query = "SELECT *  FROM pisi.deliveries_info_id JOIN pisi.cities AS c USING (city_id) WHERE delivery_info_id=?;";
+		Connection con = DBmanager.getConnection();
+		String query = "SELECT *  FROM pisi.deliveries JOIN pisi.cities AS c USING (city_id) WHERE delivery_info_id=?;";
 		ResultSet rs = null;
 
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
@@ -89,7 +91,7 @@ public class DeliveryInfoDao {
 	}
 
 	public int retrieveCityId(String cityName) throws SQLException {
-		Connection con = DBManager.getInstance().getConnection();
+		Connection con = DBmanager.getConnection();
 		String query = "SELECT city_id as id FROM pisi.cities WHERE city_name = ?";
 		ResultSet rs = null;
 
