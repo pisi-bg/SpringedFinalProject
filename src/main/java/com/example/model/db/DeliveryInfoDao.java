@@ -59,6 +59,7 @@ public class DeliveryInfoDao {
 			}
 			return new ArrayList<>(setDeliveries);
 		} catch (SQLException e) {
+			//throw custom exception
 			throw e;
 		} finally {
 			if (rs != null) {

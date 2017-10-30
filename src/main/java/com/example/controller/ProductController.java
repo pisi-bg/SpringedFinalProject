@@ -12,12 +12,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.example.model.db.ProductDao;
 import com.example.model.db.RatingDao;
@@ -42,6 +45,7 @@ public class ProductController {
 	public String productsGetAnimal(HttpServletRequest request, HttpSession s,
 			@PathVariable("animalId") Integer animalId) {
 		try {
+			
 			List<Product> products = pd.getProductsByAnimal(animalId);
 			s.setAttribute("products", products);
 			s.setAttribute("animalId", animalId);
@@ -217,7 +221,6 @@ public class ProductController {
 		if (!order.equals("asc") && !order.equals("desc")) {
 			return "error1";
 		}
-
 		Collection<Product> products = (Collection) sess.getAttribute("products");
 		if (products == null) {
 			return "error2";
@@ -253,7 +256,7 @@ public class ProductController {
 		if (!order.equals("asc") && !order.equals("desc")) {
 			return "error1";
 		}
-		Collection products = (Collection) sess.getAttribute("products");
+		Collection<Product> products = (Collection) sess.getAttribute("products");
 		if (products == null) {
 			return "error2";
 		}
@@ -279,14 +282,19 @@ public class ProductController {
 		sess.setAttribute("products", ordered);
 		return "products";
 	}
-
-	@RequestMapping(value = "/search")
-	public String searchProduct(HttpServletRequest req, HttpSession sess) {
-		if (req.getParameter("word") == null || sess.getAttribute("products") == null) {
-			return "index";
-		}
+	
+	
+	@RequestMapping(value="/search")
+	public String searchProduct(HttpServletRequest req, HttpSession sess){
+		
+		if(req.getParameter("word") == null){						
+			return "index"; // or to the previous page
+		}				
+		
 		String[] words = req.getParameter("word").split(" ");
-		Collection<Product> products = null;
+				
+		Collection<Product> products = null;				
+		
 
 		try {
 			products = pd.searchProductByWord(words);
@@ -298,10 +306,5 @@ public class ProductController {
 		return "products";
 	}
 
-	@RequestMapping(value = "/test")
-	public String testEmail() {
-		EmailSender.toPromotion();
-		return "index";
-	}
-
+	
 }

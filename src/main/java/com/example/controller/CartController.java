@@ -121,9 +121,7 @@ public class CartController {
 		}
 		ArrayList<String> cities = null;
 		ArrayList<DeliveryInfo> deliveries = null;
-
 		String idx = request.getParameter("idxDeliveryInfo");
-
 		try {
 			cities = orderDao.getCitiesNames();
 			deliveries = deliveryInfoDao.getListDeliveryInfosForUser(user.getId());

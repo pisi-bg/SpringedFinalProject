@@ -74,7 +74,7 @@ public class UserController {
 			if (ud.userExist(user)) {
 				user = ud.getUser(email);
 				ses.setAttribute("user", user);
-				ses.setMaxInactiveInterval(-1);
+				ses.setMaxInactiveInterval(-1); // infinity session
 				// TODO update session to remain logged in and
 				return "products";
 
@@ -329,7 +329,8 @@ public class UserController {
 	@RequestMapping(value = "/password", method = RequestMethod.POST)
 	public String sendPassword(HttpServletRequest req) {
 		String email = req.getParameter("email");
-		if (email == null) {
+
+		if (email == null || !UserDao.isValidEmailAddress(email)) {
 			return "error1";
 		}
 		try {

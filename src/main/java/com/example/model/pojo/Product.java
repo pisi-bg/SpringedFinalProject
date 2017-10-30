@@ -1,8 +1,12 @@
 package com.example.model.pojo;
 
+import java.awt.print.PageFormat;
+import java.awt.print.Pageable;
+import java.awt.print.Printable;
 import java.io.Serializable;
+import java.util.List;
 
-public class Product implements Serializable {
+public class Product implements Serializable, Pageable {
 
 	private long id;
 	private String name;
@@ -205,6 +209,34 @@ public class Product implements Serializable {
 		if (countRating >= 0) {
 			this.countRating = countRating;
 		}
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@Override
+	public int getNumberOfPages() {				
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public PageFormat getPageFormat(int pageIndex) throws IndexOutOfBoundsException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Printable getPrintable(int pageIndex) throws IndexOutOfBoundsException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -22,10 +22,10 @@
 	<br>
 	<div id="item">
 		<h1 style="font-size: 24px;">${ productCurrent.name }</h1>
-		<br /> <img src="<c:url value='D:/images/products/${ productCurrent.image }'/>" alt="oops no image here"
-			width="60%" height="auto" /><br /> <span> <fmt:formatNumber
-				type="number" pattern="#####.##" value="${ productCurrent.price }" />
-			лв.
+
+		<br /> <img src="<c:url value='D:/images/products/${ productCurrent.image }'/>" alt="oops no image here" width="60%" height="auto" /><br />
+		 <span>
+			 <fmt:formatNumber type="number" pattern="#####.##" value="${ productCurrent.price }" /> лв.
 		</span>
 	</div>
 	<div class="description">
