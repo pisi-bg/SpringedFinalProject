@@ -117,7 +117,35 @@
 
 		</c:if>
 
-	
+			<c:if test="${sesstionScope.comments == null }">
+				<p>Няма коментари. Бъди първият.</p>
+			</c:if>
+
+		<c:if test="${sessionScope.comments  != null}">
+			
+			<c:if test="${!sessionScope.comments.isEmpty() }">
+				<table border="1">
+							<thead class="">
+								<tr>
+									<th class="cart_product first_item">Потребител</th>
+									<th class="cart_description item">Рейтинг</th>											
+									<th class="cart_quantity item text-center">Коментар</th>							
+									<th class="cart_quantity item text-center">Дата</th>
+								</tr>
+							</thead>						
+							<tbody>			
+								<c:forEach items="${ sessionScope.comments }" var="com">
+									<tr>
+										<td>${ com.userEmail }</td>
+										<td>${com.rating }</td>
+										<td>${com.comment }</td>
+										<td>${com.dateTime }</td>																									
+									</tr>
+								</c:forEach>	
+							</tbody>
+						</table>
+			</c:if>
+		</c:if>
 
 </body>
 </html>

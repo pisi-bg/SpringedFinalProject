@@ -1,12 +1,16 @@
 package com.example.controller;
 
 
+import java.util.List;
+import java.util.Random;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
+import org.springframework.beans.support.SortDefinition;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,14 +30,25 @@ public class TestPaginationController {
 	
 	@RequestMapping(value={"/{page}" , "/{text}",""}, method = RequestMethod.GET )
 	public ModelAndView handleRequest(HttpSession sess, HttpServletRequest request, HttpServletResponse response, @PathVariable Integer page) throws Exception {
-		PagedListHolder<Product> productList;
-				
-		if(sess.getAttribute("paging") == null){
-			productList = new PagedListHolder(pd.getProductsByAnimal(3));
-		}else {
-			productList = (PagedListHolder<Product>) sess.getAttribute("paging");
+		List<Product> products = pd.getProductsByAnimal(2);
+		if(new Random().nextBoolean()){
+			products = pd.getProductsByAnimal(3);
 		}
-
+		
+		sess.setAttribute("products", products);
+		
+		PagedListHolder<Product> productList = (PagedListHolder<Product>) sess.getAttribute("paging");	
+		
+		if(productList != null && !productList.getSource().equals(sess.getAttribute("products"))){
+			productList.setSource((List<Product>)sess.getAttribute("products"));
+		}
+		
+		if(productList == null){
+			productList = new PagedListHolder<Product>(products);
+		}
+//		else {
+//			productList = (PagedListHolder<Product>) sess.getAttribute("paging");
+//		}
 		
 		 productList.setPageSize(5);
 		

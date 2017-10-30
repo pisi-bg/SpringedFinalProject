@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class Rating {
 
 	private long productId;
-	private long userId;
+	private String userEmail;
 	private double rating;
 	private String comment;
 	private LocalDateTime dateTime;
@@ -15,8 +15,8 @@ public class Rating {
 		return productId;
 	}
 
-	public long getUserId() {
-		return userId;
+	public String getUserEmail() {
+		return userEmail;
 	}
 
 	public double getRating() {
@@ -33,24 +33,29 @@ public class Rating {
 
 	// setters
 
-	public void setProductId(long productId) {
+	public Rating setProductId(long productId) {
 		this.productId = productId;
+		return this;
 	}
 
-	public void setUserId(long userId) {
-		this.userId = userId;
+	public Rating setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
+		return this;
 	}
 
-	public void setRating(double rating) {
+	public Rating setRating(double rating) {
 		this.rating = rating;
+		return this;
 	}
 
-	public void setComment(String comment) {
+	public Rating setComment(String comment) {
 		this.comment = comment;
+		return this;
 	}
 
-	public void setDateTime(LocalDateTime dateTime) {
+	public Rating setDateTime(LocalDateTime dateTime) {
 		this.dateTime = dateTime;
+		return this;
 	}
 
 }

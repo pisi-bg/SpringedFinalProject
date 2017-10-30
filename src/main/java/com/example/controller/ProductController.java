@@ -92,13 +92,24 @@ public class ProductController {
 
 	// /product/productdetail/productId/${pro.id}
 	@RequestMapping(value = "/productdetail/productId/{id}", method = RequestMethod.GET)
-	public String productDetailGet(HttpServletRequest request, HttpSession s, @PathVariable("id") Integer productId,
-			Model m) {
-
+	public String productDetailGet(HttpServletRequest request, HttpSession s, @PathVariable("id") Integer productId,Model m) {
 		Product productCurrent = null;
+		TreeSet<Rating> comments = new TreeSet<>(new Comparator<Rating>() {
+
+			@Override
+			public int compare(Rating o1, Rating o2) {
+				if(o1.getDateTime().equals(o2.getDateTime())){
+					
+				}
+				return o2.getDateTime().compareTo(o1.getDateTime());
+			}
+		});
+		
 		try {
 			productCurrent = pd.getProduct(productId);
-			s.setAttribute("productCurrent", productCurrent);
+			s.setAttribute("productCurrent", productCurrent);			
+			comments.addAll(rd.getProductRatingAndComment(productId)) ;
+			s.setAttribute("comments", comments);	
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -112,7 +123,7 @@ public class ProductController {
 			isFavorite = u.hasInFavorites(productCurrent);
 			Double ratingFromUser = null;
 			try {
-				ratingFromUser = rd.productHasRatingFromUser(productCurrent.getId(), u.getId());
+				ratingFromUser = rd.productHasRatingFromUser(productId, u.getId());			
 			} catch (SQLException e) {
 				return "error";
 			}
@@ -161,7 +172,7 @@ public class ProductController {
 			return "error";
 		}
 		rating.setProductId(pro.getId());
-		rating.setUserId(u.getId());
+		rating.setUserEmail(u.getEmail());
 		rating.setDateTime(LocalDateTime.now());
 		try {
 			rd.addProductRating(rating);

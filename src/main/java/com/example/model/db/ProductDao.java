@@ -24,7 +24,6 @@ public class ProductDao {
 	@Autowired
 	RatingDao rd;
 
-	private static ProductDao instance;
 
 	// returns list of products for specific animal category type
 	public ArrayList<Product> getProductsByAnimal(int animalId) throws SQLException {
@@ -146,10 +145,8 @@ public class ProductDao {
 			stmt.setLong(1, productId);
 			rs = stmt.executeQuery();
 			if (rs.next()) {
-				Double rating = new Double(rs.getDouble("rating"));
-				if (rating.equals(null)) {
-					rating = new Double(0);
-				}
+				double rating = rs.getDouble("rating");
+				
 				Product p = new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
 						rs.getInt("price"), rs.getString("animal"), rs.getString("category"), rs.getString("brand"),
 						rs.getString("brandlogo"), rating, rs.getInt("unit"), rs.getString("image"),

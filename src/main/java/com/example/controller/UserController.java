@@ -116,7 +116,8 @@ public class UserController {
 
 	@RequestMapping(value = "/profile", method = RequestMethod.GET)
 	public String viewProfile(HttpSession session) {
-
+		session.removeAttribute("orders");
+		
 		User u = (User) session.getAttribute("user");
 		if (u == null) {
 			return "redirect:/user/login";
