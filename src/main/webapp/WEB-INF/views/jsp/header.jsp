@@ -70,7 +70,7 @@
 			
 						
 			&nbsp;&nbsp;&nbsp;&nbsp;
-			<form action="${pageContext.request.contextPath}/products/search" method="post" style="display:inline;">
+			<form action="${pageContext.request.contextPath}/products/search/0" method="post" style="display:inline;">
 				<input type="text" name="word">
 				<!-- <input type="submit" value="Търси"> -->
 				<input type="image" name="submit"	src="<c:url value='/img/buttons/search2.png'/>" alt="ТЪРСИ" title="търси" width="35" height="auto">	
