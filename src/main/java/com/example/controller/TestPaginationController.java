@@ -1,7 +1,9 @@
 package com.example.controller;
 
 
+import java.lang.annotation.Repeatable;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +30,7 @@ public class TestPaginationController {
 	@Autowired
 	ProductDao pd;
 	
-	@RequestMapping(value={"/{page}" , "/{text}",""}, method = RequestMethod.GET )
+	@RequestMapping(value={"/{page}" , "/{text}"}, method = RequestMethod.GET )
 	public ModelAndView handleRequest(HttpSession sess, HttpServletRequest request, HttpServletResponse response, @PathVariable Integer page) throws Exception {
 		List<Product> products = pd.getProductsByAnimal(2);
 		if(new Random().nextBoolean()){
@@ -69,7 +71,6 @@ public class TestPaginationController {
 		if(page != null){
 			if(page >= 0){
 				productList.setPage(page);
-				System.out.println(productList.toString());
 			}else {
 				if(page == -1){
 					productList.nextPage();

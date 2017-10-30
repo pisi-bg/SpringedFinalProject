@@ -27,7 +27,7 @@
 		&nbsp;<a href="${pageContext.request.contextPath}/products/sort/price/${desc}" class="nav_user" style="text-decoration: none">Низ.</a>&nbsp;
 		 	
 			<table border="1">
-				<c:forEach items="${ sessionScope.products }" var="pro">
+				<c:forEach items="${ productPage.getPageList() }" var="pro">
 
 					<tr>					
 						<td><a href="<c:url value='/products/productdetail/productId/${pro.id}'/>">${pro.name }</a></td>
@@ -45,6 +45,32 @@
 
 				</c:forEach>
 			</table>
+				
+				 <div>
+		    <span style="float:left;">
+			    <c:choose>
+			        <c:when test="${productPage.firstPage}"></c:when>
+			        <c:otherwise><a href="${pageContext.request.contextPath}/${sessionScope.url }/-2">Prev</a></c:otherwise>
+			    </c:choose>
+		    </span>
+		    <span>
+			    <c:forEach begin="0" end="${productPage.pageCount-1}" varStatus="loop">
+				    &nbsp;
+				    <c:choose>
+				        <c:when test="${loop.index == productPage.page}">${loop.index+1}</c:when>
+				        <c:otherwise><a href="${pageContext.request.contextPath}/${sessionScope.url }/${loop.index}">${loop.index+1}</a></c:otherwise>
+				    </c:choose>
+			    &nbsp;
+			    </c:forEach>
+		    </span>
+		    <span>
+			    <c:choose>
+			        <c:when test="${productPage.lastPage}"></c:when>
+			        <c:otherwise><a href="${pageContext.request.contextPath}/${sessionScope.url }/-1">Next</a></c:otherwise>
+			    </c:choose>
+		    </span>
+		   </div>
+				
 				
 	</c:if>
 

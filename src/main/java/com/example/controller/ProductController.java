@@ -6,13 +6,16 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PagedListHolder;
+import org.springframework.beans.support.SortDefinition;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -34,6 +37,9 @@ import com.example.utils.EmailSender;
 @RequestMapping(value = "/products")
 public class ProductController {
 
+	
+	
+	private static final int ITEMS_PER_PAGE = 5;
 	@Autowired
 	ProductDao pd;
 	@Autowired
@@ -41,28 +47,94 @@ public class ProductController {
 	@Autowired
 	UserDao ud;
 
-	@RequestMapping(value = "/animal/{animalId}", method = RequestMethod.GET)
-	public String productsGetAnimal(HttpServletRequest request, HttpSession s,
-			@PathVariable("animalId") Integer animalId) {
+	@RequestMapping(value = "/animal/{animalId}/{page}", method = RequestMethod.GET)
+	public ModelAndView productsGetAnimal(HttpServletRequest request, HttpSession sess,
+											@PathVariable("animalId") Integer animalId,
+											@PathVariable("page") Integer page) {
+		
+		int paging = page == null ? 0 : page; // safety first
+		
+		
+//		MutableSortDefinition sort = new MutableSortDefinition("price", true, true);
+//		productList.setSort(sort);
+//		productList.resort();
+		
+		
+		PagedListHolder<Product> productList = (PagedListHolder<Product>)sess.getAttribute("productPage");	
+		
+		String url = "products/animal/" + animalId ;
 		try {
-			
 			List<Product> products = pd.getProductsByAnimal(animalId);
-			s.setAttribute("products", products);
-			s.setAttribute("animalId", animalId);
+			if(productList != null){
+				if(!productList.getSource().equals(products)){
+					productList.setSource(products);
+				}
+			}else {
+				productList = new PagedListHolder<>(products);
+			}			
+			productList.setPageSize(ITEMS_PER_PAGE);						
+			if(paging >= 0){
+				productList.setPage(paging);
+			}else {
+				if(paging == -1){
+					productList.nextPage();
+				}
+				if(paging == -2){
+					productList.previousPage();
+				}
+				if(paging < -2){
+					return new ModelAndView("Error", "message", "Please don't type in URL by yourself");
+				}
+			}
+			sess.setAttribute("url", url);			
+			sess.setAttribute("productPage", productList);
+			sess.setAttribute("products", products);
+			sess.setAttribute("animalId", animalId);
 		} catch (SQLException e) {
 			// TODO redirect to error page and re-throw e;
 			e.printStackTrace();
 		}
-		return "products";
+		return new ModelAndView("products","productPage", productList);
+		
 	}
 
-	@RequestMapping(value = "/animal/{animalId}/category/{catId}", method = RequestMethod.GET)
-	public String productsGetSubCategory(HttpServletRequest request, HttpSession s,
-			@PathVariable("animalId") Integer animalId, @PathVariable("catId") Integer categoryId) {
-
-		try {
+	@RequestMapping(value = "/animal/{animalId}/category/{catId}/{page}", method = RequestMethod.GET)
+	public ModelAndView productsGetSubCategory(HttpServletRequest request, HttpSession sess,
+										@PathVariable("animalId") Integer animalId,
+										@PathVariable("catId") Integer categoryId,
+										@PathVariable("page") Integer page) {
+		
+		int paging = page == null ? 0 : page;
+		
+		PagedListHolder<Product> productList = (PagedListHolder<Product>)sess.getAttribute("productPage");			
+		String url = "products/animal/" + animalId +"/category/"+categoryId ;
+		
+		try {			
 			List<Product> products = pd.getProductsByAnimalAndParentCategory(animalId, categoryId);
-			s.setAttribute("products", products);
+			if(productList != null){
+				if(!productList.getSource().equals(products)){
+					productList.setSource(products);
+				}
+			}else {
+				productList = new PagedListHolder<Product>(products);
+			}
+			productList.setPageSize(ITEMS_PER_PAGE);						
+			if(paging >= 0){
+				productList.setPage(paging);
+			}else {
+				if(paging == -1){
+					productList.nextPage();
+				}
+				if(paging == -2){
+					productList.previousPage();
+				}
+				if(paging < -2){
+					return new ModelAndView("Error", "message", "Please don't type in URL by yourself");
+				}
+			}
+			sess.setAttribute("url", url);			
+			sess.setAttribute("productPage", productList);
+			sess.setAttribute("products", products);
 			request.setAttribute("catId", categoryId);
 			// in request so every time you change animal category
 			// sub-categories will be not remembered
@@ -70,23 +142,55 @@ public class ProductController {
 			// TODO re-direct to error page and re-throw e;
 			e.printStackTrace();
 		}
-		return "products";
+		return new ModelAndView("products","productPage", productList);
 
 	}
 
-	@RequestMapping(value = "/subcategory/animal/{animalId}/catId/{catId}/subcatId/{subCatId}", method = RequestMethod.GET)
-	public String productsGetCategory(HttpServletRequest request, HttpSession s,
-			@PathVariable("animalId") Integer animalId, @PathVariable("catId") Integer categoryId,
-			@PathVariable("subCatId") Integer subCategoryId) {
+	@RequestMapping(value = "/subcategory/animal/{animalId}/catId/{catId}/subcatId/{subCatId}/{page}", method = RequestMethod.GET)
+	public ModelAndView productsGetCategory(HttpServletRequest request, HttpSession sess,
+									@PathVariable("animalId") Integer animalId,
+									@PathVariable("catId") Integer categoryId,
+									@PathVariable("subCatId") Integer subCategoryId,
+									@PathVariable("page") Integer page){
+		int paging = page == null ? 0 : page;
+		
+		PagedListHolder<Product> productList = (PagedListHolder<Product>)sess.getAttribute("productPage");			
+		String url = "products/animal/" + animalId +"/category/"+categoryId + "/subcatId/" + subCategoryId;
+		
 		try {
 			List<Product> products = pd.getProductsByAnimalAndSubCategory(animalId, subCategoryId);
+			
+			if(productList != null){
+				if(!productList.getSource().equals(products)){
+					productList.setSource(products);
+				}
+			}else {
+				productList = new PagedListHolder<Product>(products);
+			}
+			productList.setPageSize(ITEMS_PER_PAGE);						
+			if(paging >= 0){
+				productList.setPage(paging);
+			}else {
+				if(paging == -1){
+					productList.nextPage();
+				}
+				if(paging == -2){
+					productList.previousPage();
+				}
+				if(paging < -2){
+					return new ModelAndView("Error", "message", "Please don't type in URL by yourself");
+				}
+			}
+			
+			sess.setAttribute("url", url);			
+			sess.setAttribute("productPage", productList);
 			request.getSession().setAttribute("products", products);
 			request.setAttribute("subCatId", categoryId);
 		} catch (SQLException e) {
 			// TODO redirect to error page and re-throw e;
 			e.printStackTrace();
 		}
-		return "products";
+		return new ModelAndView("products","productPage", productList);
 
 	}
 

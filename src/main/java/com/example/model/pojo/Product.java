@@ -1,6 +1,9 @@
 package com.example.model.pojo;
 
 
+import java.awt.print.PageFormat;
+import java.awt.print.Pageable;
+import java.awt.print.Printable;
 import java.io.Serializable;
 
 public class Product implements Serializable {
@@ -211,6 +214,7 @@ public class Product implements Serializable {
 			this.countRating = countRating;
 		}
 	}
+
 
 	
 	

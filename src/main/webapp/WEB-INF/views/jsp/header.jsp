@@ -89,12 +89,12 @@
 		<nav>
 		<h3 style="display: inline-block;">
 					    
-				&nbsp; <a href="<c:url value='/products/animal/2'/>" title="Cats" class="products" style="text-decoration: none">КОТКИ</a>
-				&nbsp; <a href="<c:url value='/products/animal/3'/>" title="Dogs" class="products" style="text-decoration: none">КУЧЕТА</a>
-				&nbsp; <a href="<c:url value='/products/animal/4'/>" title="LittleFellows" class="products" style="text-decoration: none">МАЛКИ ЖИВОТНИ</a>
-				&nbsp; <a href="<c:url value='/products/animal/1'/>" title="Aquaristics" class="products" style="text-decoration: none">АКВАРИСТИКА</a> 
-				&nbsp; <a href="<c:url value='/products/animal/5'/>" title="Birds" class="products" style="text-decoration: none">ПТИЦИ</a> 
-				&nbsp; <a href="<c:url value='/products/animal/6'/>" title="Reptiles" class="products" style="text-decoration: none">ТЕРАРИСТИКА</a> &nbsp;
+				&nbsp; <a href="<c:url value='/products/animal/2/0'/>" title="Cats" class="products" style="text-decoration: none">КОТКИ</a>
+				&nbsp; <a href="<c:url value='/products/animal/3/0'/>" title="Dogs" class="products" style="text-decoration: none">КУЧЕТА</a>
+				&nbsp; <a href="<c:url value='/products/animal/4/0'/>" title="LittleFellows" class="products" style="text-decoration: none">МАЛКИ ЖИВОТНИ</a>
+				&nbsp; <a href="<c:url value='/products/animal/1/0'/>" title="Aquaristics" class="products" style="text-decoration: none">АКВАРИСТИКА</a> 
+				&nbsp; <a href="<c:url value='/products/animal/5/0'/>" title="Birds" class="products" style="text-decoration: none">ПТИЦИ</a> 
+				&nbsp; <a href="<c:url value='/products/animal/6/0'/>" title="Reptiles" class="products" style="text-decoration: none">ТЕРАРИСТИКА</a> &nbsp;
 		</h3>
 		</nav>
 	</div>
