@@ -3,35 +3,52 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="f" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<!--!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"-->
-<!DOCTYPE html SYSTEM "about:legacy-compat">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Product</title>
-<link rel="stylesheet" type="text/css" href="styles.css">
-</head>
-<body>
 
-	<jsp:include page="header.jsp"></jsp:include><br>
-	<br>
+
+	<jsp:include page="header.jsp"></jsp:include>
 
 	<c:if test="${ sessionScope.products != null } ">
 		<jsp:include page="categories.jsp"></jsp:include>
 	</c:if>
-	<br>
+	
 	<div id="item">
-		<h1 style="font-size: 24px;">${ productCurrent.name }</h1>
+		<h1>${ productCurrent.name }</h1>
 
-		<br /> <img src="<c:url value='D:/images/products/${ productCurrent.image }'/>" alt="oops no image here" width="60%" height="auto" /><br />
-		 <span>
-			 <fmt:formatNumber type="number" pattern="#####.##" value="${ productCurrent.price }" /> лв.
-		</span>
+		<img src="<c:url value='D:/images/products/${ productCurrent.image }'/>" alt="${ productCurrent.description }" /><br />
+				
+			<c:if test="${ productCurrent.discount == 0 }">
+				<ul>
+					<li class="price regular-price">
+						<span> 
+							<fmt:formatNumber type="number" pattern="#####.##" value="${ productCurrent.price }" />лв.
+						</span>
+					</li>
+				</ul>
+			</c:if>
+			<c:if test="${  productCurrent.discount != 0 }">								
+					<img src="<c:url value='/img/buttons/sale_piggy.png'/>" alt="SALE" title="SALE" width="auto" height="40" align="left">																	
+					<ul>
+						
+						<li class="price regular-price">
+							
+							<del>
+								<fmt:formatNumber type="number" pattern="#####.##" value="${ productCurrent.price }" /> лв.
+							</del>
+							
+						</li>										
+						<li class="price special-price" style="color: maroon">
+							
+							<fmt:formatNumber type="number" pattern="#####.##" value="${productCurrent.calcDiscountedPrice() }" /> лв.
+						
+						</li>
+					</ul>								
+			</c:if>
+		
 	</div>
 	<div class="description">
 		<label>Описание:</label>
 		<p>${ productCurrent.description }</p>
-		<br>
+		
 	
 	</div>
 	<c:if test="${!sessionScope.user.isAdmin() }">
@@ -42,8 +59,9 @@
 						<fmt:formatNumber	type="number" pattern="#####.##" value="${ productCurrent.rating }" />				
 				<img src="<c:url value='/img/buttons/people.png'/>"
 						alt="Voted:" title="voted" width="2%" height="auto">
-				 ${ productCurrent.countRating }
-				 
+						
+						<fmt:formatNumber type="number" pattern="#####.##" value="${ productCurrent.countRating }" /> 
+								 
 				 	
 				<c:if test="${( (sessionScope.user == null) || (sessionScope.user != null && (!sessionScope.isFavorite)))}">
 					<a href="<c:url value='/products/addFavorite'/>">
@@ -84,7 +102,7 @@
 			
 				
 			<c:if test="${sessionScope.user != null &&( sessionScope.ratingFromUser != null && sessionScope.ratingFromUser !=-1)}">
-				Your rate:<fmt:formatNumber	type="number" pattern="#####.##" value=" ${ sessionScope.ratingFromUser}" />		   
+				Your rate: ${ sessionScope.ratingFromUser}	   
 				
 				<img src="<c:url value='/img/buttons/has_rating.png'/>"
 				alt="your rating" title="RatingAdded" width="2%" height="auto">

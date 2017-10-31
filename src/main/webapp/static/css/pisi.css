@@ -1,0 +1,319 @@
+
+/* BASIC STYLES */
+
+@font-face {
+	font-family: "Comfortaa";	
+	src: url("/css/fonts/Comfortaa-Bold.ttf") format("truetype"),	
+}
+body {
+	font-family: 'Comfortaa';
+}
+
+a, button{
+	-webkit-transition: 0.2s all;
+	transition: 0.2s all;
+}
+a:hover,
+button:hover{
+	text-decoration: none;
+}
+.no-padding{
+	padding-left: 0px;
+	padding-right: 0px;
+}
+img{
+	max-width: 100%;
+	height: auto;
+}
+ul{
+	list-style: none;
+	padding-left: 0px;
+	margin-left: 0px;
+}
+
+
+/* BUTTONS */
+.pisi-pink{
+			background-color: #bc4842;
+}
+		
+.pisi-button_default{
+			background-color: #bc4842;
+			color: #fff;
+			font-size: 15px;
+			text-transform: uppercase;
+			padding: 6px 12px;
+			margin: 15px 0px;
+}
+.pisi-button_default:hover,
+.pisi-button_default:focus{
+			background-color: #222;
+			color: #fff;
+			text-decoration: none;
+}
+.pisi-button_round{
+			background-color: #bc4842;
+			color: #fff;
+			font-size: 15px;
+			text-transform: uppercase;
+			padding: 9px 18px;
+			line-height: 30px;
+			height: 30px;
+			border-radius: 15px;
+}
+.pisi-button_round:hover,
+.pisi-button_round:focus{
+			background-color: #222;
+			color: #fff;
+			text-decoration: none;
+}
+.pisi-button_yellow{
+			background-color: #d99232;
+			color: #440008;
+			font-size: 15px;
+			text-transform: uppercase;
+			padding: 9px 18px;
+			line-height: 30px;
+			height: 30px;
+			border-radius: 15px;
+}
+.pisi-button_yellow:hover,
+.pisi-button_yellow:focus{
+			background-color: #222;
+			color: #fff;
+			text-decoration: none;			
+}
+
+.pisi-button_dark{
+			background-color: #440008;
+			color: #fff;
+			font-size: 15px;
+			text-transform: uppercase;
+			padding: 6px 12px;
+			margin: 15px 0px;
+}
+.pisi-button_dark:hover,
+.pisi-button_dark:focus{
+			background-color: #222;
+			color: #fff;
+			text-decoration: none;
+}
+
+
+/* custom file input button */
+
+/*
+	label.myLabel input[type="file"] {
+		position: fixed;
+		top: -1000px;
+	}
+	.pisi-input_file {
+		border: 2px solid #AAA;
+		border-radius: 4px;
+		padding: 2px 5px;
+		margin: 2px;
+		background: #DDD;
+		display: inline-block;
+	}
+	.pisi-input_file:hover {
+		background: #CCC;
+	}
+	.pisi-input_file:active {
+		background: #CCF;
+	}
+	.pisi-input_file:invalid + span {
+		color: #A44;
+	}
+	.pisi-input_file:valid + span {
+		color: #4A4;
+	}
+*/
+
+/* ERRORS */
+
+
+
+/* HEADINGS */
+h1{
+	font-size: 28px;
+	text-transform: uppercase;
+	text-align: center;
+	font-weight: bold;
+}
+h3{
+	font-size: 18px;
+	text-transform: uppercase;
+	text-align: center;
+	font-weight: bold;
+}
+h3 left{	
+	text-align: left;	
+}
+.has-error{
+	color:red;
+}
+
+
+/* HEADER */
+.header {
+   // position: fixed;
+	//overflow: hidden;
+	// display:block;
+
+}
+
+
+/* NAV - UPPER */
+
+.pisi-nav_upper{
+	//margin-bottom: 30px;
+	background-color: #f9f9f9;
+}
+
+.pisi-nav_upper nav{
+	overflow: hidden;
+}
+
+.pisi-nav_upper nav a{
+    float: right;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 24px;
+    padding: 12px 22px 12px;
+    color: #222;
+    text-transform: uppercase;
+}
+
+.pisi-nav_upper nav a:hover{
+	color: #bc4842;
+}
+
+/* NAV - BRAND */
+.pisi-brand{
+	overflow: hidden;
+}
+.pisi-brand_logo{
+	margin: 30px 0px;
+}
+.pisi-brand_logo .pisi-title{
+	font-size: 30px;
+	float: left;
+	line-height: 120px;
+	text-transform:uppercase;
+	font-weight: bold;
+	color: #222;
+}
+.pisi-brand_logo img{
+	height: 120px;
+	width: 120px;
+	float: left;
+	margin-right: 10px;
+}
+
+.pisi-brand_search{
+
+}
+.pisi-brand_search form{
+	display: block;
+	margin-top: 75px;
+	text-align: center;
+	float: right;
+}
+.pisi-brand_search form input[type="text"]{
+	height: 30px;
+	border: 1px;
+	/*solid: #d9d9d9;*/
+	line-height: 30px;
+	float: left;
+	;
+}
+/*
+.pisi-brand_search .search-rounded {
+	background:  url("/img/rounded_text_input.png") no-repeat left top;
+	padding: 8px;
+	float: left;
+}*/
+.pisi-brand_search form input[type="image"]{
+	height: 30px;
+	margin-left: 10px;
+	float: left;
+}
+.pisi-brand_cart{
+
+}
+.pisi-brand_cart img{
+	height: 60px;
+	width: auto;
+	margin-top: 60px;
+}
+
+.pisi-nav_lower{
+	//overflow: hidden;
+	background-color: #40020a;	
+	position: fixed;
+}
+.pisi-nav_lower nav{
+
+}
+.pisi-nav_lower nav a{
+	font-size: 18px;
+    line-height: 24px;
+    padding: 21px 30px 21px;
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+    //overflow: hidden;
+    display:block;
+    float: left;
+    letter-spacing: 1px;
+    position: relative;
+}
+.pisi-nav_lower nav a:hover{
+	color: rgba(255,255,255,1);
+}
+.pisi-nav_lower nav a ul{
+	opacity: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 80px;
+	background-color: green;
+	-webkit-transition: 0.3s all;
+	transition: 0.3s all;
+}
+.pisi-nav_lower nav a ul.is-visible{
+	opacity: 1;
+	pointer-events: all;
+	position: absolute;
+	top: 50px;
+}
+
+.pisi-grid_products ul li .wrap{
+	background-color: #f9f9f9;
+	padding: 8px;
+	box-shadow: 2px 2px 2px rgba(0,0,0,0.1);
+}
+
+.pisi-grid_products ul li{
+	padding: 5px;
+	margin-top: 15px;
+	
+}
+.pisi-grid_products ul li h3{
+	margin: 15px 0px 15px!important;
+	color: #222;
+}
+
+.pisi-grid_products ul li .more-info{
+	overflow: hidden;
+}
+
+.pisi-grid_products ul li .more-info .price{
+	float: left;
+	font-size: 18px;
+	color: #40020a;
+	line-height: 30px;
+	font-weight: bold;
+}
+.pisi-grid_products ul li .more-info a{
+	float: right;
+	margin: 0px;
+}

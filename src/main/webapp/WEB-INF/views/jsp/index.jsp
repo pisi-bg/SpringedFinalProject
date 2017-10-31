@@ -1,13 +1,19 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!--!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"-->
-<!DOCTYPE html SYSTEM "about:legacy-compat">
-<html>
-<head>
-<meta charset="UTF-8">
-<title>PisiBG</title>
-</head>	
+
 	 <jsp:include page="header.jsp"></jsp:include>
+	
+	
+	<div class="pisi-banner">
+		<img src="<c:url value='/img/pisi_bg.jpg'/>" alt="BRAND" title="BRAND" />
+	</div>
+	
+	<div class="pisi-wrap container">
+	
+		<a class="pisi-button_round" href="#">test</a>
+	
+		<h1>test</h1>
+	
+	</div><!-- pisi-wrap -->
+	
 	
 	
 	

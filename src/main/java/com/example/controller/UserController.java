@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.TreeSet;
 
 import javax.servlet.annotation.MultipartConfig;
@@ -200,7 +201,7 @@ public class UserController {
 
 		User user = (User) sess.getAttribute("user");
 
-		if (!user.isAdmin()) {
+		if (user == null || !user.isAdmin()) {
 			return "forward:index";
 		}
 
@@ -221,19 +222,37 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/admin/addProduct", method = RequestMethod.GET)
-	public String addProductForm(Model m) {
+	public String addProductForm(HttpSession sess) {
+		User user = (User) sess.getAttribute("user");
+		if (user == null || !user.isAdmin()) {
+			return "redirect:/user/login";
+		}
+		try {
+			List<String> animals = pd.getAnimals();
+			sess.setAttribute("animals", animals);
+			// mainCategories = pd.getMainCategories();
+			// sess.setAttribute("mainCategories", mainCategories);
+			List<String> subCategories = pd.getCategories();
+			sess.setAttribute("subCategories", subCategories);
+			List<String> brands = pd.getBrands();
+			sess.setAttribute("brands", brands);
+		} catch (SQLException e) {
+			return "error";
+		}
 		return "addproduct";
 	}
 
 	@RequestMapping(value = "/admin/addProduct", method = RequestMethod.POST)
 	public String addProduct(HttpServletResponse resp, HttpServletRequest req,
 			@RequestParam("image") MultipartFile file) {
+
 		try {
 			req.setCharacterEncoding("UTF-8");
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 			return "encodingError";
 		}
+		// check for categories capslock s
 
 		String name = req.getParameter("name");
 		String animal = req.getParameter("animal");
@@ -242,16 +261,12 @@ public class UserController {
 		String description = req.getParameter("description");
 		String brand = req.getParameter("brand");
 		int instock = Integer.parseInt(req.getParameter("instock_count"));
-		int discount = Integer.parseInt(req.getParameter("discount"));
+		int discount = 0;
+		if (req.getParameter("discount") != null) {
+			discount = Integer.parseInt(req.getParameter("discount"));
+		}
 
-		String imageFileName = name.replaceAll(" ", ""); // consider using some
-															// regex to escape
-															// sequence in file
-															// system
-
-		// String[] temp = file.getOriginalFilename().split("."); it doesn't
-		// split it and i don't know why......
-
+		String imageFileName = name.replaceAll(" ", "");
 		String imageType = ".jpg";
 		String imageURL = imageFileName.concat(imageType);
 
@@ -284,8 +299,47 @@ public class UserController {
 			e.printStackTrace();
 			return "error";
 		}
+		// return "index";
+		return "redirect:/user/admin/addProduct";
+	}
 
-		return "index";
+	@RequestMapping(value = "/admin/addBrand", method = RequestMethod.POST)
+	public String addBrand(HttpServletResponse resp, HttpServletRequest req,
+			@RequestParam("newBrandImage") MultipartFile brandFile) {
+
+		try {
+			req.setCharacterEncoding("UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+			return "encodingError";
+		}
+
+		String brandName = req.getParameter("newBrandname");
+
+		String imageFileName = brandName.replaceAll(" ", "");
+		String imageType = ".jpg";
+		String imageURL = imageFileName.concat(imageType);
+
+		File imageFile = new File(WebInitializer.BRAND_LOCATION + imageFileName + imageType);
+
+		try {
+			brandFile.transferTo(imageFile);
+		} catch (IllegalStateException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		try {
+			pd.insertBrand(brandName, imageURL);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return "error";
+		}
+		// return "index";
+		return "redirect:/user/admin/addProduct";
 	}
 
 	@RequestMapping(value = "/admin/quantity", method = RequestMethod.POST)
