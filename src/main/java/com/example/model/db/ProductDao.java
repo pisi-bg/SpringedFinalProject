@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -464,9 +465,9 @@ public class ProductDao {
 			int brandId = getBrandId(p.getBrand());
 
 			// maybe not needed because we in-code all brand in our html
-			if (brandId == -1) {
-				brandId = insertBrand(p.getBrand(), p.getBrandImage());
-			}
+			// if (brandId == -1) {
+			// brandId = insertBrand(p.getBrand(), p.getBrandImage());
+			// }
 
 			int animalId = retrieveAnimalId(p.getAnimal());
 
@@ -571,10 +572,11 @@ public class ProductDao {
 
 	}
 
-	// inserts new brand, used when inserting new product if necessary
+	// inserts new brand used when inserting new product if necessary
+
 	public int insertBrand(String brandName, String brandImgUrl) throws SQLException {
 		Connection con = db.getConnection();
-		String query = "INSERT INTO pisi.brands (brand_name, brand_image) VALUES (?,?)";
+		String query = "INSERT INTO pisi.brands (brand_name, logo_image) VALUES (?,?)";
 		ResultSet rs = null;
 		try {
 			PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -640,6 +642,24 @@ public class ProductDao {
 
 	}
 
+	// this method returns all parent categories
+	public List<String> getMainCategories() throws SQLException {
+		List<String> categories = new ArrayList<>();
+		String query = "SELECT category_name AS name FROM pisi.product_categories WHERE parent_category_id IS NULL";
+		ResultSet rs = null;
+		try (PreparedStatement stmt = db.getConnection().prepareStatement(query)) {
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				categories.add(rs.getString("name"));
+			}
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+		}
+		return categories;
+	}
+
 	// this method returns all sub categories
 	public List<String> getCategories() throws SQLException {
 		List<String> categories = new ArrayList<>();
@@ -655,6 +675,7 @@ public class ProductDao {
 				rs.close();
 			}
 		}
+		Collections.sort(categories);
 		return categories;
 	}
 
@@ -673,6 +694,7 @@ public class ProductDao {
 				rs.close();
 			}
 		}
+		Collections.sort(brands);
 		return brands;
 	}
 
@@ -691,6 +713,7 @@ public class ProductDao {
 				rs.close();
 			}
 		}
+		Collections.sort(animals);
 		return animals;
 	}
 

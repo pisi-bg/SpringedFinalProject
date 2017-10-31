@@ -80,11 +80,8 @@
 									</li>
 								</ul>
 							</c:if>
-							<c:if test="${  product.discount != 0 }">
-								
-									<img src="<c:url value='/img/buttons/sale_piggy.png'/>" alt="SALE" title="SALE" width="auto" height="40" align="left">
-									
-								
+							<c:if test="${  product.discount != 0 }">								
+									<img src="<c:url value='/img/buttons/sale_piggy.png'/>" alt="SALE" title="SALE" width="auto" height="40" align="left">																	
 									<ul style="list-style-type: none">
 										<%-- <li style="color: maroon">	<img src="<c:url value='/img/buttons/sale.png'/>" alt="SALE" title="SALE" width="auto" height="40"></li> --%>
 										<li class="price regular-price">
@@ -93,38 +90,20 @@
 													<fmt:formatNumber type="number" pattern="#####.##" value="${ product.price }" /> лв.
 												</del>
 											</span>
-										</li>
-										<!-- <li style="color: red">нова цена</li> -->
-									
+										</li>										
 										<li class="price special-price" style="color: maroon">
 											<span> 
 												<fmt:formatNumber type="number" pattern="#####.##" value="${product.calcDiscountedPrice() }" /> лв.
 											</span>
 										</li>
-									</ul>
-								
-							</c:if></td>
+									</ul>								
+							</c:if>
+						</td>
 						<td>						
 							<form action="<c:url value='/cart/updateCart'/>" method="get">
-								<input type="hidden" value="${ product.id }" name=productId> 
-								
-								
-								
-						<%-- 		<c:if test="${productEntry.value > product.inStock}">
-										<input type="text" style="width: 35px; height: 35px; font-size: 14px; border: 1px solid #C0C0C0;"
-											name="count" size="2" value="${product.inStock}" maxlength="2">
-								</c:if>
-								
-								<c:if test="${productEntry.value <= product.inStock}"> --%>
-								
-										<input type="text" style="width: 35px; height: 35px; font-size: 14px; border: 1px solid #C0C0C0;"
-											name="count" size="2" value="${productEntry.value}" maxlength="2">
-											
-								<%-- </c:if> --%>
-								
-								
-									
-								 <input type="image" name="submit"
+								<input type="hidden" value="${ product.id }" name=productId> 								
+								<input type="text" style="width: 35px; height: 35px; font-size: 14px; border: 1px solid #C0C0C0;" name="count" size="2" value="${productEntry.value}" maxlength="2">
+								<input type="image" name="submit"
 									src="<c:url value='/img/buttons/update.png'/>" alt="UPDATE" title="Update">									
 							</form>
 							

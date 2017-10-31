@@ -15,6 +15,11 @@
 	<h2>ФОРМА ЗА РЕГИСТРАЦИЯ</h2>
 	<h3>МОЛЯ, ПОПЪЛНЕТЕ ВСИЧКИ ПОЛЕТА:</h3>
 	
+		
+	<c:if test="${sessionScope.regError }">
+		<h3 class="has-error" >Грешка при регистрацията, моля прабвайте с друг мейл.</h3>
+	</c:if>
+	
 	<f:form commandName="user">
 		Име:<f:input path="firstName"/><br>
 		Фамилия:<f:input path="lastName"/><br>

@@ -3,7 +3,9 @@ package com.example.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.TreeSet;
 
 import javax.servlet.annotation.MultipartConfig;
@@ -28,6 +30,8 @@ import com.example.model.pojo.Order;
 import com.example.model.pojo.Product;
 import com.example.model.pojo.User;
 import com.example.utils.EmailSender;
+import com.example.utils.Hasher;
+import com.example.utils.PasswordGenerator;
 
 @Controller
 @MultipartConfig
@@ -56,35 +60,39 @@ public class UserController {
 	public String loginUser(@ModelAttribute User user, HttpServletRequest request, HttpServletResponse response,
 			HttpSession ses) {
 
-		String email = user.getEmail();
-		String password = user.getPassword();
-
+		String email = user.getEmail();		
 		// validate email and password in spring form
-
 		if (!UserDao.isValidEmailAddress(email)) {
 			request.setAttribute("wrongEmail", true);
 			return "login";
 		}
-
-		if (password.isEmpty()) {
-			return "login";
-		}
-
 		try {
+			String password = user.getPassword();
+			password = Hasher.securePassword(password, email);
+			if (password.isEmpty()) {
+				return "login";
+			}
+			user.setPassword(password);
 			if (ud.userExist(user)) {
 				user = ud.getUser(email);
 				ses.setAttribute("user", user);
 				ses.setMaxInactiveInterval(-1); // infinity session
-				// TODO update session to remain logged in and
 				return "products";
-
 			} else {
 				request.setAttribute("wrongUser", true);
 				return "login";
 			}
 		} catch (SQLException e) {
-
-			return "error";
+			//TODO handle it
+			return "SQLerrorInLogin";
+		} catch (NoSuchAlgorithmException e) {
+			// TODO handle it
+			e.printStackTrace();
+			return "errorInAlgorithm";
+		} catch (UnsupportedEncodingException e) {
+			// TODO handle it
+			e.printStackTrace();
+			return "errorInEncoding";
 		}
 
 	}
@@ -98,14 +106,27 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String registerUser(@ModelAttribute User user) {
-
+	public String registerUser(HttpSession sess, @ModelAttribute User user) {		
+		
 		try {
+			String userpass = user.getPassword();
+			userpass = Hasher.securePassword(userpass, user.getEmail());
+			user.setPassword(userpass);
 			ud.insertUser(user);
-		} catch (SQLException e) {
-			// TODO error page
+		} catch (SQLException e) {			
+			sess.setAttribute("regError", true);
+			return "redirect:/user/register";
+		} catch (NoSuchAlgorithmException e) {
+			// TODO handle it
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO handle it
+			e.printStackTrace();
 		}
-		return "forward:index";
+		if(sess.getAttribute("regError") != null){
+			sess.removeAttribute("regError");
+		}
+		return "index";
 	}
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
@@ -159,10 +180,18 @@ public class UserController {
 	public String updateProfile(@ModelAttribute User user, HttpSession sess) {
 		try {
 			user.setId(((User) sess.getAttribute("user")).getId());
+			String hashPassword = Hasher.securePassword(user.getPassword(), user.getEmail());
+			user.setPassword(hashPassword);
 			ud.updateUser(user);
 			sess.setAttribute("user", user);
 		} catch (SQLException e) {
 			// TODO error page
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO handle it
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO handle it
 			e.printStackTrace();
 		}
 		return "redirect:/user/profile";
@@ -201,7 +230,7 @@ public class UserController {
 
 		User user = (User) sess.getAttribute("user");
 
-		if (!user.isAdmin()) {
+		if (user == null || !user.isAdmin()) {
 			return "forward:index";
 		}
 
@@ -222,19 +251,37 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/admin/addProduct", method = RequestMethod.GET)
-	public String addProductForm(Model m) {
+	public String addProductForm(HttpSession sess) {
+		User user = (User) sess.getAttribute("user");
+		if (user == null || !user.isAdmin()) {
+			return "redirect:/user/login";
+		}
+		try {
+			List<String> animals = pd.getAnimals();
+			sess.setAttribute("animals", animals);
+			// mainCategories = pd.getMainCategories();
+			// sess.setAttribute("mainCategories", mainCategories);
+			List<String> subCategories = pd.getCategories();
+			sess.setAttribute("subCategories", subCategories);
+			List<String> brands = pd.getBrands();
+			sess.setAttribute("brands", brands);
+		} catch (SQLException e) {
+			return "error";
+		}
 		return "addproduct";
 	}
 
 	@RequestMapping(value = "/admin/addProduct", method = RequestMethod.POST)
 	public String addProduct(HttpServletResponse resp, HttpServletRequest req,
 			@RequestParam("image") MultipartFile file) {
+
 		try {
 			req.setCharacterEncoding("UTF-8");
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 			return "encodingError";
 		}
+		// check for categories capslock s
 
 		String name = req.getParameter("name");
 		String animal = req.getParameter("animal");
@@ -243,16 +290,12 @@ public class UserController {
 		String description = req.getParameter("description");
 		String brand = req.getParameter("brand");
 		int instock = Integer.parseInt(req.getParameter("instock_count"));
-		int discount = Integer.parseInt(req.getParameter("discount"));
+		int discount = 0;
+		if (req.getParameter("discount") != null) {
+			discount = Integer.parseInt(req.getParameter("discount"));
+		}
 
-		String imageFileName = name.replaceAll(" ", ""); // consider using some
-															// regex to escape
-															// sequence in file
-															// system
-
-		// String[] temp = file.getOriginalFilename().split("."); it doesn't
-		// split it and i don't know why......
-
+		String imageFileName = name.replaceAll(" ", "");
 		String imageType = ".jpg";
 		String imageURL = imageFileName.concat(imageType);
 
@@ -285,8 +328,47 @@ public class UserController {
 			e.printStackTrace();
 			return "error";
 		}
+		// return "index";
+		return "redirect:/user/admin/addProduct";
+	}
 
-		return "index";
+	@RequestMapping(value = "/admin/addBrand", method = RequestMethod.POST)
+	public String addBrand(HttpServletResponse resp, HttpServletRequest req,
+			@RequestParam("newBrandImage") MultipartFile brandFile) {
+
+		try {
+			req.setCharacterEncoding("UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+			return "encodingError";
+		}
+
+		String brandName = req.getParameter("newBrandname");
+
+		String imageFileName = brandName.replaceAll(" ", "");
+		String imageType = ".jpg";
+		String imageURL = imageFileName.concat(imageType);
+
+		File imageFile = new File(WebInitializer.BRAND_LOCATION + imageFileName + imageType);
+
+		try {
+			brandFile.transferTo(imageFile);
+		} catch (IllegalStateException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		try {
+			pd.insertBrand(brandName, imageURL);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return "error";
+		}
+		// return "index";
+		return "redirect:/user/admin/addProduct";
 	}
 
 	@RequestMapping(value = "/admin/quantity", method = RequestMethod.POST)
@@ -328,15 +410,26 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/password", method = RequestMethod.POST)
-	public String sendPassword(HttpServletRequest req) {
+	public String sendPassword(HttpServletRequest req, HttpSession sess) {
 		String email = req.getParameter("email");
-
+		String pass = PasswordGenerator.getRandomPass();
+		
+		
 		if (email == null || !UserDao.isValidEmailAddress(email)) {
 			return "error1";
 		}
-		try {
-			User user = ud.getUser(email);
+		
+		
+		try {			
+			User user = ud.getUser(email);			
+			if(user.getEmail() == null || user.getEmail().isEmpty()){
+				return "error";
+			}			
+			sess.setAttribute("user", user);			
+			user.setPassword(pass);
 			EmailSender.passwordTo(user);
+			this.updateProfile(user, sess); 
+			sess.removeAttribute("user");
 		} catch (SQLException e) {
 			return "error2";
 		}

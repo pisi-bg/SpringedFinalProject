@@ -43,15 +43,15 @@
 		<p> your pal's favorite mall </p>
 	</h1>	
 
-	<c:if test="${ requestScope.wrongUser }"><h1 style ="color: red " align="center"> ГРЕШЕН ПТРЕБИТЕЛ</h1></c:if>
+	<c:if test="${ requestScope.wrongUser }"><h3 class="has-error"> ГРЕШЕН ПOТРЕБИТЕЛ</h3></c:if>
 	
 	
 	<form action="login" method= "POST" style="text-align: center;">
 		<h2  align="center">
 			Здравей, влез с твоя майл и парола!
 		</h2>
-		Email<input type="email" name = "email" value="pesho@abv.bg" required><br>
-		Password<input type="password" name ="password" value="pesho" required><br>
+		Email<input type="email" name = "email" value="dim@abv.bg" required><br>
+		Password<input type="password" name ="password" value="dim" required><br>
 		<input type="image" name="submit" width="8%" height="auto" src="<c:url value='/img/buttons/profile.png'/>" alt="ВЛЕЗ" title="ВЛЕЗ"> 
 		<br>ВЛЕЗ
 		<!-- <input type="submit" value="Login">  -->
