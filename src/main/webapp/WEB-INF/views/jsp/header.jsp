@@ -48,7 +48,7 @@
 					</a>
 				</div>
 				<div class="col-xs-12 col-md-4 pisi-brand_search">					
-					<form action="${pageContext.request.contextPath}/products/search" method="post">
+					<form action="${pageContext.request.contextPath}/products/search/0" method="post">
 						<input type="text" name="word">						
 						<input type="image" name="submit"	src="<c:url value='/img/buttons/search2.png'/>" alt="ТЪРСИ" title="ТЪРСИ">							
 					</form>					
@@ -61,17 +61,18 @@
 			</div>
 		</div>
 	
+
 		<div class="pisi-nav_lower">
 			<div class="container">
 				<nav>	
 										    
-					<a href="<c:url value='/products/animal/2'/>" title="Cats" class="animal-category">КОТКИ</a>
-					<a href="<c:url value='/products/animal/3'/>" title="Dogs">КУЧЕТА</a>
-					<a href="<c:url value='/products/animal/4'/>" title="LittleFellows">МАЛКИ ЖИВОТНИ</a>
-					<a href="<c:url value='/products/animal/1'/>" title="Aquaristics">АКВАРИСТИКА</a> 
-					<a href="<c:url value='/products/animal/5'/>" title="Birds">ПТИЦИ</a> 
-					<a href="<c:url value='/products/animal/6'/>" title="Reptiles">ТЕРАРИСТИКА</a> 
-					
+					<a href="<c:url value='/products/animal/2/0'/>" title="Cats" class="animal-category">КОТКИ</a>
+					<a href="<c:url value='/products/animal/3/0'/>" title="Dogs">КУЧЕТА</a>
+					<a href="<c:url value='/products/animal/4/0'/>" title="LittleFellows">МАЛКИ ЖИВОТНИ</a>
+					<a href="<c:url value='/products/animal/1/0'/>" title="Aquaristics">АКВАРИСТИКА</a> 
+					<a href="<c:url value='/products/animal/5/0'/>" title="Birds">ПТИЦИ</a> 
+					<a href="<c:url value='/products/animal/6/0'/>" title="Reptiles">ТЕРАРИСТИКА</a> 
+					                                         
 				</nav>
 			</div>
 		</div> 
@@ -80,4 +81,4 @@
 		<!-- categories -->
 		
 		
-	
+

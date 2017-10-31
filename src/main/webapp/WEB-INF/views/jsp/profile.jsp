@@ -24,7 +24,7 @@
 	<a href="sortOrders?sort=asc"><button>Oldest to newest</button></a>
 	<hr> -->
 		<form action="${pageContext.request.contextPath}/user/profile/showOrders" method="post" style="display:inline;">		
-				<h2 >	ПРЕДИШНИ ПОРЪЧКИ 		
+				<h2 >	ПРЕДИШНИ 10 ПОРЪЧКИ 		
 					<input type="image" name="submit"	src="<c:url value='/img/buttons/arrow.png'/>" alt="ЦЪК" title="drop down" width="50" height="auto" >	
 				</h2>
 		</form>			

@@ -33,7 +33,7 @@ public class OrderDao {
 
 	public TreeSet<Order> getOrdersForUser(long user_id) throws SQLException {
 		Connection con = DBmanager.getConnection();
-		String query = "SELECT * FROM pisi.orders WHERE user_id =?;";
+		String query = "SELECT * FROM pisi.orders as p WHERE user_id = ? order by p.dateTime_created DESC LIMIT 10";
 
 		ResultSet rs = null;
 
@@ -79,19 +79,19 @@ public class OrderDao {
 		ps.setLong(1, orderId);
 		ResultSet rs = ps.executeQuery();
 		HashMap<Product, Integer> productsForOrder = new HashMap<Product, Integer>();
-		while (rs.next()) {
-			long id = rs.getLong("product_id");
-			String name = rs.getString("name");
-			String description = rs.getString("description");
-			double price = rs.getDouble("price");
-			int discount = rs.getInt("discount");
-			String animal = rs.getString("animal");
-			String category = rs.getString("category");
-			String image = rs.getString("image");
+		while (rs.next()) {			
 			double rating = rd.getProductRating(rs.getLong("product_id"));
-			String brand = rs.getString("brand");
 			productsForOrder.put(
-					new Product(id, name, description, price, discount, animal, category, image, rating, brand),
+					new Product().setId(rs.getLong("product_id"))
+					.setName(rs.getString("name"))
+					.setPrice(rs.getDouble("price"))
+					.setDescription(rs.getString("description"))
+					.setDiscount(rs.getInt("discount"))
+					.setAnimal(rs.getString("animal"))
+					.setCategory(rs.getString("category"))
+					.setImage(rs.getString("image"))
+					.setRating(rating)
+					.setBrand(rs.getString("brand")),
 					rs.getInt("quantity"));
 		}
 		return productsForOrder;

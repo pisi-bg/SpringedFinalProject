@@ -24,29 +24,29 @@
 	<c:if test="${ sessionScope.animalId == 2 }">
 					<!-- FOOD  -->
 		<c:if test="${ requestScope.catId == 1 }">		
-			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId }/catId/1/subcatId/6'/>" style="text-decoration: none">КОНСЕРВИРАНА ХРАНА</a> &nbsp;
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId }/catId/1/subcatId/6/0'/>" style="text-decoration: none">КОНСЕРВИРАНА ХРАНА</a> &nbsp;
 		</c:if>
 		<c:if test="${ requestScope.catId == 1 }">
-			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/1/subcatId/15'/>" style="text-decoration: none">ХРАНА НА ГРАНУЛИ</a> &nbsp;
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/1/subcatId/15/0'/>" style="text-decoration: none">ХРАНА НА ГРАНУЛИ</a> &nbsp;
 		</c:if>
 				<!-- ACCESSOARIES -->
 		<c:if test="${ requestScope.catId == 2 }">
-			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/2/subcatId/8'/>" style="text-decoration: none">ТРАНСПОРТ</a> &nbsp;
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/2/subcatId/8/0'/>" style="text-decoration: none">ТРАНСПОРТ</a> &nbsp;
 		</c:if>
 		<c:if test="${ requestScope.catId == 2 }">
-			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/2/subcatId/11'/>" style="text-decoration: none"> ПОВОДИ И КАИШКИ</a> &nbsp;
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/2/subcatId/11/0'/>" style="text-decoration: none"> ПОВОДИ И КАИШКИ</a> &nbsp;
 		</c:if>
 		<c:if test="${ requestScope.catId == 2 }">
-			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/2/subcatId/12'/>" style="text-decoration: none">ДРЕХИ</a> &nbsp;
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/2/subcatId/12/0'/>" style="text-decoration: none">ДРЕХИ</a> &nbsp;
 		</c:if>
 					<!-- COSMETICS -->
 		<c:if test="${ requestScope.catId == 3 }">
-			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/3/subcatId/7'/>" style="text-decoration: none">ЧЕТКИ И ГРЕБЕНИ</a> &nbsp;
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/3/subcatId/7/0'/>" style="text-decoration: none">ЧЕТКИ И ГРЕБЕНИ</a> &nbsp;
 		</c:if>			<!-- To be listed more -->
 				
 				<!-- HYGIENE -->
 		<c:if test="${ requestScope.catId == 4 }">
-			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/4/subcatId/56'/>" style="text-decoration: none">КОЗМЕТИКА</a> &nbsp;
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/4/subcatId/56/0'/>" style="text-decoration: none">КОЗМЕТИКА</a> &nbsp;
 		</c:if>						<!-- Toilets is just an example we don't have it in the database -->
 		
 	</c:if>
@@ -55,30 +55,30 @@
 	<c:if test="${ sessionScope.animalId== 3 }">
 					<!-- FOOD  -->
 		<c:if test="${ requestScope.catId == 1 }">
-			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/1/subcatId/6'/>" style="text-decoration: none">КОНСЕРВИРАНА ХРАНА</a> &nbsp;
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/1/subcatId/6/0'/>" style="text-decoration: none">КОНСЕРВИРАНА ХРАНА</a> &nbsp;
 			
 		</c:if>
 		<c:if test="${ requestScope.catId == 1 }">
-			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/1/subcatId/15'/>" style="text-decoration: none">ХРАНА НА ГРАНУЛИ</a> &nbsp;
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/1/subcatId/15/0'/>" style="text-decoration: none">ХРАНА НА ГРАНУЛИ</a> &nbsp;
 		</c:if>
 				<!-- ACCESSOARIES -->
 		<c:if test="${ requestScope.catId == 2 }">
-			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/2/subcatId/8'/>" style="text-decoration: none">ТРАНСПОРТ</a> &nbsp;
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/2/subcatId/8/0'/>" style="text-decoration: none">ТРАНСПОРТ</a> &nbsp;
 		</c:if>
 		<c:if test="${ requestScope.catId == 2 }">
-			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/2/subcatId/11'/>" style="text-decoration: none">ПОВОДИ И КАИШКИ</a> &nbsp;
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/2/subcatId/11/0'/>" style="text-decoration: none">ПОВОДИ И КАИШКИ</a> &nbsp;
 		</c:if>
 		<c:if test="${ requestScope.catId == 2 }">
-			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/2/subcatId/12'/>" style="text-decoration: none">ДРЕХИ</a> &nbsp;
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/2/subcatId/12/0'/>" style="text-decoration: none">ДРЕХИ</a> &nbsp;
 		</c:if>
 					<!-- COSMETICS -->
 		<c:if test="${ requestScope.catId == 3 }">
-			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/3/subcatId/7'/>" style="text-decoration: none">ЧЕТКИ И ГРЕБЕНИ</a> &nbsp;
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/3/subcatId/7/0'/>" style="text-decoration: none">ЧЕТКИ И ГРЕБЕНИ</a> &nbsp;
 		</c:if>			<!-- To be listed more -->
 				
 				<!-- HYGIENE -->
 		<c:if test="${ sessionScope.catId == 4 }">
-			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/4/subcatId/56'/>" >КОЗМЕТИКА</a> &nbsp;
+			<a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/4/subcatId/56/0'/>" >КОЗМЕТИКА</a> &nbsp;
 		</c:if>						<!-- Toilets is just an example we don't have it in the database -->
 		
 	</c:if>

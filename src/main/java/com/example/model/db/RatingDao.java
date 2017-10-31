@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,7 +19,40 @@ public class RatingDao {
 
 	@Autowired
 	private DBManager db;
+	@Autowired
+	UserDao ud;
+	
+	public Collection<Rating> getProductRatingAndComment(long productId) throws SQLException {
+		Collection<Rating> collection = new ArrayList<>();
+		
+		Connection con = db.getConnection();
+		String query = "SELECT r.rating, r.comment AS comment, user_id AS user, date_time AS time "
+				+ "FROM pisi.ratings AS r WHERE r.product_id = ?";
+		ResultSet rs = null;
 
+		try (PreparedStatement stmt = con.prepareStatement(query);) {
+			stmt.setLong(1, productId);
+			rs = stmt.executeQuery();
+			
+			while(rs.next()){
+				LocalDateTime time = DateTimeJavaSqlConvertor.sqlToLocalDateTime(rs.getString("time"));
+				collection.add(new Rating().setRating(rs.getDouble("rating"))
+						.setComment(rs.getString("comment"))
+						.setUserEmail(ud.getUserByID(rs.getInt("user")).getEmail())
+						.setDateTime(time));
+			}
+			return collection;			
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+		}
+	}
+	
+	
+	
 	public double getProductRating(long productId) throws SQLException {
 
 		Connection con = db.getConnection();
@@ -90,12 +126,10 @@ public class RatingDao {
 
 		try (PreparedStatement ps = con.prepareStatement(query);) {
 			ps.setLong(1, rating.getProductId());
-			ps.setLong(2, rating.getUserId());
+			ps.setLong(2, ud.getUser(rating.getUserEmail()).getId());
 			ps.setDouble(3, rating.getRating());
 			ps.setString(4, rating.getComment());
-			ps.setString(5, DateTimeJavaSqlConvertor.localDateTimeToSql(rating.getDateTime()));
-			System.out.println(ps.toString());
-			System.out.println("sddeasssssssssssssssssss");
+			ps.setString(5, DateTimeJavaSqlConvertor.localDateTimeToSql(rating.getDateTime()));			
 			return (ps.executeUpdate() == 1);
 
 		} catch (SQLException e) {

@@ -167,7 +167,29 @@ public class UserDao {
 		} catch (SQLException e) {
 			throw e;
 		}
+	}
+	
+	public User getUserByID(long id) throws SQLException{
+		Connection con = db.getConnection();
+		String query = "SELECT email as email, first_name , last_name, password, gender, isAdmin as admin"
+				+ " FROM pisi.users WHERE user_id = ?";
+		ResultSet rs = null;
 
+		try (PreparedStatement stmt = con.prepareStatement(query);) {
+			stmt.setLong(1, id);
+			rs = stmt.executeQuery();
+			rs.next();
+			User u = new User(id, rs.getString("first_name"), rs.getString("last_name"), rs.getString("email"),
+					rs.getString("password"), rs.getBoolean("gender"), rs.getBoolean("admin"),
+					pd.getFavorites(id));
+			return u;
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+		}
 	}
 	
 }
