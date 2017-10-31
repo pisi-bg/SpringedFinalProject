@@ -33,7 +33,7 @@ public class OrderDao {
 
 	public TreeSet<Order> getOrdersForUser(long user_id) throws SQLException {
 		Connection con = DBmanager.getConnection();
-		String query = "SELECT * FROM pisi.orders WHERE user_id =?;";
+		String query = "SELECT * FROM pisi.orders as p WHERE user_id = ? order by p.dateTime_created DESC LIMIT 10";
 
 		ResultSet rs = null;
 

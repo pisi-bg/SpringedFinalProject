@@ -8,8 +8,6 @@
 <title>PisiBG</title>
 </head>	
 	 <jsp:include page="header.jsp"></jsp:include>
-	
-	<h1>ehooooo</h1>
-	
+
 </body>
 </html>
