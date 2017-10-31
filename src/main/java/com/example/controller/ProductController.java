@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import java.awt.image.ImageProducer;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -10,6 +12,7 @@ import java.util.Optional;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,7 @@ import com.example.model.pojo.Product;
 import com.example.model.pojo.Rating;
 import com.example.model.pojo.User;
 import com.example.utils.EmailSender;
+import com.example.utils.ImageProvider;
 
 @Controller
 @RequestMapping(value = "/products")
@@ -59,13 +63,26 @@ public class ProductController {
 		
 		try {
 			List<Product> products = pd.getProductsByAnimal(animalId);
+			
+			
+			for(Product p : products){
+				System.out.println(p.getImage() + " *********************************************************************************");
+			}
+			
+			
+			
+			
+			
 			if(productList != null){
 				if(!productList.getSource().equals(products)){
 					productList.setSource(products);
 				}
 			}else {
 				productList = new PagedListHolder<>(products);
-			}			
+			}	
+			productList.resort();
+			
+			
 			productList.setPageSize(ITEMS_PER_PAGE);						
 			if(paging >= 0){
 				productList.setPage(paging);
@@ -112,6 +129,7 @@ public class ProductController {
 			}else {
 				productList = new PagedListHolder<Product>(products);
 			}
+			productList.resort();
 			productList.setPageSize(ITEMS_PER_PAGE);						
 			if(paging >= 0){
 				productList.setPage(paging);
@@ -161,6 +179,7 @@ public class ProductController {
 			}else {
 				productList = new PagedListHolder<Product>(products);
 			}
+			productList.resort();
 			productList.setPageSize(ITEMS_PER_PAGE);						
 			if(paging >= 0){
 				productList.setPage(paging);
@@ -338,9 +357,10 @@ public class ProductController {
 			return new ModelAndView("Error", "message", "Please don't type in URL by yourself");
 		}		
 
-		MutableSortDefinition sort = new MutableSortDefinition("name", true, sortOrder);
+		MutableSortDefinition sort = new MutableSortDefinition("name", false, sortOrder);
 		productList.setSort(sort);
 		productList.resort();
+		sess.setAttribute("productPage", productList);
 		sess.setAttribute("products", productList.getSource());
 		return new ModelAndView("products","productPage", productList);
 	}
@@ -359,9 +379,10 @@ public class ProductController {
 			return new ModelAndView("Error", "message", "Please don't type in URL by yourself");
 		}		
 
-		MutableSortDefinition sort = new MutableSortDefinition("price", true, sortOrder);
+		MutableSortDefinition sort = new MutableSortDefinition("price", false, sortOrder);
 		productList.setSort(sort);
 		productList.resort();
+		sess.setAttribute("productPage", productList);
 		sess.setAttribute("products", productList.getSource());
 		return new ModelAndView("products","productPage", productList);		
 	}
@@ -374,11 +395,17 @@ public class ProductController {
 		PagedListHolder<Product> productList = (PagedListHolder<Product>)sess.getAttribute("productPage");			
 		String url = "products/search";
 		
-		if(req.getParameter("word") == null){						
-			return new ModelAndView("index"); // or to the previous page
-		}				
 		
-		String[] words = req.getParameter("word").split(" ");
+		
+		String word = (String) sess.getAttribute("word"); // дума която да пази последното търсене
+		String keyword = req.getParameter("keyword"); // дума по която търсим
+				
+		
+		if(keyword == null){
+			keyword = word;
+		}
+		
+		String[] words = keyword.split(" ");
 		
 		if(words[0].isEmpty()){
 			return new ModelAndView("index");
@@ -393,6 +420,7 @@ public class ProductController {
 			}else{
 				productList = new PagedListHolder<>(products);
 			}
+			productList.resort();
 			productList.setPageSize(ITEMS_PER_PAGE);
 			if(paging >= 0){
 				productList.setPage(paging);
@@ -408,51 +436,30 @@ public class ProductController {
 				}
 			}
 			sess.setAttribute("url", url);
+			sess.setAttribute("word", keyword);
 			sess.setAttribute("productPage", productList);
-			sess.setAttribute("products", products);
 			sess.setAttribute("products", products);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return new ModelAndView("Error", "message", "Internal error, please excuse us.");
 		}
 		
-		return new ModelAndView("products", "productPage", productList);
-		
-//		try {
-//			List<Product> products = pd.getProductsByAnimal(animalId);
-//			if(productList != null){
-//				if(!productList.getSource().equals(products)){
-//					productList.setSource(products);
-//				}
-//			}else {
-//				productList = new PagedListHolder<>(products);
-//			}			
-//			productList.setPageSize(ITEMS_PER_PAGE);						
-//			if(paging >= 0){
-//				productList.setPage(paging);
-//			}else {
-//				if(paging == -1){
-//					productList.nextPage();
-//				}
-//				if(paging == -2){
-//					productList.previousPage();
-//				}
-//				if(paging < -2){
-//					return new ModelAndView("Error", "message", "Please don't type in URL by yourself");
-//				}
-//			}
-//			sess.setAttribute("url", url);			
-//			sess.setAttribute("productPage", productList);
-//			sess.setAttribute("products", products);
-//			sess.setAttribute("animalId", animalId);
-//		} catch (SQLException e) {
-//			// TODO redirect to error page and re-throw e;
-//			e.printStackTrace();
-//		}
-//		return new ModelAndView("products","productPage", productList);
-		
-		
+		return new ModelAndView("products", "productPage", productList);		
+
 	}
 
+	@RequestMapping(value="/image/{id}")
+	public void showPicture(HttpServletResponse resp, @PathVariable Integer id){
+		
+		try {
+			Product p = pd.getProduct(id);			
+			ImageProvider.proceedProductPicture(p.getImage(), resp);
+		} catch (IOException e) {
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 }

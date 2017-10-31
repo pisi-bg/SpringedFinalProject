@@ -12,9 +12,9 @@
 <body>
 
 		<jsp:include page="header.jsp"></jsp:include><br>
-		<br>
+		<br>		
 		<jsp:include page="categories.jsp"></jsp:include>
-	
+				
 		
 		<c:if test="${ sessionScope.products != null }">
 			
@@ -38,9 +38,8 @@
 						</c:if>
 						<c:if test="${pro.rating == 0 }">
 							<td>No rating</td>
-						</c:if>
-						<td>  <img src="${ pro.image }" alt="oops no image here" width="100" height="auto" /><br /> </td>
-						
+						</c:if>					
+						<td>  <img src='<c:url value="/products/image/${ pro.id }"/>' alt="oops no image here" width="100" height="auto" /><br /> </td>
 					</tr>
 
 				</c:forEach>

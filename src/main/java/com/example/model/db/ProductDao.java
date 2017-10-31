@@ -43,6 +43,7 @@ public class ProductDao {
 			rs = stmt.executeQuery();
 			String category = null;
 			while (rs.next()) {
+				
 				double rating = rd.getProductRating(rs.getLong("id"));
 				products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
 						rs.getDouble("price"), category, rating, rs.getString("image")));
