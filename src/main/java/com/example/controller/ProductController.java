@@ -358,6 +358,7 @@ public class ProductController {
 		}		
 
 		MutableSortDefinition sort = new MutableSortDefinition("name", false, sortOrder);
+		sort.setIgnoreCase(true);
 		productList.setSort(sort);
 		productList.resort();
 		sess.setAttribute("productPage", productList);
