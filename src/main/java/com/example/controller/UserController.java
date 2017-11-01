@@ -84,7 +84,6 @@ public class UserController {
 				return "login";
 			}
 		} catch (SQLException e) {
-
 			return "error";
 		}
 
@@ -104,7 +103,7 @@ public class UserController {
 		try {
 			ud.insertUser(user);
 		} catch (SQLException e) {
-			// TODO error page
+			return "error";
 		}
 		return "forward:index";
 	}
@@ -118,7 +117,7 @@ public class UserController {
 	@RequestMapping(value = "/profile", method = RequestMethod.GET)
 	public String viewProfile(HttpSession session) {
 		session.removeAttribute("orders");
-		
+
 		User u = (User) session.getAttribute("user");
 		if (u == null) {
 			return "redirect:/user/login";

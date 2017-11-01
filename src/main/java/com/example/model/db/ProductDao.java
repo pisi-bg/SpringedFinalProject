@@ -25,14 +25,13 @@ public class ProductDao {
 	@Autowired
 	RatingDao rd;
 
-
 	// returns list of products for specific animal category type
 	public ArrayList<Product> getProductsByAnimal(int animalId) throws SQLException {
 		ArrayList<Product> products = new ArrayList<>();
 
 		Connection con = db.getConnection();
 		String query = "SELECT p.product_id AS id, p.product_name AS name , c.category_name AS category , p.price AS price, "
-				+ "p.description AS description, pc.category_name AS parent_category, p.image_url AS image "
+				+ "p.description AS description, pc.category_name AS parent_category, p.image_url AS image, p.discount AS discount "
 				+ "FROM pisi.products AS p " + "JOIN pisi.animals AS a ON (p.animal_id = a.animal_id) "
 				+ "JOIN pisi.product_categories AS c ON(p.product_category_id = c.product_category_id) "
 				+ "JOIN pisi.product_categories AS pc ON(c.parent_category_id = pc.product_category_id) "
@@ -44,10 +43,10 @@ public class ProductDao {
 			rs = stmt.executeQuery();
 			String category = null;
 			while (rs.next()) {
-				
+
 				double rating = rd.getProductRating(rs.getLong("id"));
 				products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
-						rs.getDouble("price"), category, rating, rs.getString("image")));
+						rs.getDouble("price"), category, rating, rs.getString("image"), rs.getInt("discount")));
 			}
 			return products;
 		} catch (SQLException e) {
@@ -67,7 +66,7 @@ public class ProductDao {
 		ArrayList<Product> products = new ArrayList<>();
 		Connection con = db.getConnection();
 		String query = "SELECT p.product_id as id, p.product_name as name , a.animal_name as animal, c.category_name as category , p.price,"
-				+ " p.description, pc.category_name as parent_category, p.image_url as image "
+				+ " p.description, pc.category_name as parent_category, p.image_url as image, p.discount AS discount "
 				+ "	FROM pisi.products as p" + " JOIN pisi.animals as a ON (p.animal_id = a.animal_id)"
 				+ " JOIN pisi.product_categories as c ON(p.product_category_id = c.product_category_id)"
 				+ " JOIN pisi.product_categories as pc ON(c.parent_category_id = pc.product_category_id)"
@@ -82,7 +81,8 @@ public class ProductDao {
 			while (rs.next()) {
 				double rating = rd.getProductRating(rs.getLong("id"));
 				Product p = new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
-						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image"));
+						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image"),
+						rs.getInt("discount"));
 				products.add(p);
 			}
 			return products;
@@ -102,7 +102,7 @@ public class ProductDao {
 		ArrayList<Product> products = new ArrayList<>();
 		Connection con = db.getConnection();
 		String query = "SELECT p.product_id as id, p.product_name as name , a.animal_name as animal, c.category_name as category , "
-				+ "p.price, p.description, pc.category_name as parent_category, p.image_url as image "
+				+ "p.price, p.description, pc.category_name as parent_category, p.image_url as image, p.discount AS discount "
 				+ "FROM pisi.products as p JOIN pisi.animals as a ON (p.animal_id = a.animal_id) "
 				+ "JOIN pisi.product_categories as c ON(p.product_category_id = c.product_category_id) "
 				+ "JOIN pisi.product_categories as pc ON(c.parent_category_id = pc.product_category_id) "
@@ -117,7 +117,8 @@ public class ProductDao {
 			while (rs.next()) {
 				double rating = rd.getProductRating(rs.getLong("id"));
 				products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
-						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image")));
+						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image"),
+						rs.getInt("discount")));
 			}
 			return products;
 		} catch (Exception e) {
@@ -148,7 +149,7 @@ public class ProductDao {
 			rs = stmt.executeQuery();
 			if (rs.next()) {
 				double rating = rs.getDouble("rating");
-				
+
 				Product p = new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
 						rs.getInt("price"), rs.getString("animal"), rs.getString("category"), rs.getString("brand"),
 						rs.getString("brandlogo"), rating, rs.getInt("unit"), rs.getString("image"),
@@ -173,7 +174,7 @@ public class ProductDao {
 		ArrayList<Product> products = new ArrayList<>();
 		Connection con = db.getConnection();
 		String query = "SELECT p.product_id as id, p.product_name as name , a.animal_name as animal, c.category_name as category , "
-				+ "p.price, p.description, pc.category_name as parent_category, p.image_url as image "
+				+ "p.price, p.description, pc.category_name as parent_category, p.image_url as image, p.discount AS discount "
 				+ "FROM pisi.products as p JOIN pisi.animals as a ON (p.animal_id = a.animal_id) "
 				+ "JOIN pisi.product_categories as c ON(p.product_category_id = c.product_category_id) "
 				+ "JOIN pisi.product_categories as pc ON(c.parent_category_id = pc.product_category_id) "
@@ -186,7 +187,8 @@ public class ProductDao {
 			while (rs.next()) {
 				double rating = rd.getProductRating(rs.getLong("id"));
 				products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
-						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image")));
+						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image"),
+						rs.getInt("discount")));
 			}
 			return products;
 		} catch (SQLException e) {
@@ -203,7 +205,7 @@ public class ProductDao {
 		ArrayList<Product> products = new ArrayList<>();
 		Connection con = db.getConnection();
 		String query = "SELECT p.product_id as id, p.product_name as name , a.animal_name as animal, c.category_name as category , "
-				+ "p.price, p.description, pc.category_name as parent_category, p.image_url as image "
+				+ "p.price, p.description, pc.category_name as parent_category, p.image_url as image, p.discount AS discount  "
 				+ "FROM pisi.products as p JOIN pisi.animals as a ON (p.animal_id = a.animal_id) "
 				+ "JOIN pisi.product_categories as c ON(p.product_category_id = c.product_category_id) "
 				+ "JOIN pisi.product_categories as pc ON(c.parent_category_id = pc.product_category_id) "
@@ -215,7 +217,8 @@ public class ProductDao {
 			while (rs.next()) {
 				double rating = rd.getProductRating(rs.getLong("id"));
 				products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
-						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image")));
+						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image"),
+						rs.getInt("discount")));
 			}
 			return products;
 		} catch (SQLException e) {
@@ -322,7 +325,7 @@ public class ProductDao {
 		ArrayList<Product> products = new ArrayList<>();
 		Connection con = db.getConnection();
 		String query = "SELECT  op.product_id as id, p.product_name as name , a.animal_name as animal, "
-				+ "c.category_name as category , p.price as price, p.description as description, "
+				+ "c.category_name as category , p.price as price, p.description as description, p.discount AS discount "
 				+ "p.image_url as image, SUM(op.product_quantity) as countSold" + "FROM orders_has_products as op"
 				+ "JOIN pisi.products as p ON(op.product_id = p.product_id)"
 				+ "JOIN pisi.animals as a ON (p.animal_id = a.animal_id) "
@@ -340,7 +343,8 @@ public class ProductDao {
 				// rating !!!
 				double rating = rd.getProductRating(rs.getLong("id"));
 				products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
-						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image")));
+						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image"),
+						rs.getInt("discount")));
 			}
 			return products;
 		} catch (SQLException e) {
@@ -357,7 +361,7 @@ public class ProductDao {
 		Connection con = db.getConnection();
 		String query = "SELECT  op.product_id as product_id, p.product_name as name , a.animal_name as animal,"
 				+ "c.category_name as category , p.price, p.description, pc.category_name as parent_category,"
-				+ "p.image_url as image, a.animal_id as animal, SUM(op.product_quantity) as countSold"
+				+ "p.image_url as image, a.animal_id as animal, SUM(op.product_quantity) as countSold, p.discount AS discount"
 				+ "FROM orders_has_products as op" + "JOIN pisi.products as p ON(op.product_id = p.product_id)"
 				+ "JOIN pisi.animals as a ON (p.animal_id = a.animal_id) "
 				+ "JOIN pisi.product_categories as c ON(p.product_category_id = c.product_category_id)"
@@ -375,7 +379,8 @@ public class ProductDao {
 				// rating !!!
 				double rating = rd.getProductRating(rs.getLong("id"));
 				products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
-						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image")));
+						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image"),
+						rs.getInt("discount")));
 			}
 			return products;
 		} catch (SQLException e) {

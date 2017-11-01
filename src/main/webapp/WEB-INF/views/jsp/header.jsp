@@ -43,24 +43,25 @@
 		<div class="pisi-brand">
 			<div class="container">
 				<div class="col-xs-12 col-md-4 pisi-brand_logo no-padding">
-					<a href="<c:url value='/index'/>" style="text-decoration: none">
-						<img src="<c:url value='/img/buttons/pisi.png'/>" alt="HOME" title="HOME" ><span class="pisi-title">Pisi.bg</span>
+					<a href="<c:url value='/index'/>">
+						<img src="<c:url value='/img/buttons/pisi.png'/>" alt="HOME" title="HOME" >
+						<span class="pisi-title">Pisi.bg</span>
+						<span class="pisi-title-shop">онлайн зоомагазин</span>
 					</a>
 				</div>
 				<div class="col-xs-12 col-md-4 pisi-brand_search">					
 					<form action="${pageContext.request.contextPath}/products/search/0" method="post">
-						<input type="text" name="word">						
+						<input type="text" name="keyword">						
 						<input type="image" name="submit"	src="<c:url value='/img/buttons/search2.png'/>" alt="ТЪРСИ" title="ТЪРСИ">							
 					</form>					
 				</div>
 				<div class="col-xs-12 col-md-4 pisi-brand_cart">
-					<a href="<c:url value='/cart/view'/>" style="text-decoration: none">
+					<a href="<c:url value='/cart/view'/>" >
 						<img src="<c:url value='/img/buttons/catCart.png'/>" alt="КОЛИЧКА" title="cart">
 					</a>
 				</div>
 			</div>
 		</div>
-	
 
 		<div class="pisi-nav_lower">
 			<div class="container">
