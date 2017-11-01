@@ -40,7 +40,7 @@ public class RatingDao {
 						.setComment(rs.getString("comment"))
 						.setUserEmail(ud.getUserByID(rs.getInt("user")).getEmail())
 						.setDateTime(time));
-			}
+			}			
 			return collection;			
 		} catch (SQLException e) {
 			throw e;

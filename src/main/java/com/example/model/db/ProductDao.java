@@ -325,13 +325,13 @@ public class ProductDao {
 		ArrayList<Product> products = new ArrayList<>();
 		Connection con = db.getConnection();
 		String query = "SELECT  op.product_id as id, p.product_name as name , a.animal_name as animal, "
-				+ "c.category_name as category , p.price as price, p.description as description, p.discount AS discount "
-				+ "p.image_url as image, SUM(op.product_quantity) as countSold" + "FROM orders_has_products as op"
-				+ "JOIN pisi.products as p ON(op.product_id = p.product_id)"
+				+ "c.category_name as category , p.price as price, p.description as description, p.discount AS discount, "
+				+ "p.image_url as image, SUM(op.product_quantity) as countSold " + " FROM orders_has_products as op "
+				+ "JOIN pisi.products as p ON(op.product_id = p.product_id) "
 				+ "JOIN pisi.animals as a ON (p.animal_id = a.animal_id) "
 				+ "JOIN pisi.product_categories as c ON(p.product_category_id = c.product_category_id) "
 				+ "JOIN pisi.product_categories as pc ON(c.parent_category_id = pc.product_category_id) "
-				+ "JOIN pisi.brands as b ON(p.brand_id = b.brand_id)"
+				+ "JOIN pisi.brands as b ON(p.brand_id = b.brand_id) "
 				+ "GROUP by op.product_id ORDER BY SUM(op.product_quantity) desc LIMIT ?;";
 		ResultSet rs = null;
 

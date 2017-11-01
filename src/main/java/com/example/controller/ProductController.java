@@ -208,7 +208,7 @@ public class ProductController {
 		try {
 			productCurrent = pd.getProduct(productId);
 			s.setAttribute("productCurrent", productCurrent);
-			comments.addAll(rd.getProductRatingAndComment(productId));
+			comments.addAll(rd.getProductRatingAndComment(productId));			
 			s.setAttribute("comments", comments);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
