@@ -69,4 +69,27 @@ public class CategoryDao {
 		}
 		return categories;
 	}
+	
+	public Map<String,Integer> getSubCategoriesForCategory(int animalId , int categoryId) throws SQLException{
+		String query = "SELECT DISTINCT(p.product_category_id) AS id, c.category_name AS name FROM pisi.products AS p "
+						+ "JOIN pisi.product_categories AS c ON(p.product_category_id = c.product_category_id) "
+						+ "WHERE animal_id = ? AND parent_category_id = ?";
+		Connection con = db.getConnection();
+		Map<String, Integer> subCategories = new HashMap<>();
+		ResultSet rs = null;
+		try(PreparedStatement stmt = con.prepareStatement(query)){
+			stmt.setInt(1, animalId);
+			stmt.setInt(2, categoryId);
+			rs = stmt.executeQuery();
+			while(rs.next()){
+				subCategories.put(rs.getString("name"), rs.getInt("id"));
+			}
+		} finally {
+			if(rs != null){
+				rs.close();
+			}
+		} 		
+		return subCategories;
+	}
+
 }

@@ -52,67 +52,63 @@ public class UserController {
 	OrderDao orderDao;
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String login(Model m) {
+	public ModelAndView login(Model m) {
 		User u = new User();
 		m.addAttribute("user", u);
-		return "login";
+		return new ModelAndView("login");
 	}
 
 	// this method check if login form is correctly filled and then check if
 	// user exist in the database
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String loginUser(@ModelAttribute User user, HttpServletRequest request, HttpServletResponse response,
+	public ModelAndView loginUser(@ModelAttribute User user, HttpServletRequest request, HttpServletResponse response,
 			HttpSession ses) {
 
 		String email = user.getEmail();
 		// validate email and password in spring form
 		if (!UserDao.isValidEmailAddress(email)) {
 			request.setAttribute("wrongEmail", true);
-			return "login";
+			return new ModelAndView("login");
 		}
 		try {
 			String password = user.getPassword();
 			password = Hasher.securePassword(password, email);
 			if (password.isEmpty()) {
-				return "login";
+				return new ModelAndView("login");
 			}
 			user.setPassword(password);
 			if (ud.userExist(user)) {
 				user = ud.getUser(email);
 				ses.setAttribute("user", user);
 				ses.setMaxInactiveInterval(-1); // infinity session
-				return "products";
+				return new ModelAndView("products");
 			} else {
 				request.setAttribute("wrongUser", true);
-				return "login";
+				return new ModelAndView("login");
 			}
 		} catch (SQLException e) {
-
-			// TODO handle it
-			return "SQLerrorInLogin";
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		} catch (NoSuchAlgorithmException e) {
 			// TODO handle it
-			e.printStackTrace();
-			return "errorInAlgorithm";
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		} catch (UnsupportedEncodingException e) {
 			// TODO handle it
-			e.printStackTrace();
-			return "errorInEncoding";
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 
 		}
 
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
-	public String register(Model m) {
+	public ModelAndView register(Model m) {
 		User u = new User();
 		// validate spring form
 		m.addAttribute("user", u);
-		return "register";
+		return new ModelAndView("register");
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String registerUser(HttpSession sess, @ModelAttribute User user) {
+	public ModelAndView registerUser(HttpSession sess, @ModelAttribute User user) {
 
 		try {
 			String userpass = user.getPassword();
@@ -121,46 +117,44 @@ public class UserController {
 			ud.insertUser(user);
 		} catch (SQLException e) {
 			sess.setAttribute("regError", true);
-			return "redirect:/user/register";
+			return new ModelAndView("redirect:/user/register");
 		} catch (NoSuchAlgorithmException e) {
-			// TODO handle it
-			e.printStackTrace();
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		} catch (UnsupportedEncodingException e) {
-			// TODO handle it
-			e.printStackTrace();
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		}
 		if (sess.getAttribute("regError") != null) {
 			sess.removeAttribute("regError");
 		}
-		return "index";
+		return new ModelAndView("index");
 	}
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public String logout(HttpSession sess) {
+	public ModelAndView logout(HttpSession sess) {
 		sess.invalidate();
-		return "index";
+		return new ModelAndView("index");
 	}
 
 	@RequestMapping(value = "/profile", method = RequestMethod.GET)
-	public String viewProfile(HttpSession session) {
+	public ModelAndView viewProfile(HttpSession session) {
 		session.removeAttribute("orders");
 
 		User u = (User) session.getAttribute("user");
 		if (u == null) {
-			return "redirect:/user/login";
+			return new ModelAndView("redirect:/user/login");
 		}
 		if (!u.getFavorites().isEmpty()) {
 			session.setAttribute("favorites", u.getFavorites());
 		}
-		return "profile";
+		return new ModelAndView("profile");
 	}
 
 	@RequestMapping(value = "/profile/showOrders", method = RequestMethod.POST)
-	public String viewOrders(HttpSession session) {
+	public ModelAndView viewOrders(HttpSession session) {
 
 		User u = (User) session.getAttribute("user");
 		if (u == null) {
-			return "redirect:/user/login";
+			return new ModelAndView("redirect:/user/login");
 		}
 		try {
 			TreeSet<Order> orders = orderDao.getOrdersForUser(u.getId());
@@ -168,22 +162,21 @@ public class UserController {
 				session.setAttribute("orders", orders);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return "error3";
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		}
-		return "profile";
+		return new ModelAndView("profile");
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.GET)
-	public String updateForm(Model m, HttpSession sess, HttpServletRequest req) {
+	public ModelAndView updateForm(Model m, HttpSession sess, HttpServletRequest req) {
 		User u = (User) sess.getAttribute("user");
 		req.setAttribute("update", 1);
 		m.addAttribute("user", u);
-		return "updateProfile";
+		return new ModelAndView("updateProfile");
 	}
 
 	@RequestMapping(value = "/profile", method = RequestMethod.POST)
-	public String updateProfile(@ModelAttribute User user, HttpSession sess) {
+	public ModelAndView updateProfile(@ModelAttribute User user, HttpSession sess) {
 		try {
 			user.setId(((User) sess.getAttribute("user")).getId());
 			String hashPassword = Hasher.securePassword(user.getPassword(), user.getEmail());
@@ -191,20 +184,18 @@ public class UserController {
 			ud.updateUser(user);
 			sess.setAttribute("user", user);
 		} catch (SQLException e) {
-			// TODO error page
-			e.printStackTrace();
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		} catch (NoSuchAlgorithmException e) {
-			// TODO handle it
-			e.printStackTrace();
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		} catch (UnsupportedEncodingException e) {
-			// TODO handle it
-			e.printStackTrace();
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		}
-		return "redirect:/user/profile";
+		return new ModelAndView("redirect:/user/profile");
 	}
 
 	@RequestMapping(value = "/favorites/{page}", method = RequestMethod.GET)
 	public ModelAndView viewFavorites(HttpSession session, @PathVariable("page") Integer page) {
+		session.removeAttribute("subCategories");
 		User user = (User) session.getAttribute("user");
 		if (user == null) {
 			return new ModelAndView("login");
@@ -244,7 +235,7 @@ public class UserController {
 				productList.previousPage();
 			}
 			if (paging < -2) {
-				return new ModelAndView("Error", "message", "Please don't type in URL by yourself");
+				return new ModelAndView("Error", "message", "Моля не пишете в адрес бара сами. Пробвайте отново.");
 			}
 		}
 		
@@ -257,28 +248,34 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/contactForm", method = RequestMethod.GET)
-	public String sendMail(HttpSession session, Model m) {
-		User user = (User) session.getAttribute("user");
-		if (user == null) {
-			return "redirect:/user/login";
+	public ModelAndView giveContactForm(HttpSession session, Model m) {		
+		return new ModelAndView("contactForm");
+	}
+	
+	@RequestMapping(value="/contactForm", method = RequestMethod.POST)
+	public ModelAndView sendMail(HttpServletRequest req){
+		User user = new User().setEmail(req.getParameter("email"))
+							  .setFirstName(req.getParameter("name"));
+		String subject = req.getParameter("subject");
+		String describe = req.getParameter("descr");
+		if(user == null || subject == null || describe == null){
+			return new ModelAndView("error", "error", "Моля попълнете всички полета с валидна информация.");
 		}
-
-		// session.setAttribute("favorites", user.getFavorites());
-
-		return "contactForm";
+		EmailSender.contactUs(user, subject, describe);
+		return new ModelAndView("index");
 	}
 
 	@RequestMapping(value = "/admin/removeProduct", method = RequestMethod.GET)
-	public String removeProduct(HttpSession sess) {
+	public ModelAndView removeProduct(HttpSession sess) {
 
 		if (sess.getAttribute("user") == null) {
-			return "index";
+			return new ModelAndView("index");
 		}
 
 		User user = (User) sess.getAttribute("user");
 
 		if (user == null || !user.isAdmin()) {
-			return "forward:index";
+			return new ModelAndView("forward:index");
 		}
 
 		Product pro = (Product) sess.getAttribute("productCurrent");
@@ -289,19 +286,17 @@ public class UserController {
 				// TODO error page
 				e.printStackTrace();
 			}
-			return "index";
+			return new ModelAndView("index");
 		} else {
-
-			// make an error page ....
-			return "error";
+			return new ModelAndView("error", "error", "Проблем с конкретният продукт. Може би сесията е изтекла. Пробвайте отново.");
 		}
 	}
 
 	@RequestMapping(value = "/admin/addProduct", method = RequestMethod.GET)
-	public String addProductForm(HttpSession sess) {
+	public ModelAndView addProductForm(HttpSession sess) {
 		User user = (User) sess.getAttribute("user");
 		if (user == null || !user.isAdmin()) {
-			return "redirect:/user/login";
+			return new ModelAndView("redirect:/user/login");
 		}
 		try {
 			List<String> animals = pd.getAnimals();
@@ -313,20 +308,19 @@ public class UserController {
 			List<String> brands = pd.getBrands();
 			sess.setAttribute("brands", brands);
 		} catch (SQLException e) {
-			return "error";
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		}
-		return "addproduct";
+		return new ModelAndView("addproduct");
 	}
 
 	@RequestMapping(value = "/admin/addProduct", method = RequestMethod.POST)
-	public String addProduct(HttpServletResponse resp, HttpServletRequest req,
+	public ModelAndView addProduct(HttpServletResponse resp, HttpServletRequest req,
 			@RequestParam("image") MultipartFile file) {
 
 		try {
 			req.setCharacterEncoding("UTF-8");
 		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
-			return "encodingError";
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		}
 		// check for categories capslock s
 
@@ -351,11 +345,9 @@ public class UserController {
 		try {
 			file.transferTo(imageFile);
 		} catch (IllegalStateException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		}
 
 		Product p = new Product();
@@ -372,22 +364,20 @@ public class UserController {
 		try {
 			pd.addProduct(p);
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return "error";
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		}
 		// return "index";
-		return "redirect:/user/admin/addProduct";
+		return new ModelAndView("redirect:/user/admin/addProduct");
 	}
 
 	@RequestMapping(value = "/admin/addBrand", method = RequestMethod.POST)
-	public String addBrand(HttpServletResponse resp, HttpServletRequest req,
+	public ModelAndView addBrand(HttpServletResponse resp, HttpServletRequest req,
 			@RequestParam("newBrandImage") MultipartFile brandFile) {
 
 		try {
 			req.setCharacterEncoding("UTF-8");
 		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
-			return "encodingError";
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		}
 
 		String brandName = req.getParameter("newBrandname");
@@ -401,74 +391,73 @@ public class UserController {
 		try {
 			brandFile.transferTo(imageFile);
 		} catch (IllegalStateException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		}
 
 		try {
 			pd.insertBrand(brandName, imageURL);
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return "error";
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		}
 		// return "index";
-		return "redirect:/user/admin/addProduct";
+		return new ModelAndView("redirect:/user/admin/addProduct");
 	}
 
 	@RequestMapping(value = "/admin/quantity", method = RequestMethod.POST)
-	public String addQuantity(HttpSession sess, HttpServletRequest req) {
+	public ModelAndView addQuantity(HttpSession sess, HttpServletRequest req) {
 		int quantity = Integer.parseInt(req.getParameter("quantity"));
 		if (quantity < 1) {
-
-			return "error";
+			return new ModelAndView("error", "error", "Моля не въвеждайте отрицателни стойности в полетата.");
 		}
 		Product pro = (Product) sess.getAttribute("productCurrent");
 		try {
 			pd.addQuantity(pro.getId(), quantity);
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return "sqlError";
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		}
-		return "index";
+		return new ModelAndView("index");
 	}
 
 	@RequestMapping(value = "/admin/discount", method = RequestMethod.POST)
-	public String addDiscount(HttpSession sess, HttpServletRequest req) {
+	public ModelAndView addDiscount(HttpSession sess, HttpServletRequest req) {
 		int discount = Integer.parseInt(req.getParameter("discount"));
 		if (discount < 0 || discount > 99) {
-			return "error";
+			return new ModelAndView("error", "error", "Моля въвеждайте коректни стойности за отстъпки.");
 		}
 		Product pro = (Product) sess.getAttribute("productCurrent");
 		long id = pro.getId();
 		try {
 			pd.setInPromotion(id, discount);
+			List<String> users = ud.userEmailsLiked(id);
+			for(String email : users){
+				EmailSender.toPromotion(email, id);
+			}
 		} catch (SQLException e) {
-			return "error";
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		}
-		return "products";
+		return new ModelAndView("products");
 	}
 
 	@RequestMapping(value = "/password", method = RequestMethod.GET)
-	public String forgottenPassword() {
-		return "password";
+	public ModelAndView forgottenPassword() {
+		return new ModelAndView("password");
 	}
 
 	@RequestMapping(value = "/password", method = RequestMethod.POST)
-	public String sendPassword(HttpServletRequest req, HttpSession sess) {
+	public ModelAndView sendPassword(HttpServletRequest req, HttpSession sess) {
 		String email = req.getParameter("email");
 		String pass = PasswordGenerator.getRandomPass();
 
 		if (email == null || !UserDao.isValidEmailAddress(email)) {
-			return "error1";
+			return new ModelAndView("error", "error", "Моля въвеждайте валидни данни за вашият имейл.");
 		}
 
 		try {
 			User user = ud.getUser(email);
 			if (user.getEmail() == null || user.getEmail().isEmpty()) {
-				return "error";
+				return new ModelAndView("error", "error", "Моля въвеждайте валидни данни за вашият имейл.");
 			}
 			sess.setAttribute("user", user);
 			user.setPassword(pass);
@@ -476,9 +465,9 @@ public class UserController {
 			this.updateProfile(user, sess);
 			sess.removeAttribute("user");
 		} catch (SQLException e) {
-			return "error2";
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		}
-		return "index";
+		return new ModelAndView("index");
 	}
 
 }
