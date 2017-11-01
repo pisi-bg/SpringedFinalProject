@@ -21,6 +21,10 @@
 				<a href="${pageContext.request.contextPath}/products/sort/price/${asc}" ">Въз.</a>
 				<a href="${pageContext.request.contextPath}/products/sort/price/${desc}" ">Низ.</a>	 --%>
 				
+				<!-- Show info about your favorites products  -->
+				<c:if test="${sessionScope.favorite }"><h1>Вашите любими продукти:</h1></c:if>
+				<c:if test="${sessionScope.favorite != null && !sessionScope.favorite }"><h1>Нямате любими продукти!</h1></c:if>
+				
 				<p>подреди по</p>
 				
 				
@@ -37,10 +41,10 @@
 							<li class="col-xs-12 col-md-3">
 								<div class="wrap">
 								
-									<a href="#" class="">
+									<a href="${pageContext.request.contextPath}/products/productdetail/productId/${pro.id}" class="">
 										<img src="<c:url value="/products/image/${ pro.id }"/>"  alt="${ pro.description }" />
 									</a>
-									<a href="#" class="pisi-grid_products_title">
+									<a href="${pageContext.request.contextPath}/products/productdetail/productId/${pro.id}" class="pisi-grid_products_title">
 										<h3>
 											${pro.name}
 										</h3>
@@ -69,7 +73,7 @@
 											</c:if>
 											
 										</span>
-										<a href="#" class="pisi-button_dark">Виж повече</a>
+										<a href="${pageContext.request.contextPath}/products/productdetail/productId/${pro.id}" class="pisi-button_dark">Виж повече</a>
 										
 										
 									</div>

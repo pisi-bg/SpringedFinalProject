@@ -31,7 +31,7 @@
 				<c:if test="${sessionScope.user != null}">
 					<a href="<c:url value='/user/logout'/>" title="LogOut">ИЗХОД</a> 
 					<a href="<c:url value='/user/profile'/>" title="Profile">ПРОФИЛ</a> 
-					<a href="<c:url value='/user/favorites'/>" title="Favorites">ЛЮБИМИ</a> 
+					<a href="<c:url value='/user/favorites/0'/>" title="Favorites">ЛЮБИМИ</a> 
 				</c:if>				
 				<c:if test="${ sessionScope.user.isAdmin() }">
 					<a href="${pageContext.request.contextPath}/user/admin/addProduct" title="Add Product">ДОБАВИ ПРОДУКТ</a> 
@@ -49,7 +49,7 @@
 				</div>
 				<div class="col-xs-12 col-md-4 pisi-brand_search">					
 					<form action="${pageContext.request.contextPath}/products/search/0" method="post">
-						<input type="text" name="word">						
+						<input type="text" name="keyword">						
 						<input type="image" name="submit"	src="<c:url value='/img/buttons/search2.png'/>" alt="ТЪРСИ" title="ТЪРСИ">							
 					</form>					
 				</div>
