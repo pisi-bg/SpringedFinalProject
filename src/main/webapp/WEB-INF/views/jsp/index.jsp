@@ -1,4 +1,4 @@
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 	 <jsp:include page="header.jsp"></jsp:include>
 
 	
@@ -14,9 +14,6 @@
 	
 		</div><!-- w3-container -->
 	</div> <!-- pisi-wrap -->
-	
-	
-	
 	
 
 </body>

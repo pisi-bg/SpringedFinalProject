@@ -35,7 +35,7 @@ import com.example.utils.ImageProvider;
 @RequestMapping(value = "/products")
 public class ProductController {
 
-	private static final int ITEMS_PER_PAGE = 9;
+	public static final int ITEMS_PER_PAGE = 9;
 	@Autowired
 	ProductDao pd;
 	@Autowired
@@ -47,6 +47,7 @@ public class ProductController {
 	public ModelAndView productsGetAnimal(HttpServletRequest request, HttpSession sess,
 			@PathVariable("animalId") Integer animalId, @PathVariable("page") Integer page) {
 
+		sess.removeAttribute("favorite");
 		int paging = page == null ? 0 : page; // safety first
 
 		PagedListHolder<Product> productList = (PagedListHolder<Product>) sess.getAttribute("productPage");
@@ -96,6 +97,7 @@ public class ProductController {
 			@PathVariable("animalId") Integer animalId, @PathVariable("catId") Integer categoryId,
 			@PathVariable("page") Integer page) {
 
+		sess.removeAttribute("favorite");
 		int paging = page == null ? 0 : page;
 
 		PagedListHolder<Product> productList = (PagedListHolder<Product>) sess.getAttribute("productPage");
@@ -143,6 +145,8 @@ public class ProductController {
 	public ModelAndView productsGetCategory(HttpServletRequest request, HttpSession sess,
 			@PathVariable("animalId") Integer animalId, @PathVariable("catId") Integer categoryId,
 			@PathVariable("subCatId") Integer subCategoryId, @PathVariable("page") Integer page) {
+
+		sess.removeAttribute("favorite");
 		int paging = page == null ? 0 : page;
 
 		PagedListHolder<Product> productList = (PagedListHolder<Product>) sess.getAttribute("productPage");
@@ -176,7 +180,7 @@ public class ProductController {
 
 			sess.setAttribute("url", url);
 			sess.setAttribute("productPage", productList);
-			request.getSession().setAttribute("products", products);
+			sess.setAttribute("products", products);
 			request.setAttribute("subCatId", categoryId);
 		} catch (SQLException e) {
 			// TODO redirect to error page and re-throw e;
@@ -185,8 +189,7 @@ public class ProductController {
 		return new ModelAndView("products", "productPage", productList);
 
 	}
-
-	// /product/productdetail/productId/${pro.id}
+	
 	@RequestMapping(value = "/productdetail/productId/{id}", method = RequestMethod.GET)
 	public String productDetailGet(HttpServletRequest request, HttpSession s, @PathVariable("id") Integer productId,
 			Model m) {
@@ -205,7 +208,7 @@ public class ProductController {
 		try {
 			productCurrent = pd.getProduct(productId);
 			s.setAttribute("productCurrent", productCurrent);
-			comments.addAll(rd.getProductRatingAndComment(productId));
+			comments.addAll(rd.getProductRatingAndComment(productId));			
 			s.setAttribute("comments", comments);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -282,7 +285,7 @@ public class ProductController {
 	}
 
 	@RequestMapping(value = "/addFavorite", method = RequestMethod.GET)
-	public String addFavorit(HttpServletRequest request, HttpSession session) {
+	public String addFavorite(HttpServletRequest request, HttpSession session) {
 		Product product = (Product) session.getAttribute("productCurrent");
 		if (product == null) {
 			return "error";
@@ -303,7 +306,7 @@ public class ProductController {
 	}
 
 	@RequestMapping(value = "/removeFavorite", method = RequestMethod.GET)
-	public String removeFavorit(HttpServletRequest request, HttpSession session) {
+	public String removeFavorite(HttpServletRequest request, HttpSession session) {
 		Product product = (Product) session.getAttribute("productCurrent");
 		if (product == null) {
 			return "error";
@@ -369,8 +372,10 @@ public class ProductController {
 		return new ModelAndView("products", "productPage", productList);
 	}
 
-	@RequestMapping(value = "/search/{page}")
+	@RequestMapping(value = "/search/{page}", method = RequestMethod.POST)
 	public ModelAndView searchProduct(HttpServletRequest req, HttpSession sess, @PathVariable Integer page) {
+
+		sess.removeAttribute("favorite");
 		int paging = page == null ? 0 : page; // safety first
 
 		PagedListHolder<Product> productList = (PagedListHolder<Product>) sess.getAttribute("productPage");
@@ -383,7 +388,7 @@ public class ProductController {
 		if (keyword == null) {
 			keyword = word;
 		}
-
+		
 		String[] words = keyword.split(" ");
 
 		if (words[0].isEmpty()) {

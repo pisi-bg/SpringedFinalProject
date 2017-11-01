@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -14,13 +15,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.example.WebInitializer;
 import com.example.model.db.OrderDao;
@@ -199,16 +203,57 @@ public class UserController {
 		return "redirect:/user/profile";
 	}
 
-	@RequestMapping(value = "/favorites", method = RequestMethod.GET)
-	public String viewFavorites(HttpSession session) {
+	@RequestMapping(value = "/favorites/{page}", method = RequestMethod.GET)
+	public ModelAndView viewFavorites(HttpSession session, @PathVariable("page") Integer page) {
 		User user = (User) session.getAttribute("user");
 		if (user == null) {
-			return "redirect:/user/login";
+			return new ModelAndView("login");
 		}
-		if (!user.getFavorites().isEmpty()) {
-			session.setAttribute("favorites", user.getFavorites());
+		
+		int paging = page == null ? 0 : page;
+		
+		PagedListHolder<Product> productList = (PagedListHolder<Product>) session.getAttribute("productPage");
+		String url = "/user/favorites";
+		List<Product> products = new ArrayList<>();
+		products.addAll(user.getFavorites());
+		
+		if(products.isEmpty()){
+			session.setAttribute("favorite", false);
+		}else {
+			session.setAttribute("favorite", true);
 		}
-		return "favorites";
+		// maybe here set attribute for empty list
+		
+		if(productList != null){
+			if(!productList.getSource().equals(products)){
+				productList.setSource(products);
+			}
+		}else {
+			productList = new PagedListHolder<>(products);
+		}
+		productList.resort();
+		productList.setPageSize(ProductController.ITEMS_PER_PAGE);
+		
+		if (paging >= 0) {
+			productList.setPage(paging);
+		} else {
+			if (paging == -1) {
+				productList.nextPage();
+			}
+			if (paging == -2) {
+				productList.previousPage();
+			}
+			if (paging < -2) {
+				return new ModelAndView("Error", "message", "Please don't type in URL by yourself");
+			}
+		}
+		
+		session.setAttribute("url", url);
+		session.setAttribute("products", products);
+		session.setAttribute("productPage", productList);
+		
+		
+		return new ModelAndView("products", "productPage", productList);
 	}
 
 	@RequestMapping(value = "/contactForm", method = RequestMethod.GET)

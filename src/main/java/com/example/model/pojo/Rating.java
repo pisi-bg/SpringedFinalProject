@@ -1,8 +1,9 @@
 package com.example.model.pojo;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Rating {
+public class Rating implements Serializable{
 
 	private long productId;
 	private String userEmail;

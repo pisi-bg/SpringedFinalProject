@@ -136,8 +136,8 @@
 			</form>
 
 		</c:if>
-
-			<c:if test="${sesstionScope.comments == null }">
+				
+			<c:if test="${sessionScope.comments.isEmpty() }">
 				<p>Няма коментари. Бъди първият.</p>
 			</c:if>
 

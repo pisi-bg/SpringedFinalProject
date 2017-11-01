@@ -31,7 +31,7 @@
 				<c:if test="${sessionScope.user != null}">
 					<a href="<c:url value='/user/logout'/>" title="LogOut">ИЗХОД</a> 
 					<a href="<c:url value='/user/profile'/>" title="Profile">ПРОФИЛ</a> 
-					<a href="<c:url value='/user/favorites'/>" title="Favorites">ЛЮБИМИ</a> 
+					<a href="<c:url value='/user/favorites/0'/>" title="Favorites">ЛЮБИМИ</a> 
 				</c:if>				
 				<c:if test="${ sessionScope.user.isAdmin() }">
 					<a href="${pageContext.request.contextPath}/user/admin/addProduct" title="Add Product">ДОБАВИ ПРОДУКТ</a> 

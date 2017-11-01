@@ -9,18 +9,16 @@
 		<jsp:include page="categories.jsp"></jsp:include>
 		
 		
-		<!-- <div class="pisi-wrap-container"> -->
-			
+		<!-- <div class="pisi-wrap-container"> -->			
+
 			<c:if test="${ sessionScope.products != null }">
 				<div  class="w3-container" >	
 					<div class="pisi-sort_buttons">
 						<c:set var="asc" value="asc"></c:set>
 						<c:set var="desc" value="desc"></c:set>
 						
-						<%-- <a href="${pageContext.request.contextPath}/products/sort/name/${asc}" >А-Я</a>
-						<a href="${pageContext.request.contextPath}/products/sort/name/${desc}"">Я-А</a>
-						<a href="${pageContext.request.contextPath}/products/sort/price/${asc}" ">Въз.</a>
-						<a href="${pageContext.request.contextPath}/products/sort/price/${desc}" ">Низ.</a>	 --%>
+						<c:if test="${sessionScope.favorite }"><h1>Вашите любими продукти:</h1></c:if>
+						<c:if test="${sessionScope.favorite != null && !sessionScope.favorite }"><h1>Нямате любими продукти!</h1></c:if>
 						
 						<p>подреди по</p>
 						
@@ -35,8 +33,7 @@
 						<ul>
 							<c:forEach items="${ productPage.getPageList() }" var="pro">
 									<li class="col-xs-12 col-md-4">
-										<div class="wrap">
-											
+										<div class="wrap">											
 												<a href="<c:url value='/products/productdetail/productId/${pro.id}'/>" class="products_img">
 													<img src="<c:url value="/products/image/${ pro.id }"/>"  alt="${ pro.description }" />
 												</a>
@@ -69,8 +66,8 @@
 														
 													<!-- </span> -->
 													<a href="<c:url value='/products/productdetail/productId/${pro.id}'/>" class="pisi-button_dark">Виж повече</a>
-												</div>
-											
+												</div>											
+
 										</div> <!-- "wrap" -->
 									</li>
 					
