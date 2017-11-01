@@ -64,7 +64,7 @@ public class UserController {
 	public String loginUser(@ModelAttribute User user, HttpServletRequest request, HttpServletResponse response,
 			HttpSession ses) {
 
-		String email = user.getEmail();		
+		String email = user.getEmail();
 		// validate email and password in spring form
 		if (!UserDao.isValidEmailAddress(email)) {
 			request.setAttribute("wrongEmail", true);
@@ -87,7 +87,8 @@ public class UserController {
 				return "login";
 			}
 		} catch (SQLException e) {
-			//TODO handle it
+
+			// TODO handle it
 			return "SQLerrorInLogin";
 		} catch (NoSuchAlgorithmException e) {
 			// TODO handle it
@@ -97,6 +98,7 @@ public class UserController {
 			// TODO handle it
 			e.printStackTrace();
 			return "errorInEncoding";
+
 		}
 
 	}
@@ -110,14 +112,14 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String registerUser(HttpSession sess, @ModelAttribute User user) {		
-		
+	public String registerUser(HttpSession sess, @ModelAttribute User user) {
+
 		try {
 			String userpass = user.getPassword();
 			userpass = Hasher.securePassword(userpass, user.getEmail());
 			user.setPassword(userpass);
 			ud.insertUser(user);
-		} catch (SQLException e) {			
+		} catch (SQLException e) {
 			sess.setAttribute("regError", true);
 			return "redirect:/user/register";
 		} catch (NoSuchAlgorithmException e) {
@@ -127,7 +129,7 @@ public class UserController {
 			// TODO handle it
 			e.printStackTrace();
 		}
-		if(sess.getAttribute("regError") != null){
+		if (sess.getAttribute("regError") != null) {
 			sess.removeAttribute("regError");
 		}
 		return "index";
@@ -142,7 +144,7 @@ public class UserController {
 	@RequestMapping(value = "/profile", method = RequestMethod.GET)
 	public String viewProfile(HttpSession session) {
 		session.removeAttribute("orders");
-		
+
 		User u = (User) session.getAttribute("user");
 		if (u == null) {
 			return "redirect:/user/login";
@@ -458,22 +460,20 @@ public class UserController {
 	public String sendPassword(HttpServletRequest req, HttpSession sess) {
 		String email = req.getParameter("email");
 		String pass = PasswordGenerator.getRandomPass();
-		
-		
+
 		if (email == null || !UserDao.isValidEmailAddress(email)) {
 			return "error1";
 		}
-		
-		
-		try {			
-			User user = ud.getUser(email);			
-			if(user.getEmail() == null || user.getEmail().isEmpty()){
+
+		try {
+			User user = ud.getUser(email);
+			if (user.getEmail() == null || user.getEmail().isEmpty()) {
 				return "error";
-			}			
-			sess.setAttribute("user", user);			
+			}
+			sess.setAttribute("user", user);
 			user.setPassword(pass);
 			EmailSender.passwordTo(user);
-			this.updateProfile(user, sess); 
+			this.updateProfile(user, sess);
 			sess.removeAttribute("user");
 		} catch (SQLException e) {
 			return "error2";

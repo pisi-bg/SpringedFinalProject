@@ -1,9 +1,5 @@
 package com.example.model.pojo;
 
-
-import java.awt.print.PageFormat;
-import java.awt.print.Pageable;
-import java.awt.print.Printable;
 import java.io.Serializable;
 
 public class Product implements Serializable {
@@ -36,14 +32,14 @@ public class Product implements Serializable {
 
 	public Product(long id, String name, String description, double price, int discount, String animal, String category,
 			String image, double rating, String brand) {
-		this(id, name, description, price, category, rating, image);
+		this(id, name, description, price, category, rating, image, discount);
 		this.discount = discount;
 		this.animal = animal;
 		this.brand = brand;
 	}
 
-	public Product(long id, String name, String description, double price, String category, double rating,
-			String image) {
+	public Product(long id, String name, String description, double price, String category, double rating, String image,
+			int discount) {
 		this.id = id;
 		this.name = name;
 		this.description = description;
@@ -51,6 +47,7 @@ public class Product implements Serializable {
 		this.category = category;
 		this.rating = rating;
 		this.image = image;
+		this.discount = discount;
 	}
 
 	public Product setId(long id) {
@@ -61,7 +58,7 @@ public class Product implements Serializable {
 	public Product setDiscount(int discount) {
 		if (discount >= 0 && discount <= 100) {
 			this.discount = discount;
-		}else {
+		} else {
 			// throw e;
 		}
 		return this;
@@ -215,8 +212,4 @@ public class Product implements Serializable {
 		}
 	}
 
-
-	
-	
-	
 }

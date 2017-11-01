@@ -8,12 +8,14 @@
 	</div>
 	
 	<div class="pisi-wrap container">
+		<div  class="w3-container" >
 	
-		<a class="pisi-button_round" href="#">test</a>
+			<a class="pisi-button_round" href="#">test</a>
+		
+			<h1>test</h1>
 	
-		<h1>test</h1>
-	
-	</div><!-- pisi-wrap -->
+		</div><!-- w3-container -->
+	</div> <!-- pisi-wrap -->
 	
 	
 	
