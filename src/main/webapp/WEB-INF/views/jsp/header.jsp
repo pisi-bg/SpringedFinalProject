@@ -10,7 +10,7 @@
 <%-- <link rel="stylesheet" href='<c:url value="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />' /> --%>
 <%-- <link rel="stylesheet" href='<c:url value="https://zeroattentionspan.net/pisi.css" />' /> --%>
 <link href="<c:url value="/css/bootstrap.css" />" rel="stylesheet" type="text/css">
-<link href="<c:url value="/css/pisi.css" />" rel="stylesheet" type="text/css">
+<link href="<c:url value="/css/pisi2.css" />" rel="stylesheet" type="text/css">
 
 
 </head>
@@ -45,8 +45,10 @@
 				<div class="col-xs-12 col-md-4 pisi-brand_logo no-padding">
 					<a href="<c:url value='/index'/>">
 						<img src="<c:url value='/img/buttons/pisi.png'/>" alt="HOME" title="HOME" >
-						<span class="pisi-title">Pisi.bg</span>
-						<span class="pisi-title-shop">онлайн зоомагазин</span>
+						<span class="logo-text">
+							<span class="pisi-title">Pisi.bg</span><br>
+							<span class="pisi-title-shop">онлайн зоомагазин</span>
+						</span>
 					</a>
 				</div>
 				<div class="col-xs-12 col-md-4 pisi-brand_search">					

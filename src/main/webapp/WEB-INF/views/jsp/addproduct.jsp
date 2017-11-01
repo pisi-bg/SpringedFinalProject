@@ -2,12 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<!DOCTYPE html SYSTEM "about:legacy-compat">
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Insert title here</title>
-</head>
 
 	 <c:if test="${ !sessionScope.user.isAdmin()}">	 
 		<c:redirect url="index.jsp"></c:redirect>
@@ -62,8 +56,7 @@
 			<input type="number" min="0" max="99" step="1" name="discount" required /><br>		
 		Снимка:	 
 			<input type="file" name="image" accept=".jpg, .png, .jpeg"  required/><br>	
-			<%-- <input type="image" name="submit" width="8%" height="auto" src="<c:url value='/img/buttons/profile.png'/>" alt="ВЛЕЗ" title="ВЛЕЗ">  --%>
-	<!-- //	<a class="pisi-button_yellow" href="#">ДОБАВИ</a> -->
+			
 		<input type="submit">
 	</form>
 	

@@ -198,22 +198,25 @@ h3 left{
 .pisi-brand_logo{
 	margin: 30px 0px;
 }
-.pisi-brand_logo .pisi-title{
-	font-size: 30px;
+
+.pisi-brand_logo .logo-text {	
 	float: left;
-	line-height: 120px;
+	/*line-height: 120px;*/	
+	font-weight: bold;	
+	margin-top: 30px;
+}
+
+.pisi-brand_logo .logo-text .pisi-title{
+	font-size: 30px;
+	/*line-height: 120px;*/
 	text-transform:uppercase;
-	font-weight: bold;
 	color: #440008;
 }
-.pisi-brand_logo .pisi-title-shop{
-	font-size: 20px;
-	float: left;
-	line-height: 120px;
-	
-	font-weight: bold;
-	color: №d99232;
+.pisi-brand_logo .logo-text .pisi-title-shop{
+	font-size: 16px;	
+	color: #d99232;	
 }
+
 .pisi-brand_logo img{
 	height: 120px;
 	width: 120px;
@@ -233,7 +236,8 @@ h3 left{
 .pisi-brand_search form input[type="text"]{
 	height: 30px;
 	border: 1px;
-	solid: #d9d9d9;
+	solid: 	#000000;	
+	/*solid: #d9d9d9;*/
 	line-height: 30px;
 	float: left;
 	
@@ -321,7 +325,7 @@ h3 left{
    /* overflow-y:scroll;*/
 	flex: 1; 
 	overflow: auto;
-	z-index: -1;
+	z-index: 0;
 }	
  .pisi-paging {
 	display: block;	
