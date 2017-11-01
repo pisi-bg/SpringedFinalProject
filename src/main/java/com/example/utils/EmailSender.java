@@ -17,10 +17,10 @@ public class EmailSender {
 	private static String from = "pisi.bg.shop@gmail.com";
 	private static String pass = "pisi.bg1";
 
-	private static String subject = "www.pisi.bg";
+	private static String subject = "www.pisi.bg !!!";
 
 	
-	public static void toPromotion() {
+	public static void toPromotion(String email, long productId) {
 		Properties props = new Properties();
 		
 		props.put("mail.smtp.host", host);
@@ -35,13 +35,15 @@ public class EmailSender {
 		try {
 
 			msg.setFrom(new InternetAddress(from));
-			msg.setRecipient(Message.RecipientType.TO, new InternetAddress("pisi.bg.shop@gmail.com"));
-			msg.setSubject(subject);
+			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
+			msg.setSubject("Нови изкушаващи промоций в www.pisi.bg !!!");
 			
 			// to be added properly
-			String emailText = "<a href=\"http://localhost:8080/ProjectPisi/products/productdetail/productId/3\">"
-					+ " <img src=\"http://www.petmd.com/sites/default/files/scared-kitten-shutterstock_191443322.jpg\">"
-					+ "</a>";
+			String emailText = "<strong>Здравей, имаме нова отстъпка на любим твой продукт. Тук можеш да разгледаш:</strong>"
+							+ "<a href=\"http://localhost:8080/ProjectPisi/products/productdetail/productId/5\"> Продукт"
+							+ "</a><br>"
+							+ "<strong>Екипът на pisi.bg ти пожелава приятно пазаруваме в нашият сайт.</strong> <br><br>"
+							+ "<img src=\"http://media.pennlive.com/midstate_impact/photo/dog-paw-genericjpg-829eca230b8dc4f1.jpg\" width=\"100px\" heigth=\"auto\" ></a>";
 			msg.setContent(emailText, "text/html; charset=utf-8");
 
 			Transport transport = session.getTransport("smtps");
@@ -68,7 +70,7 @@ public class EmailSender {
 		try {
 
 			msg.setFrom(new InternetAddress(from));
-			msg.setRecipient(Message.RecipientType.TO, new InternetAddress("pisi.bg.shop@gmail.com"));
+			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(u.getEmail()));
 			msg.setSubject(subject);
 
 			String emailText = String.format("<h2>Здравей, приятелю на домашните любимци!</h2><br>"
@@ -81,6 +83,38 @@ public class EmailSender {
 					+ "<a>"
 					+ " <img src=\"http://media.pennlive.com/midstate_impact/photo/dog-paw-genericjpg-829eca230b8dc4f1.jpg\" width=\"100px\" heigth=\"auto\" >"
 					+ "</a>",u.getEmail(), u.getPassword());
+
+			msg.setContent(emailText, "text/html; charset=utf-8");
+
+			Transport transport = session.getTransport("smtps");
+			transport.connect(host, from, pass);
+			transport.sendMessage(msg, msg.getAllRecipients());
+			transport.close();
+
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void contactUs(User u, String subject, String describe) {
+		Properties props = new Properties();
+		
+		props.put("mail.smtp.host", host);
+		props.put("mail.smtp.user", from);
+		props.put("mail.smtp.password", pass);
+		props.put("mail.smtp.port", port);
+		props.put("mail.smtp.auth", "true");
+
+		Session session = Session.getDefaultInstance(props);
+
+		Message msg = new MimeMessage(session);
+		try {
+
+			msg.setFrom(new InternetAddress(from));
+			msg.setRecipient(Message.RecipientType.TO, new InternetAddress("pisi.bg.shop@gmail.com"));
+			msg.setSubject(subject);
+
+			String emailText = String.format("Потребител на име " + u.getFirstName() + " и мейл "+ u.getEmail() + " се свърза с нас с въпрос: <br>"	+ describe);
 
 			msg.setContent(emailText, "text/html; charset=utf-8");
 

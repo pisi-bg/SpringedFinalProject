@@ -15,7 +15,7 @@
 	<h2>ФОРМА ЗА КОНТАКТИ</h2>
 	<h3>МОЛЯ, ПОПЪЛНЕТЕ ВСИЧКИ ПОЛЕТА:</h3>
 
-	<form method="POST" enctype="multipart/form-data" action="sendMail"	id="login_form" class="box">
+	<form method="POST"  action="contactForm" id="login_form" class="box">
 
 		<!-- <h3 class="page-subheading">ФОРМА ЗА КОНТАКТИ</h3> -->
 
@@ -24,23 +24,23 @@
 
 		<div class="form_content clearfix">
 			<div class="form-group">
-				<label for="email">Име</label> <input type="text" name="name"
+				<label for="name">Име</label> <input type="text" name="name"
 					value="" class="account_input form-control">
 			</div>
 			<div class="form-group">
-				<label for="passwd">Телефон</label> <input type="text" name="phone"
+				<label for="phone">Телефон</label> <input type="number" name="phone"
 					value="" class="account_input form-control">
 			</div>
 			<div class="form-group">
-				<label for="passwd">Email</label> <input type="text" name="email"
+				<label for="email">Email</label> <input type="email" name="email"
 					value="" class="account_input form-control">
 			</div>
 			<div class="form-group">
-				<label for="passwd">Относно</label> <input type="text"
+				<label for="subject">Относно</label> <input type="text"
 					name="subject" value="" class="account_input form-control">
 			</div>
 			<div class="form-group">
-				<label for="passwd">Описание</label>
+				<label for="descr">Описание</label>
 
 				<textarea name="descr" class="account_input form-control"
 					style="height: 120px;"></textarea>

@@ -257,15 +257,21 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/contactForm", method = RequestMethod.GET)
-	public String sendMail(HttpSession session, Model m) {
-		User user = (User) session.getAttribute("user");
-		if (user == null) {
-			return "redirect:/user/login";
-		}
-
-		// session.setAttribute("favorites", user.getFavorites());
-
+	public String giveContactForm(HttpSession session, Model m) {		
 		return "contactForm";
+	}
+	
+	@RequestMapping(value="/contactForm", method = RequestMethod.POST)
+	public String sendMail(HttpServletRequest req){
+		User user = new User().setEmail(req.getParameter("email"))
+							  .setFirstName(req.getParameter("name"));
+		String subject = req.getParameter("subject");
+		String describe = req.getParameter("descr");
+		if(user == null || subject == null || describe == null){
+			return "error";
+		}
+		EmailSender.contactUs(user, subject, describe);
+		return "index";
 	}
 
 	@RequestMapping(value = "/admin/removeProduct", method = RequestMethod.GET)
@@ -445,6 +451,10 @@ public class UserController {
 		long id = pro.getId();
 		try {
 			pd.setInPromotion(id, discount);
+			List<String> users = ud.userEmailsLiked(id);
+			for(String email : users){
+				EmailSender.toPromotion(email, id);
+			}
 		} catch (SQLException e) {
 			return "error";
 		}

@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -190,6 +192,30 @@ public class UserDao {
 				rs.close();
 			}
 		}
+	}
+	
+	public List<String> userEmailsLiked(long productId) throws SQLException{
+		String query = "SELECT u.email AS email FROM pisi.users AS u "
+						+ "JOIN pisi.users_has_favorites AS f ON(u.user_id = f.user_id) "
+						+ "JOIN pisi.products AS p ON(f.product_id = p.product_id) "
+						+ "WHERE f.product_id = ?";
+		List<String> emails = new ArrayList<String>();
+		Connection con = db.getAdminCon();
+		ResultSet rs = null;
+		try(PreparedStatement stmt = con.prepareStatement(query)){
+			stmt.setLong(1, productId);
+			rs = stmt.executeQuery();
+			while(rs.next()){
+				emails.add(rs.getString("email"));
+			}
+		} catch (SQLException e) {
+			throw e;
+		}finally {
+			if(rs != null){
+				rs.close();
+			}
+		}		
+		return emails;
 	}
 	
 }
