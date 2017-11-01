@@ -39,15 +39,6 @@ public class User {
 		this.favorites = favorites;
 	}
 
-//	// constructor for register
-//	public User(String firstName, String lastName, String email, String password, boolean isMale) {
-//		this(email, password);
-//		this.firstName = firstName;
-//		this.lastName = lastName;
-//		this.isMale = isMale;
-//		this.isAdmin = false;
-//	}
-
 	// check if user is admin
 	public boolean isAdmin() {
 		return isAdmin;

@@ -72,10 +72,11 @@ public class EmailSender {
 			msg.setSubject(subject);
 
 			String emailText = String.format("<h2>Здравей, приятелю на домашните любимци!</h2><br>"
-					+ "кофти е да си забравиш паролата, затова от екипа на pisi.bg проявяваме разбиране и предоставяме тази информация за теб.<br>"
+					+ "Кофти е да си забравиш паролата, затова от екипа на pisi.bg проявяваме разбиране и предоставяме тази информация за теб.<br>"
 					+ "Твоите данни са:<br><br>"
 					+ "<strong>email:</strong> %s <br>"
 					+ "<strong>password:</strong> %s<br><br>"
+					+ "<strong>Ето линк, където да се логнеш с новата си парола, след което можеш да я смениш: http://localhost:8080/ProjectPisi/user/login </strong><br>"
 					+ "<h3>От екипа на нашия сайт, ти пожелаваме приятно пазаруване.</h3>"
 					+ "<a>"
 					+ " <img src=\"http://media.pennlive.com/midstate_impact/photo/dog-paw-genericjpg-829eca230b8dc4f1.jpg\" width=\"100px\" heigth=\"auto\" >"

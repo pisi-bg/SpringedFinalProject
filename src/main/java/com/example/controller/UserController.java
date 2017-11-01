@@ -3,6 +3,7 @@ package com.example.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.TreeSet;
@@ -29,6 +30,8 @@ import com.example.model.pojo.Order;
 import com.example.model.pojo.Product;
 import com.example.model.pojo.User;
 import com.example.utils.EmailSender;
+import com.example.utils.Hasher;
+import com.example.utils.PasswordGenerator;
 
 @Controller
 @MultipartConfig
@@ -58,33 +61,40 @@ public class UserController {
 			HttpSession ses) {
 
 		String email = user.getEmail();
-		String password = user.getPassword();
-
 		// validate email and password in spring form
-
 		if (!UserDao.isValidEmailAddress(email)) {
 			request.setAttribute("wrongEmail", true);
 			return "login";
 		}
-
-		if (password.isEmpty()) {
-			return "login";
-		}
-
 		try {
+			String password = user.getPassword();
+			password = Hasher.securePassword(password, email);
+			if (password.isEmpty()) {
+				return "login";
+			}
+			user.setPassword(password);
 			if (ud.userExist(user)) {
 				user = ud.getUser(email);
 				ses.setAttribute("user", user);
 				ses.setMaxInactiveInterval(-1); // infinity session
-				// TODO update session to remain logged in and
 				return "products";
-
 			} else {
 				request.setAttribute("wrongUser", true);
 				return "login";
 			}
 		} catch (SQLException e) {
-			return "error";
+
+			// TODO handle it
+			return "SQLerrorInLogin";
+		} catch (NoSuchAlgorithmException e) {
+			// TODO handle it
+			e.printStackTrace();
+			return "errorInAlgorithm";
+		} catch (UnsupportedEncodingException e) {
+			// TODO handle it
+			e.printStackTrace();
+			return "errorInEncoding";
+
 		}
 
 	}
@@ -98,14 +108,27 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String registerUser(@ModelAttribute User user) {
+	public String registerUser(HttpSession sess, @ModelAttribute User user) {
 
 		try {
+			String userpass = user.getPassword();
+			userpass = Hasher.securePassword(userpass, user.getEmail());
+			user.setPassword(userpass);
 			ud.insertUser(user);
 		} catch (SQLException e) {
-			return "error";
+			sess.setAttribute("regError", true);
+			return "redirect:/user/register";
+		} catch (NoSuchAlgorithmException e) {
+			// TODO handle it
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO handle it
+			e.printStackTrace();
 		}
-		return "forward:index";
+		if (sess.getAttribute("regError") != null) {
+			sess.removeAttribute("regError");
+		}
+		return "index";
 	}
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
@@ -159,10 +182,18 @@ public class UserController {
 	public String updateProfile(@ModelAttribute User user, HttpSession sess) {
 		try {
 			user.setId(((User) sess.getAttribute("user")).getId());
+			String hashPassword = Hasher.securePassword(user.getPassword(), user.getEmail());
+			user.setPassword(hashPassword);
 			ud.updateUser(user);
 			sess.setAttribute("user", user);
 		} catch (SQLException e) {
 			// TODO error page
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO handle it
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO handle it
 			e.printStackTrace();
 		}
 		return "redirect:/user/profile";
@@ -381,15 +412,24 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/password", method = RequestMethod.POST)
-	public String sendPassword(HttpServletRequest req) {
+	public String sendPassword(HttpServletRequest req, HttpSession sess) {
 		String email = req.getParameter("email");
+		String pass = PasswordGenerator.getRandomPass();
 
 		if (email == null || !UserDao.isValidEmailAddress(email)) {
 			return "error1";
 		}
+
 		try {
 			User user = ud.getUser(email);
+			if (user.getEmail() == null || user.getEmail().isEmpty()) {
+				return "error";
+			}
+			sess.setAttribute("user", user);
+			user.setPassword(pass);
 			EmailSender.passwordTo(user);
+			this.updateProfile(user, sess);
+			sess.removeAttribute("user");
 		} catch (SQLException e) {
 			return "error2";
 		}
