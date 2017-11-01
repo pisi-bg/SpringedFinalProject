@@ -4,12 +4,14 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.example.model.db.CategoryDao;
 import com.example.model.db.ProductDao;
@@ -26,7 +28,7 @@ public class WelcomeController {
 	ProductDao pd;
 	
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String welcome(HttpSession ses) {
+	public ModelAndView welcome(HttpSession ses) {
 		ses.setMaxInactiveInterval(45 * 60); // 45 mins
 		Map<String,Integer> aqua = null;	
 		Map<String,Integer> cats = null;	
@@ -55,10 +57,10 @@ public class WelcomeController {
 			ses.setAttribute("topProducts", topProducts);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return "error";
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините.");
 		}	
 		
-		return "index";
+		return new ModelAndView("index");
 	}
 	
 	

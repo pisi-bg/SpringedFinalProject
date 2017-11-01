@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.model.db.CategoryDao;
 import com.example.model.db.ProductDao;
 import com.example.model.db.RatingDao;
 import com.example.model.db.UserDao;
@@ -42,12 +44,15 @@ public class ProductController {
 	RatingDao rd;
 	@Autowired
 	UserDao ud;
+	@Autowired
+	CategoryDao ctd;
 
 	@RequestMapping(value = "/animal/{animalId}/{page}", method = RequestMethod.GET)
 	public ModelAndView productsGetAnimal(HttpServletRequest request, HttpSession sess,
 			@PathVariable("animalId") Integer animalId, @PathVariable("page") Integer page) {
 
 		sess.removeAttribute("favorite");
+		sess.removeAttribute("subCategories");
 		int paging = page == null ? 0 : page; // safety first
 
 		PagedListHolder<Product> productList = (PagedListHolder<Product>) sess.getAttribute("productPage");
@@ -77,7 +82,7 @@ public class ProductController {
 					productList.previousPage();
 				}
 				if (paging < -2) {
-					return new ModelAndView("Error", "message", "Please don't type in URL by yourself");
+					return new ModelAndView("Error", "message", "Моля не пишете в адрес бара сами. Пробвайте отново.");
 				}
 			}
 			sess.setAttribute("url", url);
@@ -85,8 +90,7 @@ public class ProductController {
 			sess.setAttribute("products", products);
 			sess.setAttribute("animalId", animalId);
 		} catch (SQLException e) {
-			// TODO redirect to error page and re-throw e;
-			e.printStackTrace();
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		}
 		return new ModelAndView("products", "productPage", productList);
 
@@ -98,12 +102,16 @@ public class ProductController {
 			@PathVariable("page") Integer page) {
 
 		sess.removeAttribute("favorite");
+		
 		int paging = page == null ? 0 : page;
 
 		PagedListHolder<Product> productList = (PagedListHolder<Product>) sess.getAttribute("productPage");
+		
+		
 		String url = "products/animal/" + animalId + "/category/" + categoryId;
 
 		try {
+			Map<String,Integer> subCategories = ctd.getSubCategoriesForCategory(animalId, categoryId);
 			List<Product> products = pd.getProductsByAnimalAndParentCategory(animalId, categoryId);
 			if (productList != null) {
 				if (!productList.getSource().equals(products)) {
@@ -124,18 +132,18 @@ public class ProductController {
 					productList.previousPage();
 				}
 				if (paging < -2) {
-					return new ModelAndView("Error", "message", "Please don't type in URL by yourself");
+					return new ModelAndView("Error", "message", "Моля не пишете в адрес бара сами. Пробвайте отново.");
 				}
 			}
 			sess.setAttribute("url", url);
 			sess.setAttribute("productPage", productList);
 			sess.setAttribute("products", products);
 			request.setAttribute("catId", categoryId);
+			sess.setAttribute("subCategories", subCategories);
 			// in request so every time you change animal category
 			// sub-categories will be not remembered
 		} catch (SQLException e) {
-			// TODO re-direct to error page and re-throw e;
-			e.printStackTrace();
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		}
 		return new ModelAndView("products", "productPage", productList);
 
@@ -174,7 +182,7 @@ public class ProductController {
 					productList.previousPage();
 				}
 				if (paging < -2) {
-					return new ModelAndView("Error", "message", "Please don't type in URL by yourself");
+					return new ModelAndView("Error", "message", "Моля не пишете в адрес бара сами. Пробвайте отново.");
 				}
 			}
 
@@ -183,15 +191,14 @@ public class ProductController {
 			sess.setAttribute("products", products);
 			request.setAttribute("subCatId", categoryId);
 		} catch (SQLException e) {
-			// TODO redirect to error page and re-throw e;
-			e.printStackTrace();
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		}
 		return new ModelAndView("products", "productPage", productList);
 
 	}
 	
 	@RequestMapping(value = "/productdetail/productId/{id}", method = RequestMethod.GET)
-	public String productDetailGet(HttpServletRequest request, HttpSession s, @PathVariable("id") Integer productId,
+	public ModelAndView productDetailGet(HttpServletRequest request, HttpSession s, @PathVariable("id") Integer productId,
 			Model m) {
 		Product productCurrent = null;
 		TreeSet<Rating> comments = new TreeSet<>(new Comparator<Rating>() {
@@ -211,8 +218,7 @@ public class ProductController {
 			comments.addAll(rd.getProductRatingAndComment(productId));			
 			s.setAttribute("comments", comments);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		}
 
 		// check if product is favorite and has Rating from user
@@ -225,23 +231,23 @@ public class ProductController {
 			try {
 				ratingFromUser = rd.productHasRatingFromUser(productId, u.getId());
 			} catch (SQLException e) {
-				return "error";
+				return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 			}
 			s.setAttribute("ratingFromUser", ratingFromUser);
 			s.setAttribute("isFavorite", new Boolean(isFavorite));
 		}
 		m.addAttribute("newrating", new Rating());
-		return "productdetail";
+		return new ModelAndView("productdetail");
 
 	}
 
 	@RequestMapping(value = "/addInCart/{id}", method = RequestMethod.GET)
-	public String addInCart(HttpServletRequest request, HttpSession s, @PathVariable("id") Integer productId) {
+	public ModelAndView addInCart(HttpServletRequest request, HttpSession s, @PathVariable("id") Integer productId) {
 
 		Product pro = (Product) s.getAttribute("productCurrent");
 		if (pro == null || pro.getInStock() == 0) {
 			// TODO pop up
-			return "redirect:/products";
+			return new ModelAndView("redirect:/products");
 		}
 		HashMap<Product, Integer> cart = (HashMap<Product, Integer>) s.getAttribute("cart");
 		if (cart == null) {
@@ -258,18 +264,18 @@ public class ProductController {
 			cart.put(pro, new Integer(1));
 		}
 		s.setAttribute("cart", cart);
-		return "redirect:/products/productdetail/productId/" + pro.getId();
+		return new ModelAndView("redirect:/products/productdetail/productId/" + pro.getId());
 	}
 
 	@RequestMapping(value = "/addRating", method = RequestMethod.POST)
-	public String addRating(HttpServletRequest request, HttpSession s, @ModelAttribute Rating rating) {
+	public ModelAndView addRating(HttpServletRequest request, HttpSession s, @ModelAttribute Rating rating) {
 		Product pro = (Product) s.getAttribute("productCurrent");
 		if (pro == null) {
-			return "error";
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		}
 		User u = (User) s.getAttribute("user");
 		if (u == null) {
-			return "error";
+			return new ModelAndView("redirect:/user/login");
 		}
 		rating.setProductId(pro.getId());
 		rating.setUserEmail(u.getEmail());
@@ -278,42 +284,42 @@ public class ProductController {
 			rd.addProductRating(rating);
 			pro.setCountRating(pro.getCountRating() + 1);
 		} catch (SQLException e) {
-			return "error";
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		}
 
-		return "redirect:/products/productdetail/productId/" + pro.getId();
+		return new ModelAndView("redirect:/products/productdetail/productId/" + pro.getId());
 	}
 
 	@RequestMapping(value = "/addFavorite", method = RequestMethod.GET)
-	public String addFavorite(HttpServletRequest request, HttpSession session) {
+	public ModelAndView addFavorite(HttpServletRequest request, HttpSession session) {
 		Product product = (Product) session.getAttribute("productCurrent");
 		if (product == null) {
-			return "error";
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		}
 		User user = (User) session.getAttribute("user");
 		if (user == null) {
-			return "redirect:/user/login";
+			return new ModelAndView("redirect:/user/login");
 		}
 		try {
 			ud.insertFavorite(user, product.getId());
 			user.addToFavorites(product);
 			session.setAttribute("isFavorite", true);
 		} catch (SQLException e) {
-			return "error";
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		}
 
-		return "redirect:/products/productdetail/productId/" + product.getId();
+		return new ModelAndView("redirect:/products/productdetail/productId/" + product.getId());
 	}
 
 	@RequestMapping(value = "/removeFavorite", method = RequestMethod.GET)
-	public String removeFavorite(HttpServletRequest request, HttpSession session) {
+	public ModelAndView removeFavorite(HttpServletRequest request, HttpSession session) {
 		Product product = (Product) session.getAttribute("productCurrent");
 		if (product == null) {
-			return "error";
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		}
 		User user = (User) session.getAttribute("user");
 		if (user == null) {
-			return "redirect:/user/login";
+			return new ModelAndView("redirect:/user/login");
 		}
 
 		try {
@@ -321,10 +327,10 @@ public class ProductController {
 			user.removeFromFavorites(product);
 			session.setAttribute("isFavorite", false);
 		} catch (SQLException e) {
-			return "error";
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		}
 
-		return "redirect:/products/productdetail/productId/" + product.getId();
+		return new ModelAndView("redirect:/products/productdetail/productId/" + product.getId());
 	}
 
 	@RequestMapping(value = "/sort/name/{order}")
@@ -353,7 +359,7 @@ public class ProductController {
 	@RequestMapping(value = "/sort/price/{order}")
 	public ModelAndView sortByPrice(HttpSession sess, @PathVariable String order) {
 		if (!order.equals("asc") && !order.equals("desc")) {
-			return new ModelAndView("Error", "message", "Please don't type in URL by yourself");
+			return new ModelAndView("Error", "message", "Моля не пишете в адрес бара сами. Пробвайте отново.");
 		}
 
 		boolean sortOrder = order.equals("asc");
@@ -361,7 +367,7 @@ public class ProductController {
 		PagedListHolder<Product> productList = (PagedListHolder<Product>) sess.getAttribute("productPage");
 
 		if (productList == null) {
-			return new ModelAndView("Error", "message", "Please don't type in URL by yourself");
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		}
 
 		MutableSortDefinition sort = new MutableSortDefinition("price", false, sortOrder);
@@ -375,6 +381,7 @@ public class ProductController {
 	@RequestMapping(value = "/search/{page}", method = RequestMethod.POST)
 	public ModelAndView searchProduct(HttpServletRequest req, HttpSession sess, @PathVariable Integer page) {
 
+		sess.removeAttribute("subCategories");
 		sess.removeAttribute("favorite");
 		int paging = page == null ? 0 : page; // safety first
 
@@ -416,7 +423,7 @@ public class ProductController {
 					productList.previousPage();
 				}
 				if (paging < -2) {
-					return new ModelAndView("Error", "message", "Please don't type in URL by yourself");
+					return new ModelAndView("Error", "message", "Моля не пишете в адрес бара сами. Пробвайте отново.");
 				}
 			}
 			sess.setAttribute("url", url);
@@ -425,7 +432,7 @@ public class ProductController {
 			sess.setAttribute("products", products);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return new ModelAndView("Error", "message", "Internal error, please excuse us.");
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		}
 
 		return new ModelAndView("products", "productPage", productList);
@@ -439,10 +446,9 @@ public class ProductController {
 			Product p = pd.getProduct(id);
 			ImageProvider.proceedProductPicture(p.getImage(), resp);
 		} catch (IOException e) {
-
+			// in jsp will be shown atl value
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// in jsp will be shown atl value
 		}
 	}
 

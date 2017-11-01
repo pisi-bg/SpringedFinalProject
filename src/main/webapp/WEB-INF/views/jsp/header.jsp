@@ -10,7 +10,7 @@
 <%-- <link rel="stylesheet" href='<c:url value="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />' /> --%>
 <%-- <link rel="stylesheet" href='<c:url value="https://zeroattentionspan.net/pisi.css" />' /> --%>
 <link href="<c:url value="/css/bootstrap.css" />" rel="stylesheet" type="text/css">
-<link href="<c:url value="/css/pisi2.css" />" rel="stylesheet" type="text/css">
+<link href="<c:url value="/css/pisi.css" />" rel="stylesheet" type="text/css">
 
 
 </head>
