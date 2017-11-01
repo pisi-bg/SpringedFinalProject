@@ -16,20 +16,21 @@
 	<h3>МОЛЯ, ПОПЪЛНЕТЕ ВСИЧКИ ПОЛЕТА:</h3>
 	
 		
-	<c:if test="${sessionScope.regError }">
-		<h3 class="has-error" >Грешка при регистрацията, моля прабвайте с друг мейл.</h3>
-	</c:if>
+		<c:if test="${sessionScope.regError }">
+			<h3 class="has-error" >Грешка при регистрацията, моля прабвайте с друг мейл.</h3>
+		</c:if>
 	
-	<f:form commandName="user">
-		Име:<f:input path="firstName"/><br>
-		Фамилия:<f:input path="lastName"/><br>
-		Майл:<f:input path="email"/><br>
-		Парола:<f:password path="password"/><br>
-		Пол: <f:radiobutton path="isMale" value="true" label="мъж"/>
-		<f:radiobutton path="isMale" value="false" label="жена"/>	<br>
-		<input type="submit" value="РЕГИСТРИРАЙ МЕ">			
-	</f:form>		
-	<a href= "<c:url value='/index'/>"><button>Home</button></a>
-	
+		<h5 class="center">
+			<f:form commandName="user">
+				Име:<f:input path="firstName"/><br>
+				Фамилия:<f:input path="lastName"/><br>
+				Майл:<f:input path="email"/><br>
+				Парола:<f:password path="password"/><br>
+				Пол: <f:radiobutton path="isMale" value="true" label="мъж"/>
+				<f:radiobutton path="isMale" value="false" label="жена"/>	<br>
+				<input type="submit" value="РЕГИСТРИРАЙ МЕ">			
+			</f:form>		
+			<a href= "<c:url value='/index'/>"><button>Home</button></a>
+		</h5>
 </body>
 </html>

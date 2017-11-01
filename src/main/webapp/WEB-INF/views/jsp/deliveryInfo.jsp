@@ -29,27 +29,30 @@
 					 </h4> 								
 				</form>
 			</c:if>
-
+		<br><br>
 		<form action="<c:url value='/cart/newOrder'/>" method="post">
-			<h3 align="left">Получател</h3>
-			<!--  form action="getNamesFromUser" method="POST"
-				style="text-align: center;">
-				<br> Вземи от профила<input type="radio">
-			</form-->
-			Име <input type="text" name="firstName" value="${ sessionScope.selectedDelInfo.recieverFirstName  }" required><br>
-			Фамилия <input type="text" name="lastName" value="${ sessionScope.selectedDelInfo.recieverLastName  }" required><br>
-			Телефон <input type="text" name="phone" value="${ sessionScope.selectedDelInfo.recieverPhone }" required><br>
-
-			<h3 align="left">Адрес</h3>
+			<h3 align ="center" text-align="center">Получател</h3>			
+			<h5 class="center">
+				Име <input type="text" name="firstName" value="${ sessionScope.selectedDelInfo.recieverFirstName  }" required><br>
+				Фамилия <input type="text" name="lastName" value="${ sessionScope.selectedDelInfo.recieverLastName  }" required><br>
+				Телефон <input type="text" name="phone" value="${ sessionScope.selectedDelInfo.recieverPhone }" required><br>
+			</h5>
+			<br><br>
+			<h3 text-align="center">Адрес</h3>
+			<h5 class="center">
 				Град <select name='city'>
 						<c:forEach items="${requestScope.cities}" var="city">
 							<option value="${city}">${city}</option>
 						</c:forEach>
 					</select> <br> 
-				Пощенски код <input type ="number" name="zip" min="1000" max ="9999" value="${sessionScope.selectedDelInfo.zipCode }" required> <br> 				
-				Адрес <input type ="text" name="address" value="${ sessionScope.selectedDelInfo.address }" required> <br>
-				Бележка <input type="text" name="note" value="${ sessionScope.selectedDelInfo.notes }"> <br> 
-			<input type="submit" value="Потвърди">
+				Пощенски код
+				<input type ="number" name="zip" min="1000" max ="9999" value="${sessionScope.selectedDelInfo.zipCode }" required> <br> 				
+				Адрес
+				<input type ="text" name="address" value="${ sessionScope.selectedDelInfo.address }" required> <br>
+				Бележка
+				<input type="text" name="note" value="${ sessionScope.selectedDelInfo.notes }"> <br> 
+				<input type="submit" value="Потвърди">
+			</h5>
 		</form>
 	</div> 
 	
