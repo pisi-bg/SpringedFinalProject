@@ -23,7 +23,7 @@ public class Hasher {
 	// testing demo ....
 	public static void main(String[] args) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 
-		String a = Hasher.securePassword("petko", "petko@gmail.com");
+		String a = Hasher.securePassword("t", "t@t.t");
 		System.out.println(a);
 		System.out.println(a.length());
 

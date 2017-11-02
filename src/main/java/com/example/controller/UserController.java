@@ -81,7 +81,7 @@ public class UserController {
 				user = ud.getUser(email);
 				ses.setAttribute("user", user);
 				ses.setMaxInactiveInterval(-1); // infinity session
-				return new ModelAndView("products");
+				return new ModelAndView("index");
 			} else {
 				request.setAttribute("wrongUser", true);
 				return new ModelAndView("login");
@@ -182,6 +182,7 @@ public class UserController {
 			String hashPassword = Hasher.securePassword(user.getPassword(), user.getEmail());
 			user.setPassword(hashPassword);
 			ud.updateUser(user);
+			user = ud.getUser(user.getEmail());
 			sess.setAttribute("user", user);
 		} catch (SQLException e) {
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");

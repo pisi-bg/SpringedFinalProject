@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,12 @@ public class WelcomeController {
 		}
 
 		return new ModelAndView("index");
+	}
+	
+	@RequestMapping(value="/error")
+	public String error(HttpServletRequest req){
+		req.setAttribute("error", "Greshka");
+		return "error";
 	}
 
 }

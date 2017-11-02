@@ -395,7 +395,7 @@ public class ProductController {
 		String word = (String) sess.getAttribute("word"); // saved word from
 															// last search
 		String keyword = req.getParameter("keyword"); // word that is searched
-
+		keyword = keyword.trim();
 		if (keyword == null) {
 			keyword = word;
 		}
