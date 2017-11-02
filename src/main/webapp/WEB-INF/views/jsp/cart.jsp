@@ -101,23 +101,27 @@
 								</c:if>
 							</h5>
 						</td>
-						<td>						
-							<form action="<c:url value='/cart/updateCart'/>" method="get">
-								<input type="hidden" value="${ product.id }" name=productId> 								
-								<input type="text" style="width: 35px; height: 35px; font-size: 14px; border: 1px solid #C0C0C0;" name="count" size="2" value="${productEntry.value}" maxlength="2">
-								<input type="image" name="submit"
-									src="<c:url value='/img/buttons/update.png'/>" alt="UPDATE" title="Update">									
-							</form>
-							<br>
-						<!-- </td>	
-						<td> -->						
-							<form action="<c:url value='/cart/removeFromCart/${ product.id }'/>" method="post">
-								<input type="image" name="submit" width="35" height="auto" 
-									src="<c:url value='/img/buttons/icon_trash.png'/>" alt="REMOVE" title="Remove" align="center"> 
-									<%-- <input type="hidden" value="${ product.id }" name="productId"> --%>
-							</form>
-						</td>
-					<!-- 	<td width="10%"></td> -->
+						
+							<td style="font-size: 22px;     vertical-align: middle;">	
+													
+								<form action="<c:url value='/cart/updateCart'/>" method="get">
+									<input type="hidden" value="${ product.id }" name=productId> 								
+									<input type="text" style="width: 35px; height: 35px; font-size: 14px; border: 1px solid #C0C0C0;" name="count" size="2" value="${productEntry.value}" maxlength="2">
+									<input type="image" name="submit"
+										src="<c:url value='/img/buttons/update.png'/>" alt="UPDATE" title="Update">									
+								</form>
+								<br>
+							<!-- </td>	
+							<td> -->						
+								<form action="<c:url value='/cart/removeFromCart/${ product.id }'/>" method="post">
+									<input type="image" name="submit" width="35" height="auto" 
+										src="<c:url value='/img/buttons/icon_trash.png'/>" alt="REMOVE" title="Remove" align="center"> 
+										<%-- <input type="hidden" value="${ product.id }" name="productId"> --%>
+								</form>
+														
+							</td>
+						
+					
 						<td align="right">
 							<c:if test="${ product.discount == 0 }">
 								<fmt:formatNumber type="number" pattern="#####.00" value="${ product.price * productEntry.value }" />лв.									
@@ -126,6 +130,7 @@
 								<fmt:formatNumber type="number" pattern="#####.00" value="${ product.calcDiscountedPrice()  *  productEntry.value }" />лв.									 
 							</c:if>
 						</td>
+						
 					</tr>
 				</c:forEach>
 			</tbody>

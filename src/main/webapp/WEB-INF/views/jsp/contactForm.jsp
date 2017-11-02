@@ -13,7 +13,7 @@
 	<jsp:include page="header.jsp"></jsp:include>
 
 	<h2>ФОРМА ЗА КОНТАКТИ</h2>
-	<h3>МОЛЯ, ПОПЪЛНЕТЕ ВСИЧКИ ПОЛЕТА:</h3>
+	<h4>МОЛЯ, ПОПЪЛНЕТЕ ВСИЧКИ ПОЛЕТА:</h4>
 
 	<form method="POST"  action="contactForm" id="login_form" class="box">
 
@@ -46,7 +46,7 @@
 					style="height: 120px;"></textarea>
 			</div>
 
-			<p class="submit">
+			<p class="submit" align="center">
 				
 				<input type="image" name="submit" width="8%" height="auto" src="<c:url value='/img/buttons/send.png'/>" alt="ИЗПРАТИ" title="ИЗПРАТИ" width="6%" height="auto"> 
 				

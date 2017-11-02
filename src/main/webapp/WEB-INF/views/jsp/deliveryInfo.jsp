@@ -19,7 +19,7 @@
 			 <!-- will be made with AJAX -->
 			<c:if test="${sessionScope.deliveries != null &&  not empty sessionScope.deliveries }">
 				<form action="<c:url value='/cart/deliveryInfo'/>" method="get">
-					<h4 align="center">Избери от предишни доставки <br>
+					<h4 align="center">Избери от предишни доставки <br><br><br>
 						 <select name='idxDeliveryInfo'>											
 								<c:forEach items="${sessionScope.deliveries}" var="delivery" varStatus="loop">
 									<option value="${loop.index}" >${delivery.address}</option>												
@@ -32,14 +32,14 @@
 		<br><br>
 		<form action="<c:url value='/cart/newOrder'/>" method="post">
 			<h3 align ="center" text-align="center">Получател</h3>			
-			<h5 class="center">
+			<h5 style="text-align: left;">
 				Име <input type="text" name="firstName" value="${ sessionScope.selectedDelInfo.recieverFirstName  }" required><br>
 				Фамилия <input type="text" name="lastName" value="${ sessionScope.selectedDelInfo.recieverLastName  }" required><br>
 				Телефон <input type="text" name="phone" value="${ sessionScope.selectedDelInfo.recieverPhone }" required><br>
 			</h5>
 			<br><br>
 			<h3 text-align="center">Адрес</h3>
-			<h5 class="center">
+			<h5 class="center" style ="text-align: left; " >
 				Град <select name='city'>
 						<c:forEach items="${requestScope.cities}" var="city">
 							<option value="${city}">${city}</option>
@@ -50,8 +50,9 @@
 				Адрес
 				<input type ="text" name="address" value="${ sessionScope.selectedDelInfo.address }" required> <br>
 				Бележка
-				<input type="text" name="note" value="${ sessionScope.selectedDelInfo.notes }"> <br> 
-				<input type="submit" value="Потвърди">
+				<input type="text" name="note" value="${ sessionScope.selectedDelInfo.notes }"> <br>
+				
+				<input type="submit" value="Потвърди" class="pisi-button_dark">
 			</h5>
 		</form>
 	</div> 

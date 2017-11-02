@@ -16,11 +16,11 @@
 		<div class="pisi-item">
 				<h1>${ productCurrent.name }</h1>
 	
-				<div class="col-xs-12 col-md-6 image" >
-					<img src="<c:url value="/products/image/${ productCurrent.id }"/>" alt="${ productCurrent.description }" class="img-big" /><br />
+				<div class="col-xs-12 col-md-4 image" >
+					<img src="<c:url value="/products/image/${ productCurrent.id }"/>" alt="${ productCurrent.description }" class="img-big" height="100%" width="auto"/><br />
 				</div>
 				
-				<div class="col-xs-12 col-md-6 more-info">
+				<div class="col-xs-12 col-md-5 more-info">
 					<div class="description">
 						<h2 class="left">Описание:</h2>
 						<h3 class="left">${productCurrent.description }</h3>
@@ -84,47 +84,56 @@
 						</c:if>				
 						
 					<c:if test="${sessionScope.user != null &&( sessionScope.ratingFromUser != null && sessionScope.ratingFromUser !=-1)}">
-						<h5>Your rate: ${ sessionScope.ratingFromUser}</h5>	
+						<h5>Your rate: ${ sessionScope.ratingFromUser}
 							<img src="<c:url value='/img/buttons/has_rating.png'/>"
 							alt="your rating" title="RatingAdded" width="5%" height="auto">
+						</h5>	
 					</c:if>
 					<br>
 				</div> <!-- more-info -->
-				<br><br><br>
-				<div class="addincart">
-					<br>
-					<a href="<c:url value='/products/addInCart/${productCurrent.id}'/>">
-						<img src="<c:url value='/img/buttons/shopping_cart - color.png'/>"
-						alt="ADD IN CART" title="addInCart" width="15%" height="auto">
-					</a>
-				</div>  <!-- addincart -->
 			</div><!-- pisi-item -->
-			<br><br><br>
+				<br><br><br>
+				<h5>
+					<!-- <div class="addincart" > -->
+						<br>
+							<%-- <a href="<c:url value='/products/addInCart/${productCurrent.id}'/>" title="addInCart" class="pisi-button_yellow"
+							style="text-decoration: none">ДОБАВИ В КОЛИЧКА</a>  --%>
+						
+						
+							<a href="<c:url value='/products/addInCart/${productCurrent.id}'/>">
+								<img src="<c:url value='/img/buttons/shopping_cart - color.png'/>"
+								alt="ADD IN CART" title="addInCart" width="15%" height="auto">
+							</a>
+					<!-- </div>  addincart -->
+				</h5>
+			<br>		
 			<%-- </c:if> --%>
 			
 			<div class="col-xs-12 col-md-4 admin">
 				<c:if test="${sessionScope.user.isAdmin() }">
 					<h3 class ="left">
 						АДМИНИСТРАТОРСКИ ПАНЕЛ <br>
-							<h5>
-								<a href='<c:url value='/user/admin/removeProduct'></c:url>'>
-								<button>Изтрий артикул</button></a>
-								<br>
-								<form action="${pageContext.request.contextPath}/user/admin/quantity" method="post">
-									<input type="number" name="quantity" placeholder="Количество" min="1" style="width: 150px;"> 
-									<input type="submit" value="Добави">
-								</form>
-								
-								<form action="${pageContext.request.contextPath}/user/admin/discount" method="post">
-									<input type="number" name="discount" placeholder="Отстъпка %" min="0" max="99" style="width: 150px;">
-									<input type="submit" value="Добави">
-								</form>
-							</h5>	
 					</h3>
+					<h5>
+						<a href='<c:url value='/user/admin/removeProduct'></c:url>'>
+						<button>Изтрий артикул</button></a>
+						<br>
+						<form action="${pageContext.request.contextPath}/user/admin/quantity" method="post">
+							<input type="number" name="quantity" placeholder="Количество" min="1" style="width: 150px;"> 
+							<input type="submit" value="Добави">
+						</form>
+						
+						<form action="${pageContext.request.contextPath}/user/admin/discount" method="post">
+							<input type="number" name="discount" placeholder="Отстъпка %" min="0" max="99" style="width: 150px;">
+							<input type="submit" value="Добави">
+						</form>
+					</h5>	
+					
 				</c:if>
 			</div> <!-- admin	 -->
 			
-			<div class="col-xs-12 col-md-6  comments">
+			<br>
+			<div class="col-xs-12 col-md-6 comments" align="right" >
 				<c:if test="${sessionScope.comments.isEmpty() }">
 					<p>Няма коментари. Бъди първият.</p>
 				</c:if>
@@ -132,26 +141,33 @@
 		
 				<c:if test="${sessionScope.comments  != null}">
 					<c:if test="${!sessionScope.comments.isEmpty() }">
-						<table border="1">
+						<table border="1"  >
 							<thead class="">
 								<tr>
-									<th class="cart_product first_item">Потребител</th>
-									<th class="cart_description item">Рейтинг</th>											
-									<th class="cart_quantity item text-center">Коментар</th>							
 									<th class="cart_quantity item text-center">Дата</th>
+									<th class="cart_product first_item">Потребител</th>
+																				
+									<th class="cart_quantity item text-center">Коментар</th>							
+									
 								</tr>
 							</thead>						
 							<tbody>			
 								<c:forEach items="${ sessionScope.comments }" var="com">
 									<tr>
+										<td width = "130px">${com.dateTime }</td>
 										<td>${ com.userEmail }</td>
-										<td>${com.rating }</td>
-										<td>${com.comment }</td>
-										<td>${com.dateTime }</td>																									
+										<td align="left">
+											<fmt:formatNumber	type="number" pattern="#####.##" value="${com.rating }" />	
+											<img src="<c:url value='/img/buttons/has_rating.png'/>" alt="rating" title="rating" width="5%" height="auto">
+											
+											${com.comment }
+										</td>
+																																			
 									</tr>
 								</c:forEach>	
 							</tbody>
 						</table>
+						<br>
 					</c:if>
 				</c:if>
 		</div> <!-- "comments"	 -->

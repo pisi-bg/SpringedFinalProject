@@ -32,7 +32,7 @@ ul{
 }
 
 th{
-	font-size: 20px;
+	font-size: 18px;
 	text-transform: uppercase;
 	text-align: center;
 	font-weight: bold;
@@ -40,8 +40,7 @@ th{
 
 }
 tr{
-	font-size: 16px;
-	text-transform: uppercase;
+	font-size: 14px;
 	text-align: center;
 	font-weight: bold;
 	color: #440008;
@@ -501,11 +500,13 @@ h5 .center{
 .pisi-item .image{
 	float: left;
 	max-height: 60%;
-	width: "auto";
-	height: "400px";
-	min-height: "400px";
-	min-width: "600px";
-	background-size:cover;
+	left: 10px;	
+	
+	height: 400px;
+	width: auto;
+	min-height: 400px;
+	min-width: 600px;
+/*	background-size: cover;*/
 	
 }
 .img-big{
@@ -516,12 +517,19 @@ h5 .center{
 	background-size:cover;
 }
 
-.pisi-item .more-info .description{
-	border: 1px;
-}
+
 
 .pisi-item .more-info{
 	float: right;
+	/*width: 50%;*/
+/*	position: fixed;*/
+  /**  right: 10px;*/
+}
+
+
+.pisi-item .more-info .description{
+	border: 1px;
+	/*position: relative;*/
 }
 
 .pisi-item .price{
@@ -548,5 +556,20 @@ h5 .center{
 	color:  #c4463e;
 }
 
+.comments{
+	float: right;
+	/*position: relative;
+    right: 10px;*/
+}
+/*
+.addincart{
+	float: center;
+	display: block;
+	/*
+    right: 10px;
+	bottom: 100px;
+	position: fixed;*/
+}
+*/
 
 
