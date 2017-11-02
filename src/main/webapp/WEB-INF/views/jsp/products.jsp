@@ -4,8 +4,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 
-		<jsp:include page="header.jsp"></jsp:include><br>
-		<br>		
+		<jsp:include page="header.jsp"></jsp:include>
+				
 		<jsp:include page="categories.jsp"></jsp:include>
 		
 		
@@ -21,7 +21,7 @@
 							<c:if test="${sessionScope.favorite }"><h1>Вашите любими продукти:</h1></c:if>
 							<c:if test="${sessionScope.favorite != null && !sessionScope.favorite }"><h1>Нямате любими продукти!</h1></c:if>
 							
-							<h5>подреди по</h5>
+							<!-- <h5>подреди по</h5> -->
 							
 							<a class="pisi-button_yellow" href="${pageContext.request.contextPath}/products/sort/name/${asc}">име(а-я)</a>
 							<a class="pisi-button_yellow" href="${pageContext.request.contextPath}/products/sort/name/${desc}">име(я-а)</a>

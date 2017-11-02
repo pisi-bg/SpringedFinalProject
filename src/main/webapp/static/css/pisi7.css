@@ -349,11 +349,12 @@ h5 .center{
     display:block;
     float: left;
     letter-spacing: 1px;
+	font-weight: bold;
    /* position: relative;*/
 }
 .pisi-nav_lower nav a:hover{
-	/*color: rgba(255,255,255,1);*/
-	color: rgba(217,146,50,,1);
+	color: rgba(255,255,255,1);
+	/*color: rgba(217,146,50,1);*/
 }
 .pisi-nav_lower nav a ul{
 	opacity: 0;
@@ -371,12 +372,103 @@ h5 .center{
 	top: 50px;
 }
 
+/* NAV - MAIN CATEGORIES */
+
+.pisi-nav_main-cat{
+	//overflow: hidden;
+	background-color: #d99232;
+	position: sticky;	
+	width: 100%;	
+	margin-top: 0;
+	top:0;
+	z-index: 90;
+}
+.pisi-nav_main-cat nav{
+	z-index: 90;
+}
+.pisi-nav_main-cat nav a{
+	font-size: 14px;
+    line-height: 12px;
+    padding: 10px 8px 8px;
+	color: #440008;   
+    display:block;
+    float: left;
+    letter-spacing: 1px;	
+	text-transform: uppercase;	
+	font-weight: bold;
+}
+.pisi-nav_main-cat nav a:hover{
+	color: rgba(255,255,255,1);
+	
+	
+}
+.pisi-nav_main-cat nav a ul{
+	opacity: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 80px;
+	background-color: green;
+	-webkit-transition: 0.3s all;
+	transition: 0.3s all;
+}
+.pisi-nav_main-cat nav a ul.is-visible{
+	opacity: 1;
+	pointer-events: all;
+	position: absolute;
+	top: 50px;
+}
+
+/* NAV - SUB CATEGORIES */
+
+.pisi-nav_sub-cat{
+	//overflow: hidden;
+	background-color: #d99232;
+	position: sticky;	
+	width: 100%;	
+	margin-top: 0;
+	top:0;
+	z-index: 90;
+}
+.pisi-nav_sub-cat nav{
+	z-index: 90;
+}
+.pisi-nav_sub-cat nav a{
+	font-size: 14px;
+    line-height: 10px;
+    padding: 4px 8px 8px;
+	color: #440008;   
+    display:block;
+    float: left;
+    letter-spacing: 1px;	
+	text-transform: uppercase;	
+}
+.pisi-nav_sub-cat nav a:hover{
+	color: rgba(255,255,255,1);
+	
+	
+}
+.pisi-nav_sub-cat nav a ul{
+	opacity: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 80px;
+	background-color: green;
+	-webkit-transition: 0.3s all;
+	transition: 0.3s all;
+}
+.pisi-nav_sub-cat nav a ul.is-visible{
+	opacity: 1;
+	pointer-events: all;
+	position: absolute;
+	top: 50px;
+}
+
+
 
 /* CONTEINER */
 
 .w3-container{
-	position:relative;
-     margin-top: 6000;
+	/*position:relative;*/    
     left:0px;
     right:0px;
     bottom:50px;
@@ -398,6 +490,12 @@ h5 .center{
 }
 
 /* GRID_PRODUCTS */
+
+
+
+.pisi-sort_buttons {
+	margin-top: 10px;
+}
 
 .pisi-grid_products {
 	z-index: -1;
@@ -518,7 +616,6 @@ h5 .center{
 }
 
 
-
 .pisi-item .more-info{
 	float: right;
 	/*width: 50%;*/
@@ -571,5 +668,47 @@ h5 .center{
 	position: fixed;*/
 }
 */
+/*DROP - DOWN MENUS*/
+/*
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
 
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
 
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+	background-color: #f1f1f1
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}
+*/

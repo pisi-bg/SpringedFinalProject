@@ -58,7 +58,10 @@ public class ProductController {
 		PagedListHolder<Product> productList = (PagedListHolder<Product>) sess.getAttribute("productPage");
 		String url = "products/animal/" + animalId;
 
+		Map<String, Integer> categoriesD = null;
+
 		try {
+			categoriesD = ctd.getCategoriesForAnimal(animalId);
 
 			List<Product> products = pd.getProductsByAnimal(animalId);
 
@@ -89,6 +92,8 @@ public class ProductController {
 			sess.setAttribute("productPage", productList);
 			sess.setAttribute("products", products);
 			sess.setAttribute("animalId", animalId);
+
+			sess.setAttribute("categoriesD", categoriesD);
 		} catch (SQLException e) {
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		}
@@ -102,16 +107,15 @@ public class ProductController {
 			@PathVariable("page") Integer page) {
 
 		sess.removeAttribute("favorite");
-		
+
 		int paging = page == null ? 0 : page;
 
 		PagedListHolder<Product> productList = (PagedListHolder<Product>) sess.getAttribute("productPage");
-		
-		
+
 		String url = "products/animal/" + animalId + "/category/" + categoryId;
 
 		try {
-			Map<String,Integer> subCategories = ctd.getSubCategoriesForCategory(animalId, categoryId);
+			Map<String, Integer> subCategories = ctd.getSubCategoriesForCategory(animalId, categoryId);
 			List<Product> products = pd.getProductsByAnimalAndParentCategory(animalId, categoryId);
 			if (productList != null) {
 				if (!productList.getSource().equals(products)) {
@@ -196,10 +200,10 @@ public class ProductController {
 		return new ModelAndView("products", "productPage", productList);
 
 	}
-	
+
 	@RequestMapping(value = "/productdetail/productId/{id}", method = RequestMethod.GET)
-	public ModelAndView productDetailGet(HttpServletRequest request, HttpSession s, @PathVariable("id") Integer productId,
-			Model m) {
+	public ModelAndView productDetailGet(HttpServletRequest request, HttpSession s,
+			@PathVariable("id") Integer productId, Model m) {
 		Product productCurrent = null;
 		TreeSet<Rating> comments = new TreeSet<>(new Comparator<Rating>() {
 
@@ -215,7 +219,7 @@ public class ProductController {
 		try {
 			productCurrent = pd.getProduct(productId);
 			s.setAttribute("productCurrent", productCurrent);
-			comments.addAll(rd.getProductRatingAndComment(productId));			
+			comments.addAll(rd.getProductRatingAndComment(productId));
 			s.setAttribute("comments", comments);
 		} catch (SQLException e) {
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
@@ -395,7 +399,7 @@ public class ProductController {
 		if (keyword == null) {
 			keyword = word;
 		}
-		
+
 		String[] words = keyword.split(" ");
 
 		if (words[0].isEmpty()) {

@@ -6,23 +6,30 @@
 	
 	<c:if test="${ sessionScope.animalId != null }">
 	
+		<div class="pisi-nav_main-cat">
+			<div class="container">
+				<nav>	
+					<c:forEach items="${ sessionScope.categoriesD }" var="parentCategory">
+			   					
+						 <a href="<c:url value='/products/animal/3/category/${parentCategory.value}/0'/>" > ${parentCategory.key} </a>
+								
+					</c:forEach>	                        
+				</nav>
+			</div>
+		</div> 
 	
+		<div class="pisi-nav_sub-cat" style="font-size: 12px;">
+			<div class="container">
+				<nav>	
+					<c:forEach items="${ sessionScope.subCategories }" var="subCategory">	
+						 <a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/${requestScope.catId}/subcatId/${subCategory.value}/0'/>" > ${subCategory.key} </a>
+					</c:forEach>	                        
+				</nav>
+			</div>
+		</div>	
 	
-		<a href="<c:url value='/products/animal/${sessionScope.animalId }/category/1/0'/>" style="text-decoration: none">ХРАНА</a>  &nbsp;
-		<a href="<c:url value='/products/animal/${sessionScope.animalId }/category/2/0'/>" style="text-decoration: none">АКСЕСОАРИ</a>  &nbsp;
-		
-		<c:if test="${ sessionScope.animalId == 2 || sessionScope.animalId == 3 }">
-			<a href="<c:url value='/products/animal/${sessionScope.animalId }/category/3/0'/>" style="text-decoration: none">КОЗМЕТИКА</a>  &nbsp;
-		</c:if>
-		
-		<c:if test="${ sessionScope.animalId == 1 || sessionScope.animalId == 2 || sessionScope.animalId == 3 }">
-			<a href="<c:url value='/products/animal/${sessionScope.animalId }/category/4/0'/>" style="text-decoration: none">ХИГИЕНА</a>  &nbsp;
-		</c:if>
-		
-		<c:if test="${ sessionScope.animalId == 1 || sessionScope.animalId == 5 || sessionScope.animalId == 6 }">
-			<a href="<c:url value='/products/animal/${sessionScope.animalId }/category/5/0'/>" style="text-decoration: none">АКВАРИУМИ И КЛЕТКИ</a>  &nbsp;
-		</c:if><br><br>
-		
-		<jsp:include page="subCategories.jsp"></jsp:include>
-		
 	</c:if>
+	
+		
+		
+	

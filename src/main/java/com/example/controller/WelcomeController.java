@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,23 +20,23 @@ import com.example.model.pojo.Product;
 public class WelcomeController {
 
 	private static final int LIMIT = 5;
-	
+
 	@Autowired
 	CategoryDao ctd;
 	@Autowired
 	ProductDao pd;
-	
+
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public ModelAndView welcome(HttpSession ses) {
 		ses.setMaxInactiveInterval(45 * 60); // 45 mins
-		Map<String,Integer> aqua = null;	
-		Map<String,Integer> cats = null;	
-		Map<String,Integer> dogs = null;	
-		Map<String,Integer> little = null;	
-		Map<String,Integer> birds = null;	
-		Map<String,Integer> lizzards = null;	
+		Map<String, Integer> aqua = null;
+		Map<String, Integer> cats = null;
+		Map<String, Integer> dogs = null;
+		Map<String, Integer> little = null;
+		Map<String, Integer> birds = null;
+		Map<String, Integer> lizzards = null;
 		try {
-			//<brand name, brand logo>
+			// <brand name, brand logo>
 			Map<String, String> brands = ctd.getTopBrands(LIMIT);
 			List<Product> topProducts = pd.getTopSoldProducts(LIMIT);
 			aqua = ctd.getCategoriesForAnimal(1);
@@ -46,22 +45,21 @@ public class WelcomeController {
 			little = ctd.getCategoriesForAnimal(4);
 			birds = ctd.getCategoriesForAnimal(5);
 			lizzards = ctd.getCategoriesForAnimal(6);
-			
-			ses.setAttribute("aqua", aqua);
-			ses.setAttribute("cats", cats);
-			ses.setAttribute("dogs", dogs);
-			ses.setAttribute("little", little);
-			ses.setAttribute("birds", birds);
-			ses.setAttribute("lizzards", lizzards);
+
+			ses.setAttribute("1", aqua);
+			ses.setAttribute("2", cats);
+			ses.setAttribute("3", dogs);
+			ses.setAttribute("4", little);
+			ses.setAttribute("5", birds);
+			ses.setAttribute("6", lizzards);
 			ses.setAttribute("brands", brands);
 			ses.setAttribute("topProducts", topProducts);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините.");
-		}	
-		
+		}
+
 		return new ModelAndView("index");
 	}
-	
-	
+
 }
