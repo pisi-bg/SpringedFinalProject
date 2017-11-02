@@ -10,7 +10,8 @@
 <%-- <link rel="stylesheet" href='<c:url value="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />' /> --%>
 <%-- <link rel="stylesheet" href='<c:url value="https://zeroattentionspan.net/pisi.css" />' /> --%>
 <link href="<c:url value="/css/bootstrap.css" />" rel="stylesheet" type="text/css">
-<link href="<c:url value="/css/pisi.css" />" rel="stylesheet" type="text/css">
+<link href="<c:url value="/css/pisi7.css" />" rel="stylesheet" type="text/css">
+
 
 
 </head>
@@ -68,13 +69,31 @@
 		<div class="pisi-nav_lower">
 			<div class="container">
 				<nav>	
+						<!-- TEST FOR DROPDOWN -> NOT WORKING -->
+							<%-- <div class="navbar">
+								  <div class="dropdown">
+									<!--   <a href="<c:url value='/products/animal/3/0'/>" title="Dogs">  -->
+									  	<button class="dropbtn">КУЧЕТА</button>
+									 <!--  </a>	 -->
+					    			<c:forEach items="${ sessionScope.dogs }" var="parentCategory">
+					   					 <div class="dropdown-content">
+											 <a href="<c:url value='/products/animal/3/category/${parentCategory.value}/0'/>" title="Dogs"> ${parentCategory.key} </a>
+										 </div>
+									</c:forEach>
+								  </div> 
+							</div>	 --%><!-- class="navbar" -->
+						<!-- END *** TEST FOR DROPDOWN -->
+					
+				
+						
 										    
-					<a href="<c:url value='/products/animal/2/0'/>" title="Cats" class="animal-category">КОТКИ</a>
-					<a href="<c:url value='/products/animal/3/0'/>" title="Dogs">КУЧЕТА</a>
-					<a href="<c:url value='/products/animal/4/0'/>" title="LittleFellows">МАЛКИ ЖИВОТНИ</a>
-					<a href="<c:url value='/products/animal/1/0'/>" title="Aquaristics">АКВАРИСТИКА</a> 
-					<a href="<c:url value='/products/animal/5/0'/>" title="Birds">ПТИЦИ</a> 
-					<a href="<c:url value='/products/animal/6/0'/>" title="Reptiles">ТЕРАРИСТИКА</a> 
+						<a href="<c:url value='/products/animal/2/0'/>" title="Cats" class="animal-category">КОТКИ</a>
+						
+						<a href="<c:url value='/products/animal/3/0'/>" title="Dogs">КУЧЕТА</a>
+						<a href="<c:url value='/products/animal/4/0'/>" title="LittleFellows">МАЛКИ ЖИВОТНИ</a>
+						<a href="<c:url value='/products/animal/1/0'/>" title="Aquaristics">АКВАРИСТИКА</a> 
+						<a href="<c:url value='/products/animal/5/0'/>" title="Birds">ПТИЦИ</a> 
+						<a href="<c:url value='/products/animal/6/0'/>" title="Reptiles">ТЕРАРИСТИКА</a> 
 					                                         
 				</nav>
 			</div>

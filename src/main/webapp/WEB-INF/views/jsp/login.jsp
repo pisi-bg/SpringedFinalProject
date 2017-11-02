@@ -1,15 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!--!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"-->
-<!DOCTYPE html SYSTEM "about:legacy-compat">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>LogIn</title>
 
 
-<style type="text/css">	
+
+<!-- <style type="text/css">	
 		h1 {
 			    display: block;
 			    font-size: 1.8em;
@@ -31,16 +26,16 @@
 	    font-weight: bold;	    
 	}
 		
-</style>
+</style>  -->
 
 
 </head>
 <body>
 <jsp:include page="header.jsp"></jsp:include>
-	<h1 style="background-color: #d99232"   align="center">
+	<h1 style="background-color: #d99232;   align: center;  padding-top: 10px; padding-bottom: 10px; " >
 		 pisi.bg 
 		<!--  <br>  your pet's favorite mall -->
-		<p> your pal's favorite mall </p>
+		<p style="font-size: 28px;"> your pal's favorite mall </p>
 	</h1>	
 
 	<c:if test="${ requestScope.wrongUser }"><h3 class="has-error"> ГРЕШЕН ПOТРЕБИТЕЛ</h3></c:if>

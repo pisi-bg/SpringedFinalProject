@@ -23,7 +23,7 @@
 	<h3>ДОБАВИ НОВ ПРОДУКТ</h3><br>
 	<form action="addProduct" method="post" enctype="multipart/form-data" accept-charset="UTF-8 ">
 		Име на продукт: 
-			<input type= "text" name= "name"  required><br>		
+			<input type= "text" name= "name"  required style="width: 250px;"><br>		
 			
 		Тип животно: 
 			<c:forEach items="${sessionScope.animals}" var="animal"  >							
@@ -38,10 +38,10 @@
 			</select><br>	
 				
 		Цена: 
-			<input type="number" min="0.00" max="10000.00" step="0.01" name="price" required /><br>
+			<input type="number" min="0.00" max="10000.00" step="0.01" name="price" style="width: 150px;" required /><br>
 		
 		Описание:
-			<input type="text" name="description" required><br>
+			<input type="text" name="description" style="width: 150px;" required><br>
 		
 		Марка:
 			<select name="brand"  required>
@@ -51,7 +51,7 @@
 			</select><br>
 		
 		Брой в наличност: 
-			<input type="number" min="0" step="1" name="instock_count" required/><br>
+			<input type="number" min="0" step="1" name="instock_count" style="width: 150px;" required/><br>
 		Намаление в процент: 
 			<input type="number" min="0" max="99" step="1" name="discount" required /><br>		
 		Снимка:	 
