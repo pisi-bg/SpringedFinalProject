@@ -12,7 +12,7 @@ public class DeliveryInfo {
 	private String notes;
 
 	public DeliveryInfo() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	// constructor to send info in DB

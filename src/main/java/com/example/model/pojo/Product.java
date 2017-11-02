@@ -11,7 +11,6 @@ public class Product implements Serializable {
 	private String animal;
 	private String category;
 	private String brand;
-	private String brandImage;
 	private double rating;
 	private int countRating;
 	private int inStock;
@@ -24,7 +23,6 @@ public class Product implements Serializable {
 	public Product(long id, String name, String description, double price, String animal, String category, String brand,
 			String brandImage, double rating, int isStock, String image, int discount) {
 		this(id, name, description, price, discount, animal, category, image, rating, brand);
-		this.brandImage = brandImage;
 		this.inStock = isStock;
 	}
 
@@ -128,9 +126,6 @@ public class Product implements Serializable {
 		return brand;
 	}
 
-	public String getBrandImage() {
-		return brandImage;
-	}
 
 	public double getRating() {
 		return rating;
@@ -186,10 +181,7 @@ public class Product implements Serializable {
 		return this;
 	}
 
-	public Product setBrandImage(String brandImage) {
-		this.brandImage = brandImage;
-		return this;
-	}
+	
 
 	public Product setRating(double rating) {
 		this.rating = rating;
