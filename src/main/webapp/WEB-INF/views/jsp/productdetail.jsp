@@ -66,7 +66,7 @@
 						</p>
 						<br>		
 					</div>
-						<c:if test="${sessionScope.user != null && sessionScope.ratingFromUser == -1}">
+						<c:if test="${sessionScope.user != null && sessionScope.ratingFromUser == -1 && error == null}">
 							<h5>
 								<f:form commandName="newrating" action="${pageContext.request.contextPath}/products/addRating"> 
 									Коментар:<f:input path="comment" />				
@@ -118,6 +118,7 @@
 						<a href='<c:url value='/user/admin/removeProduct'></c:url>'>
 						<button>Изтрий артикул</button></a>
 						<br>
+						<h5 class="has-error"><c:out value="${error }"></c:out></h5>
 						<form action="${pageContext.request.contextPath}/user/admin/quantity" method="post">
 							<input type="number" name="quantity" placeholder="Количество" min="1" style="width: 150px;"> 
 							<input type="submit" value="Добави">

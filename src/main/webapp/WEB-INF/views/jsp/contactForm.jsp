@@ -24,26 +24,31 @@
 
 		<div class="form_content clearfix">
 			<div class="form-group">
+				<h5 class="has-error"><c:out value="${name }"></c:out></h5>
 				<label for="name">Име</label> <input type="text" name="name"
-					value="" class="account_input form-control">
+					value="" class="account_input form-control" required>
 			</div>
 			<div class="form-group">
+				<h5 class="has-error"><c:out value="${phone }"></c:out></h5>
 				<label for="phone">Телефон</label> <input type="number" name="phone"
-					value="" class="account_input form-control">
+					value="" class="account_input form-control" required>
 			</div>
 			<div class="form-group">
+				<h5 class="has-error"><c:out value="${email }"></c:out></h5>
 				<label for="email">Email</label> <input type="email" name="email"
-					value="" class="account_input form-control">
+					value="" class="account_input form-control" required>
 			</div>
 			<div class="form-group">
+				<h5 class="has-error"><c:out value="${subject }"></c:out></h5>
 				<label for="subject">Относно</label> <input type="text"
-					name="subject" value="" class="account_input form-control">
+					name="subject" value="" class="account_input form-control" required>
 			</div>
 			<div class="form-group">
+				<h5 class="has-error"><c:out value="${describe }"></c:out></h5>
 				<label for="descr">Описание</label>
 
 				<textarea name="descr" class="account_input form-control"
-					style="height: 120px;"></textarea>
+					style="height: 120px;" required></textarea>
 			</div>
 
 			<p class="submit" align="center">

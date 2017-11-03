@@ -11,6 +11,7 @@
 	
 	<h3>ДОБАВИ НОВА МАРКА</h3><br>
 	
+	<h5 class="has-error"><c:out value="${requestScope.brandError }"></c:out></h5>
 	<form action="addBrand" method="post" enctype="multipart/form-data"   accept-charset="UTF-8 ">
 		Име на марка: 
 			<input type= "text" name= "newBrandname"  required><br>				
@@ -21,6 +22,7 @@
 	</form>
 	
 	<h3>ДОБАВИ НОВ ПРОДУКТ</h3><br>
+	<h5 class="has-error"><c:out value="${requestScope.productError }"></c:out></h5>
 	<form action="addProduct" method="post" enctype="multipart/form-data" accept-charset="UTF-8 ">
 		Име на продукт: 
 			<input type= "text" name= "name"  required style="width: 250px;"><br>		

@@ -385,6 +385,7 @@ public class ProductController {
 	@RequestMapping(value = "/search/{page}", method = RequestMethod.POST)
 	public ModelAndView searchProduct(HttpServletRequest req, HttpSession sess, @PathVariable Integer page) {
 
+		sess.removeAttribute("categoriesD");
 		sess.removeAttribute("subCategories");
 		sess.removeAttribute("favorite");
 		int paging = page == null ? 0 : page; // safety first

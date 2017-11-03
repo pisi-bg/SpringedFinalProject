@@ -1,14 +1,27 @@
 package com.example.model.pojo;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 public class DeliveryInfo {
 
 	private long deliveryInfoId;
+	@NotBlank(message="Моля, попълнете валиден адрес.")
 	private String address;
+	@Min(value= 1000 , message="Моля, въведете валиден пощенски код.")
+	@Max(value = 9999, message ="Моля, въведете валиден пощенски код.")
 	private int zipCode;
+	@NotBlank(message="Моля, попълнете валиден град.")
 	private String city;
+	@NotBlank(message="Моля, попълнете валидно име.")
 	private String recieverFirstName;
+	@NotBlank(message="Моля, попълнете валидно име.")
 	private String recieverLastName;
-	private String recieverPhone;
+	@Min(value= 111111111 , message="Моля, въведете валиден телефонен номер без 0 отпед.")
+	@Max(value= 999999999 , message="Моля, въведете валиден телефонен номер без 0 отпед.")
+	private long recieverPhone = 8;
 	private String notes;
 
 	public DeliveryInfo() {
@@ -17,7 +30,7 @@ public class DeliveryInfo {
 
 	// constructor to send info in DB
 	public DeliveryInfo(String address, int zipCode, String city, String recieverFirstName, String recieverLastName,
-			String recieverPhone, String notes) {
+			long recieverPhone, String notes) {
 		this.address = address;
 		this.zipCode = zipCode;
 		this.city = city;
@@ -29,7 +42,7 @@ public class DeliveryInfo {
 
 	// constructor to retrieve info from DB
 	public DeliveryInfo(long deliveryInfoId, String address, int zipCode, String city, String recieverFirstName,
-			String recieverLastName, String recieverPhone, String notes) {
+			String recieverLastName, long recieverPhone, String notes) {
 		this.deliveryInfoId = deliveryInfoId;
 		this.address = address;
 		this.zipCode = zipCode;
@@ -69,12 +82,44 @@ public class DeliveryInfo {
 		return recieverLastName;
 	}
 
-	public String getRecieverPhone() {
+	public long getRecieverPhone() {
 		return recieverPhone;
 	}
 
 	public String getNotes() {
 		return notes;
+	}
+	
+	
+	
+	
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public void setZipCode(int zipCode) {
+		this.zipCode = zipCode;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public void setRecieverFirstName(String recieverFirstName) {
+		this.recieverFirstName = recieverFirstName;
+	}
+
+	public void setRecieverLastName(String recieverLastName) {
+		this.recieverLastName = recieverLastName;
+	}
+
+	public void setRecieverPhone(long recieverPhone) {
+		this.recieverPhone = recieverPhone;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 
 	@Override

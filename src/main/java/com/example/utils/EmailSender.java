@@ -38,9 +38,9 @@ public class EmailSender {
 			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
 			msg.setSubject("Нови изкушаващи промоций в www.pisi.bg !!!");
 			
-			// to be added properly
+			
 			String emailText = "<strong>Здравей, имаме нова отстъпка на любим твой продукт. Тук можеш да разгледаш:</strong>"
-							+ "<a href=\"http://localhost:8080/ProjectPisi/products/productdetail/productId/5\"> Продукт"
+							+ "<a href=\"http://localhost:8080/ProjectPisi/products/productdetail/productId/"+productId+"\"> Продукт"
 							+ "</a><br>"
 							+ "<strong>Екипът на pisi.bg ти пожелава приятно пазаруваме в нашият сайт.</strong> <br><br>"
 							+ "<img src=\"http://media.pennlive.com/midstate_impact/photo/dog-paw-genericjpg-829eca230b8dc4f1.jpg\" width=\"100px\" heigth=\"auto\" ></a>";

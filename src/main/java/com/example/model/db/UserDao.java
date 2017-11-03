@@ -137,7 +137,9 @@ public class UserDao {
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			stmt.setString(1, email);
 			rs = stmt.executeQuery();
-			rs.next();
+			if(!rs.next()){
+				return new User();
+			}
 			User u = new User(rs.getInt("id"), rs.getString("first_name"), rs.getString("last_name"), email,
 					rs.getString("password"), rs.getBoolean("gender"), rs.getBoolean("admin"),
 					pd.getFavorites(rs.getLong("id")));
