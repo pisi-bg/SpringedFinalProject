@@ -7,17 +7,24 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,15 +49,22 @@ import com.example.utils.PasswordGenerator;
 @RequestMapping(value = "/user")
 public class UserController {
 
+	private Validator validator;
+	
 	@Autowired
-	UserDao ud;
+	private UserDao ud;
 
 	@Autowired
-	ProductDao pd;
+	private ProductDao pd;
 
 	@Autowired
-	OrderDao orderDao;
+	private OrderDao orderDao;
 
+	public UserController() {
+		ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+		validator = validatorFactory.getValidator();
+	}
+	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView login(Model m) {
 		User u = new User();
@@ -102,14 +116,23 @@ public class UserController {
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
 	public ModelAndView register(Model m) {
 		User u = new User();
-		// validate spring form
 		m.addAttribute("user", u);
 		return new ModelAndView("register");
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public ModelAndView registerUser(HttpSession sess, @ModelAttribute User user) {
-
+	public ModelAndView registerUser(HttpSession sess, @ModelAttribute User user, BindingResult result) {
+		Set<ConstraintViolation<User>> violations = validator.validate(user);
+		for(ConstraintViolation<User> cv : violations){
+			String propertyPath = cv.getPropertyPath().toString();
+			String message = cv.getMessage();
+			result.addError(new FieldError("user", propertyPath, message));
+		}
+		
+		if(result.hasErrors()){
+			return new ModelAndView("register");
+		}
+		
 		try {
 			String userpass = user.getPassword();
 			userpass = Hasher.securePassword(userpass, user.getEmail());
@@ -170,7 +193,7 @@ public class UserController {
 	@RequestMapping(value = "/update", method = RequestMethod.GET)
 	public ModelAndView updateForm(Model m, HttpSession sess, HttpServletRequest req) {
 		User u = (User) sess.getAttribute("user");
-		req.setAttribute("update", 1);
+//		req.setAttribute("update", 1);
 		m.addAttribute("user", u);
 		return new ModelAndView("updateProfile");
 	}

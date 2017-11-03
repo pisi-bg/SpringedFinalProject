@@ -22,10 +22,15 @@
 	
 		<h5 class="center">
 			<f:form commandName="user">
-				Име:<f:input path="firstName"/><br>
-				Фамилия:<f:input path="lastName"/><br>
-				Майл:<f:input path="email"/><br>
-				Парола:<f:password path="password"/><br>
+				
+				Име:<f:input path="firstName"/>
+				<f:errors path="firstName" cssClass="error" style = "color:red"></f:errors><br>
+				Фамилия:<f:input path="lastName"/>
+				<f:errors path="lastName" cssClass="error" style = "color:red"></f:errors><br>
+				Имейл:<f:input path="email"/>
+				<f:errors path="email" cssClass="error" style = "color:red"></f:errors><br>
+				Парола:<f:password path="password"/>
+				<f:errors path="password" cssClass="error" style = "color:red"></f:errors><br>
 				Пол: <f:radiobutton path="isMale" value="true" label="мъж"/>
 				<f:radiobutton path="isMale" value="false" label="жена"/>	<br>
 				<input type="submit" value="РЕГИСТРИРАЙ МЕ">			

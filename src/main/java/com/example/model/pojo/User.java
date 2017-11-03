@@ -3,13 +3,24 @@ package com.example.model.pojo;
 import java.util.Collections;
 import java.util.Set;
 
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.stereotype.Component;
 
 public class User {
+	
 	private long id;
+	@NotBlank(message="Ivalid input.")
 	private String firstName;
+	@NotBlank(message="Ivalid input.")
 	private String lastName;
+	@NotBlank(message="Please enter an email")
+	@Email(message="Please enter a valid email.")
 	private String email;
+	@NotBlank(message="")
+	@Size(min=6,max=50 , message="Ivalid password. Length must be more than 6 characters.")
 	private String password;
 	private boolean isMale;
 	private boolean isAdmin;
@@ -69,6 +80,8 @@ public class User {
 		return lastName;
 	}
 
+	//** SETTERS **//
+	
 	// set id which is returned by the database
 	public void setId(long id) {
 		this.id = id;
