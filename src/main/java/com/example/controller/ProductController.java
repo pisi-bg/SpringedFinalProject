@@ -142,7 +142,7 @@ public class ProductController {
 			sess.setAttribute("url", url);
 			sess.setAttribute("productPage", productList);
 			sess.setAttribute("products", products);
-			request.setAttribute("catId", categoryId);
+			sess.setAttribute("catId", categoryId);
 			sess.setAttribute("subCategories", subCategories);
 			// in request so every time you change animal category
 			// sub-categories will be not remembered
