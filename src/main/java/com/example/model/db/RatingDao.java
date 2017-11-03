@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.model.pojo.Rating;
-import com.example.utils.DateTimeJavaSqlConvertor;
+import com.example.utils.DateTimeConvertor;
 
 @Component
 public class RatingDao {
@@ -21,27 +21,25 @@ public class RatingDao {
 	private DBManager db;
 	@Autowired
 	UserDao ud;
-	
+
 	public Collection<Rating> getProductRatingAndComment(long productId) throws SQLException {
 		Collection<Rating> collection = new ArrayList<>();
-		
+
 		Connection con = db.getConnection();
-		String query = "SELECT r.rating, r.comment AS comment, user_id AS user, date_time AS time "
-				+ "FROM pisi.ratings AS r WHERE r.product_id = ?";
+		String query = "SELECT r.rating, r.comment AS comment, u.first_name as user, date_time AS time  "
+				+ "FROM pisi.ratings AS r JOIN pisi.users AS u USING (user_id) WHERE r.product_id = ? ORDER BY date_time ";
 		ResultSet rs = null;
 
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			stmt.setLong(1, productId);
 			rs = stmt.executeQuery();
-			
-			while(rs.next()){
-				LocalDateTime time = DateTimeJavaSqlConvertor.sqlToLocalDateTime(rs.getString("time"));
-				collection.add(new Rating().setRating(rs.getDouble("rating"))
-						.setComment(rs.getString("comment"))
-						.setUserEmail(ud.getUserByID(rs.getInt("user")).getEmail())
-						.setDateTime(time));
-			}			
-			return collection;			
+
+			while (rs.next()) {
+				LocalDateTime time = DateTimeConvertor.sqlToLocalDateTime(rs.getString("time"));
+				collection.add(new Rating().setRating(rs.getDouble("rating")).setComment(rs.getString("comment"))
+						.setUserName(rs.getString("user")).setDateTime(time));
+			}
+			return collection;
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -50,9 +48,7 @@ public class RatingDao {
 			}
 		}
 	}
-	
-	
-	
+
 	public double getProductRating(long productId) throws SQLException {
 
 		Connection con = db.getConnection();
@@ -129,7 +125,7 @@ public class RatingDao {
 			ps.setLong(2, ud.getUser(rating.getUserEmail()).getId());
 			ps.setDouble(3, rating.getRating());
 			ps.setString(4, rating.getComment());
-			ps.setString(5, DateTimeJavaSqlConvertor.localDateTimeToSql(rating.getDateTime()));			
+			ps.setString(5, DateTimeConvertor.localDateTimeToSql(rating.getDateTime()));
 			return (ps.executeUpdate() == 1);
 
 		} catch (SQLException e) {

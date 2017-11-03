@@ -515,20 +515,18 @@ public class ProductDao {
 	// remove product from admin
 	public synchronized void removeProduct(Product p) throws SQLException {
 		Connection con = db.getAdminCon();
-		String queryOne = "DELETE FROM pisi.products WHERE product_id=?;";
+
 		String queryTwo = "DELETE FROM pisi.ratings WHERE product_id=?;";
 		String queryThree = "DELETE FROM pisi.users_has_favorites WHERE product_id=?;";
-		String queryFour = "DELETE FROM pisi.products_has_animals WHERE product_id=?;";
+		String queryFour = "DELETE FROM pisi.orders_has_products WHERE product_id=?;";
+		String queryOne = "DELETE FROM pisi.products WHERE product_id=?;";
 
 		con.setAutoCommit(false);
 
-		try (PreparedStatement psOne = con.prepareStatement(queryOne);
-				PreparedStatement psTwo = con.prepareStatement(queryTwo);
+		try (PreparedStatement psTwo = con.prepareStatement(queryTwo);
 				PreparedStatement psThree = con.prepareStatement(queryThree);
-				PreparedStatement psFour = con.prepareStatement(queryFour)) {
-
-			psOne.setLong(1, p.getId());
-			psOne.executeUpdate();
+				PreparedStatement psFour = con.prepareStatement(queryFour);
+				PreparedStatement psOne = con.prepareStatement(queryOne);) {
 
 			psTwo.setLong(1, p.getId());
 			psTwo.executeUpdate();
@@ -538,6 +536,9 @@ public class ProductDao {
 
 			psFour.setLong(1, p.getId());
 			psFour.executeUpdate();
+
+			psOne.setLong(1, p.getId());
+			psOne.executeUpdate();
 
 			con.commit();
 		} catch (SQLException e) {

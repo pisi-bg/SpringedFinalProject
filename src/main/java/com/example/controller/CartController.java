@@ -87,9 +87,9 @@ public class CartController {
 			cart.remove(productCurrent);
 			session.setAttribute("cart", cart);
 		} catch (SQLException e) {
-			
+
 		}
-		return new ModelAndView("redirect:/cart/view") ;
+		return new ModelAndView("redirect:/cart/view");
 	}
 
 	@RequestMapping(value = "/updateCart", method = RequestMethod.GET)
@@ -169,7 +169,7 @@ public class CartController {
 		try {
 			con.setAutoCommit(false);
 			deliveryInfoDao.insertDelivInfoOrder(deliveryInfo);
-			Order order = new Order(user, LocalDateTime.now(), priceForCart, deliveryInfo.getDeliveryInfoId(), cart);
+			Order order = new Order(user, LocalDateTime.now(), priceForCart, deliveryInfo, cart);
 			orderDao.insertOrderForUser(order);
 			long orderId = order.getOrderId();
 			orderDao.insertProductsFromOrder(orderId, cart);
@@ -178,9 +178,11 @@ public class CartController {
 			try {
 				con.rollback();
 			} catch (SQLException e1) {
-				return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Проверете в профила си дали поръчката ви е приета.");
+				return new ModelAndView("error", "error",
+						"Вътрешна грешка, моля да ни извините. Проверете в профила си дали поръчката ви е приета.");
 			}
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Проверете в профила си дали поръчката ви е приета.");
+			return new ModelAndView("error", "error",
+					"Вътрешна грешка, моля да ни извините. Проверете в профила си дали поръчката ви е приета.");
 		} catch (NotEnoughQuantityException eq) {
 			try {
 				con.rollback();
@@ -193,13 +195,15 @@ public class CartController {
 			try {
 				con.setAutoCommit(true);
 			} catch (SQLException e) {
-				return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Проверете в профила си дали поръчката ви е приета.");
+				return new ModelAndView("error", "error",
+						"Вътрешна грешка, моля да ни извините. Проверете в профила си дали поръчката ви е приета.");
 			}
 			if (rs != null) {
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Проверете в профила си дали поръчката ви е приета.");
+					return new ModelAndView("error", "error",
+							"Вътрешна грешка, моля да ни извините. Проверете в профила си дали поръчката ви е приета.");
 				}
 			}
 		}
@@ -213,7 +217,6 @@ public class CartController {
 		session.setAttribute("productCurrent", null);
 		User u = (User) session.getAttribute("user");
 
-		session.setAttribute("favorites", u.getFavorites());
 		return new ModelAndView("thanks");
 
 	}

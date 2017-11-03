@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>	
 <%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>	
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!--!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"-->
 <!DOCTYPE html SYSTEM "about:legacy-compat">
 <html>
@@ -24,17 +25,94 @@
 	<a href="sortOrders?sort=asc"><button>Oldest to newest</button></a>
 	<hr> -->
 		<form action="${pageContext.request.contextPath}/user/profile/showOrders" method="post" style="display:inline;">		
-				<h2 >	ПРЕДИШНИ 10 ПОРЪЧКИ 		
-					<input type="image" name="submit"	src="<c:url value='/img/buttons/arrow.png'/>" alt="ЦЪК" title="drop down" width="50" height="auto" >	
-				</h2>
+			<h2 >	ПРЕДИШНИ 10 ПОРЪЧКИ 		
+				<input type="image" name="submit"	src="<c:url value='/img/buttons/arrow.png'/>" alt="ЦЪК" title="drop down" width="50" height="auto" >	
+			</h2>
 		</form>			
 	 	<%-- <c:if test="${empty sessionScope.orders}">
 			<h4 >	НЯМА ПРЕДИШНИ ПОРЪЧКИ 	</h4>
 		</c:if>  --%>
 		
 		<c:if test="${not empty sessionScope.orders}">
-				<form action="deliveryInfo" method="get" >				
-								<table border="1">
+				<%-- <form action="deliveryInfo" method="get" >	 --%>	
+						
+			<table border="1">
+							<thead class="">
+								<tr>
+									<th>Дата</th>
+									<th>Цена</th>											
+									<th>Продукти</th>
+									<th>Доставка</th>
+								</tr>
+							</thead>						
+							<tbody>			
+								<c:forEach items="${ sessionScope.orders }" var="order">
+									<tr>
+									
+										<td>
+											<fmt:parseDate value="${ order.dateTime }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
+											<fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${ parsedDateTime }" />
+										</td>
+										<td>${order.finalPrice }</td>
+										<td>
+											<!-- <ul>  style="list-style-type: none" -->
+											
+												<table  style="border-color:#FFF8DC; border:0;">
+													<thead class="light">
+														<tr>
+															<th style="font-size: 12px;">име</th>
+															<th style="font-size: 12px;">к-во</th>																				
+															<th style="font-size: 12px;">марка</th>	
+															<th style="font-size: 12px;">категория</th>
+														</tr>
+													</thead>						
+													<tbody>			
+														<c:forEach items="${ order.products }" var="productEntry">
+															<tr class="light">
+																<td width = "200px">${productEntry.key.name }</td>
+																<td  width = "40px">${productEntry.value }</td>
+																<td>${productEntry.key.brand }</td>
+																<td>${productEntry.key.category }</td>														
+															</tr> 
+														</c:forEach>	
+													</tbody>
+												</table>
+										</td>
+										
+										<td>
+											<ul >
+												<li>
+													 Име 
+													<span style="font-weight:lighter">${order.deliveryInfo.recieverFirstName} ${order.deliveryInfo.recieverLastName}</span>
+												</li>
+												<li>
+													Телефон 
+													<span style="font-weight:lighter">${order.deliveryInfo.recieverPhone}</span> 
+												</li>                                           
+												<li>                                            
+													Град 
+													<span style="font-weight:lighter">${order.deliveryInfo.city}</span>   
+													 ПK
+													<span style="font-weight:lighter">${order.deliveryInfo.zipCode}</span> 
+												</li>                                           
+												<li>                                            
+													Адрес													
+													<span style="font-weight:lighter">${order.deliveryInfo.address}</span>
+												</li>                                           
+												<li>                                            
+													Бележка
+													<span style="font-weight:lighter">${order.deliveryInfo.notes}</span>   
+												</li>  												
+											</ul>
+										
+										</td>
+									</tr>
+								</c:forEach>	
+							</tbody>
+						</table>
+						
+						
+								<%-- <table border="1">
 									<thead class="">
 										<tr>
 											<th class="cart_product first_item">Дата</th>
@@ -44,8 +122,11 @@
 									</thead>						
 									<tbody>			
 										<c:forEach items="${ sessionScope.orders }" var="order">
-											<tr>
-												<td>${ order.dateTime }</td>
+											<tr>										
+												<td>
+													<fmt:parseDate value="${ order.dateTime }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
+													<fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${ parsedDateTime }" />	
+												</td>
 												<td>${order.finalPrice }</td>
 												<td>
 													<ul style="list-style-type: none">
@@ -59,10 +140,10 @@
 											</tr>
 										</c:forEach>	
 									</tbody>
-								</table>
+								</table> --%>
 							<br>
 										
-				</form>
+				<%-- </form> --%>
 		</c:if>	
 <!-- 
 	<h1>Please update all fields:</h1>

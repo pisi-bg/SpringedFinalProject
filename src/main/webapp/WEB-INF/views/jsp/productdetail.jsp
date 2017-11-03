@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="f" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib uri="http://sargue.net/jsptags/time" prefix="javatime" %>
 
 
 	<jsp:include page="header.jsp"></jsp:include>
@@ -144,23 +145,26 @@
 						<table border="1"  >
 							<thead class="">
 								<tr>
-									<th class="cart_quantity item text-center">Дата</th>
-									<th class="cart_product first_item">Потребител</th>
-																				
-									<th class="cart_quantity item text-center">Коментар</th>							
-									
+									<th>Дата</th>
+									<th>Потребител</th>																				
+									<th>Коментар</th>	
 								</tr>
 							</thead>						
 							<tbody>			
 								<c:forEach items="${ sessionScope.comments }" var="com">
 									<tr>
-										<td width = "130px">${com.dateTime }</td>
+									
+										<td width = "130px">										
+											<fmt:parseDate value="${com.dateTime}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
+											<fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${ parsedDateTime }" />									
+										</td>
 										<td>${ com.userEmail }</td>
 										<td align="left">
 											<fmt:formatNumber	type="number" pattern="#####.##" value="${com.rating }" />	
 											<img src="<c:url value='/img/buttons/has_rating.png'/>" alt="rating" title="rating" width="5%" height="auto">
-											
-											${com.comment }
+											<p align="center">
+												${com.comment }
+											</p>
 										</td>
 																																			
 									</tr>

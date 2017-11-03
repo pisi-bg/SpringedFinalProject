@@ -3,10 +3,10 @@ package com.example.model.pojo;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Rating implements Serializable{
+public class Rating implements Serializable {
 
 	private long productId;
-	private String userEmail;
+	private String userName;
 	private double rating;
 	private String comment;
 	private LocalDateTime dateTime;
@@ -17,7 +17,7 @@ public class Rating implements Serializable{
 	}
 
 	public String getUserEmail() {
-		return userEmail;
+		return userName;
 	}
 
 	public double getRating() {
@@ -32,15 +32,13 @@ public class Rating implements Serializable{
 		return dateTime;
 	}
 
-	// setters
-
 	public Rating setProductId(long productId) {
 		this.productId = productId;
 		return this;
 	}
 
-	public Rating setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
+	public Rating setUserName(String userName) {
+		this.userName = userName;
 		return this;
 	}
 
@@ -58,5 +56,7 @@ public class Rating implements Serializable{
 		this.dateTime = dateTime;
 		return this;
 	}
+
+	// setters
 
 }

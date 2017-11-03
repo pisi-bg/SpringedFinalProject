@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 import com.example.model.pojo.Order;
 import com.example.model.pojo.Product;
-import com.example.utils.DateTimeJavaSqlConvertor;
+import com.example.utils.DateTimeConvertor;
 import com.example.utils.NotEnoughQuantityException;
 
 @Component
@@ -29,7 +29,13 @@ public class OrderDao {
 	ProductDao productDao;
 
 	@Autowired
+	DeliveryInfoDao deliveryInfoDao;
+
+	@Autowired
 	DBManager DBmanager;
+
+	@Autowired
+	UserDao userDao;
 
 	public TreeSet<Order> getOrdersForUser(long user_id) throws SQLException {
 		Connection con = DBmanager.getConnection();
@@ -49,9 +55,10 @@ public class OrderDao {
 
 			while (rs.next()) {
 				HashMap<Product, Integer> products = this.getProductsForOrder(rs.getLong("order_id"));
-				orders.add(new Order(rs.getLong("order_id"), user_id,
-						DateTimeJavaSqlConvertor.sqlToLocalDateTime(rs.getString("dateTime_created")),
-						rs.getBigDecimal("final_price").doubleValue(), products));
+				orders.add(new Order(rs.getLong("order_id"), userDao.getUserByID(user_id),
+						DateTimeConvertor.sqlToLocalDateTime(rs.getString("dateTime_created")),
+						rs.getBigDecimal("final_price").doubleValue(), products,
+						deliveryInfoDao.getDeliveryInfo(rs.getInt("delivery_info_id"))));
 
 			}
 			return orders;
@@ -79,20 +86,13 @@ public class OrderDao {
 		ps.setLong(1, orderId);
 		ResultSet rs = ps.executeQuery();
 		HashMap<Product, Integer> productsForOrder = new HashMap<Product, Integer>();
-		while (rs.next()) {			
+		while (rs.next()) {
 			double rating = rd.getProductRating(rs.getLong("product_id"));
-			productsForOrder.put(
-					new Product().setId(rs.getLong("product_id"))
-					.setName(rs.getString("name"))
-					.setPrice(rs.getDouble("price"))
-					.setDescription(rs.getString("description"))
-					.setDiscount(rs.getInt("discount"))
-					.setAnimal(rs.getString("animal"))
-					.setCategory(rs.getString("category"))
-					.setImage(rs.getString("image"))
-					.setRating(rating)
-					.setBrand(rs.getString("brand")),
-					rs.getInt("quantity"));
+			productsForOrder.put(new Product().setId(rs.getLong("product_id")).setName(rs.getString("name"))
+					.setPrice(rs.getDouble("price")).setDescription(rs.getString("description"))
+					.setDiscount(rs.getInt("discount")).setAnimal(rs.getString("animal"))
+					.setCategory(rs.getString("category")).setImage(rs.getString("image")).setRating(rating)
+					.setBrand(rs.getString("brand")), rs.getInt("quantity"));
 		}
 		return productsForOrder;
 	}
@@ -105,9 +105,9 @@ public class OrderDao {
 
 		try (PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
 			ps.setLong(1, order.getUser().getId());
-			ps.setString(2, DateTimeJavaSqlConvertor.localDateTimeToSql(order.getDateTime()));
+			ps.setString(2, DateTimeConvertor.localDateTimeToSql(order.getDateTime()));
 			ps.setDouble(3, order.getFinalPrice());
-			ps.setLong(4, order.getDeliveryInfoId());
+			ps.setLong(4, order.getDeliveryInfo().getDeliveryInfoId());
 
 			ps.executeUpdate();
 			rs = ps.getGeneratedKeys();

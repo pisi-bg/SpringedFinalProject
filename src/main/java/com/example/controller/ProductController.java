@@ -3,11 +3,10 @@ package com.example.controller;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -205,16 +204,7 @@ public class ProductController {
 	public ModelAndView productDetailGet(HttpServletRequest request, HttpSession s,
 			@PathVariable("id") Integer productId, Model m) {
 		Product productCurrent = null;
-		TreeSet<Rating> comments = new TreeSet<>(new Comparator<Rating>() {
-
-			@Override
-			public int compare(Rating o1, Rating o2) {
-				if (o1.getDateTime().equals(o2.getDateTime())) {
-
-				}
-				return o2.getDateTime().compareTo(o1.getDateTime());
-			}
-		});
+		ArrayList<Rating> comments = new ArrayList<>();
 
 		try {
 			productCurrent = pd.getProduct(productId);
@@ -282,7 +272,7 @@ public class ProductController {
 			return new ModelAndView("redirect:/user/login");
 		}
 		rating.setProductId(pro.getId());
-		rating.setUserEmail(u.getEmail());
+		rating.setUserName(u.getFirstName());
 		rating.setDateTime(LocalDateTime.now());
 		try {
 			rd.addProductRating(rating);

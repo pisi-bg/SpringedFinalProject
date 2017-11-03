@@ -37,14 +37,35 @@ th{
 	text-align: center;
 	font-weight: bold;
 	color:  #440008;
-
 }
+thead .light{
+	font-size: 14px;	
+	text-align: center;
+	color:  #440008;
+}
+
 tr{
 	font-size: 14px;
 	text-align: center;
 	font-weight: bold;
 	color: #440008;
 }
+
+tr .light{
+	font-size: 12px;
+	text-align: center;
+	color: #440008;
+}
+
+.left-lighter{
+	font-weight:
+	text-align: left;
+}
+
+.bold{
+	font-weight: bold;
+}
+
 
 
 
@@ -543,14 +564,25 @@ h5 .center{
 
 .pisi-grid_products ul li .wrap .products_title{
 	display: table;
-	height:40px;
+	height:40px;	
 }
+
+
 
 .pisi-grid_products ul li .wrap .products_title .table-view{
 	display: table-cell;
 	vertical-align: middle;
 	height:50px;
 }
+
+.table-view:hover{	
+	color: #c4463e;
+}
+.pisi-grid_products ul li .wrap .products_title .table-view:hover{	
+	color: #c4463e;
+}
+
+
 
 .pisi-grid_products ul li h3{
 	margin: 15px 0px 15px!important;
