@@ -158,20 +158,7 @@ public class UserController {
 		return new ModelAndView("index");
 	}
 
-	@RequestMapping(value = "/profile", method = RequestMethod.GET)
-	public ModelAndView viewProfile(HttpSession session) {
-		session.removeAttribute("orders");
-
-		User u = (User) session.getAttribute("user");
-		if (u == null) {
-			return new ModelAndView("redirect:/user/login");
-		}
-		if (!u.getFavorites().isEmpty()) {
-			session.setAttribute("favorites", u.getFavorites());
-		}
-		return new ModelAndView("profile");
-	}
-
+	
 	@RequestMapping(value = "/profile/showOrders", method = RequestMethod.POST)
 	public ModelAndView viewOrders(HttpSession session) {
 
@@ -197,24 +184,42 @@ public class UserController {
 		m.addAttribute("user", u);
 		return new ModelAndView("updateProfile");
 	}
+	
+	@RequestMapping(value = "/profile", method = RequestMethod.GET)
+	public ModelAndView viewProfile(HttpSession session, HttpServletRequest req) {
+		session.removeAttribute("orders");
+		
+
+		User u = (User) session.getAttribute("user");
+		if (u == null) {
+			return new ModelAndView("redirect:/user/login");
+		}
+		if (!u.getFavorites().isEmpty()) {
+			session.setAttribute("favorites", u.getFavorites());
+		}
+		return new ModelAndView("profile");
+	}
+
 
 	@RequestMapping(value = "/profile", method = RequestMethod.POST)
-	public ModelAndView updateProfile(@ModelAttribute User user, HttpSession sess) {
-		try {
-			user.setId(((User) sess.getAttribute("user")).getId());
-			String hashPassword = Hasher.securePassword(user.getPassword(), user.getEmail());
-			user.setPassword(hashPassword);
-			ud.updateUser(user);
-			user = ud.getUser(user.getEmail());
-			sess.setAttribute("user", user);
-		} catch (SQLException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
-		} catch (NoSuchAlgorithmException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
-		} catch (UnsupportedEncodingException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+	public ModelAndView updateProfile(@ModelAttribute User user,HttpServletRequest req , HttpSession sess, BindingResult result) {
+		Set<ConstraintViolation<User>> violations = validator.validate(user);
+		
+		for(ConstraintViolation<User> cv : violations){
+			String propertyPath = cv.getPropertyPath().toString();
+			String message = cv.getMessage();
+			result.addError(new FieldError("user", propertyPath, message));
 		}
-		return new ModelAndView("redirect:/user/profile");
+		
+		if(result.hasErrors()){		
+			return new ModelAndView("redirect:/user/profile");
+		}
+		
+		ModelAndView m = this.updateProfile(user, sess);
+		if(m.getViewName().equals("redirect:/user/profile")){
+			m.setViewName("index");
+		}
+		return m;
 	}
 
 	@RequestMapping(value = "/favorites/{page}", method = RequestMethod.GET)
@@ -494,4 +499,23 @@ public class UserController {
 		return new ModelAndView("index");
 	}
 
+	
+	private ModelAndView updateProfile(User user, HttpSession sess){
+		try {
+			user.setId(((User) sess.getAttribute("user")).getId());
+			String hashPassword = Hasher.securePassword(user.getPassword(), user.getEmail());
+			user.setPassword(hashPassword);
+			ud.updateUser(user);
+			user = ud.getUser(user.getEmail());
+			sess.setAttribute("user", user);
+		} catch (SQLException e) {
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+		} catch (NoSuchAlgorithmException e) {
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+		} catch (UnsupportedEncodingException e) {
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+		}
+		return new ModelAndView("redirect:/user/profile");		
+	}
+	
 }
