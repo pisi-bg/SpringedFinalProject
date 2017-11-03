@@ -32,16 +32,19 @@ public class DeliveryInfoDao {
 			ps.setInt(3, cityId);
 			ps.setString(4, delivInfo.getRecieverFirstName());
 			ps.setString(5, delivInfo.getRecieverLastName());
-			ps.setString(6, delivInfo.getRecieverPhone());
+			ps.setLong(6, delivInfo.getRecieverPhone());
 			ps.setString(7, delivInfo.getNotes());
 			int result = ps.executeUpdate();
 			rs = ps.getGeneratedKeys();
 			rs.next();
 			delivInfo.setDeliveryInfoId(rs.getLong(1));
 		} catch (SQLException e) {
+			e.printStackTrace();
 			throw e;
 		} finally {
-			rs.close();
+			if(rs != null){
+				rs.close();
+			}
 		}
 	}
 
@@ -80,7 +83,7 @@ public class DeliveryInfoDao {
 			rs.next();
 			DeliveryInfo delInfo = new DeliveryInfo(deliveryInfoId, rs.getString("address"), rs.getInt("zip_code"),
 					rs.getString("city_name"), rs.getString("reciever_first_name"), rs.getString("reciever_last_name"),
-					rs.getString("reciever_phone"), rs.getString("notes"));
+					rs.getLong("reciever_phone"), rs.getString("notes"));
 			return delInfo;
 		} catch (SQLException e) {
 			throw e;
@@ -97,7 +100,7 @@ public class DeliveryInfoDao {
 		ResultSet rs = null;
 
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
-			stmt.setString(1, cityName.toUpperCase());
+			stmt.setString(1, cityName);
 			// TODO upgrate cases in DB
 			rs = stmt.executeQuery();
 			if (rs.next()) {

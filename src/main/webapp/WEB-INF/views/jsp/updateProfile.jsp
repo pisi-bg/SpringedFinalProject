@@ -11,16 +11,22 @@
 <body>	
 	<h2>ПРОМЕНИ ИНФОРМАЦИЯ В ПРОФИЛ:</h2>
 	<h3>попълни всички полета:</h3>
-	
-	<f:form commandName="user" >
-		Име :<f:input path="firstName"/><br>
-		Фамилия:<f:input path="lastName"/><br>
-		email:<f:input path="email"/><br>
-		парола:<f:password path="password"/><br>
-		пол: <f:radiobutton path="isMale" value="true" label="мъж"/>
-		<f:radiobutton path="isMale" value="false" label="жена"/>	<br>
-		<input type="submit" value="Update">			
-	</f:form>	
+		
+		
+		
+		<f:form commandName="user">				
+			Име:<f:input path="firstName"/>
+			<f:errors path="firstName" cssClass="error" style = "color:red"></f:errors><br>
+			Фамилия:<f:input path="lastName"/>
+			<f:errors path="lastName" cssClass="error" style = "color:red"></f:errors><br>
+			Имейл:<f:input path="email"/>
+			<f:errors path="email" cssClass="error" style = "color:red"></f:errors><br>
+			Парола:<f:password path="password" placeholder="Минимум 6 символа..."/>
+			<f:errors path="password" cssClass="error" style = "color:red" ></f:errors><br>
+			Пол: <f:radiobutton path="isMale" value="true" label="мъж"/>
+			<f:radiobutton path="isMale" value="false" label="жена"/>	<br>
+			<input type="submit" value="Промени">			
+		</f:form>
 		
 <%-- 	<a href= "<c:url value='/index'/>"><button>Home</button></a> --%>
 	

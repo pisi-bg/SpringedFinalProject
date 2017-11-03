@@ -7,14 +7,23 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,9 +42,9 @@ import com.example.utils.NotEnoughQuantityException;
 @Controller
 @RequestMapping(value = "/cart")
 public class CartController {
-
-	// @Autowired
-	// CartDao cartDao;
+	
+	private Validator validator;
+	
 	@Autowired
 	ProductDao productDao;
 	@Autowired
@@ -44,6 +53,11 @@ public class CartController {
 	DeliveryInfoDao deliveryInfoDao;
 	@Autowired
 	DBManager DBmanager;
+	
+	public CartController() {
+		ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+		validator = validatorFactory.getValidator();
+	}
 
 	@RequestMapping(value = "/view", method = RequestMethod.GET)
 	public ModelAndView viewCart(HttpSession s) {
@@ -113,8 +127,9 @@ public class CartController {
 	}
 
 	@RequestMapping(value = "/deliveryInfo", method = RequestMethod.GET)
-	public ModelAndView viewDeliveryInfo(HttpSession session, HttpServletRequest request) {
-
+	public ModelAndView viewDeliveryInfo(HttpSession session, HttpServletRequest request, Model m) {
+		
+		DeliveryInfo selectedDelInfo = new DeliveryInfo();
 		// check if logged
 		User user = (User) session.getAttribute("user");
 		if (user == null) {
@@ -130,31 +145,42 @@ public class CartController {
 				session.setAttribute("deliveries", deliveries);
 				if (idx != null) {
 					Integer idxDeliveryInfo = Integer.parseInt(idx);
-					DeliveryInfo selectedDelInfo = deliveries.get(idxDeliveryInfo);
-					session.setAttribute("selectedDelInfo", selectedDelInfo);
+					selectedDelInfo = deliveries.get(idxDeliveryInfo); 
+//					session.setAttribute("selectedDelInfo", selectedDelInfo);    pazi go che shte trqbva 
 				}
 			}
 
 		} catch (SQLException e) {
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		}
-		request.setAttribute("cities", cities);
+		m.addAttribute("deliveryInfo",selectedDelInfo);		
+		session.setAttribute("cities", cities);
 		return new ModelAndView("deliveryInfo");
 	}
 
-	@RequestMapping(value = "/newOrder", method = RequestMethod.POST)
-	public ModelAndView createNewOrder(HttpSession session, HttpServletRequest request) {
+	@RequestMapping(value = "/deliveryInfo", method = RequestMethod.POST)
+	public ModelAndView createNewOrder(HttpSession session, HttpServletRequest request,@ModelAttribute DeliveryInfo deliveryInfo, BindingResult result) {
+		
+		Set<ConstraintViolation<DeliveryInfo>> violations = validator.validate(deliveryInfo);
+		for(ConstraintViolation<DeliveryInfo> cv : violations){
+			String propertyPath = cv.getPropertyPath().toString();
+			String message = cv.getMessage();
+			result.addError(new FieldError("deliveryInfo", propertyPath, message));
+		}
+		
+		if(result.hasErrors()){
+			return new ModelAndView("deliveryInfo");
+		}
 
-		String firstName = request.getParameter("firstName");
-		String lastName = request.getParameter("lastName");
-		String phone = request.getParameter("phone");
-		String city = request.getParameter("city");
-		String address = request.getParameter("address");
-		int zip = Integer.parseInt(request.getParameter("zip"));
-		String note = request.getParameter("note");
-		// TODO validation
-
-		DeliveryInfo deliveryInfo = new DeliveryInfo(address, zip, city, firstName, lastName, phone, note);
+		System.out.println(deliveryInfo + " *******************************************************************************************");
+		System.out.println(deliveryInfo.getCity());
+				System.out.println(deliveryInfo.getAddress());
+						System.out.println(deliveryInfo.getDeliveryInfoId());
+								System.out.println(deliveryInfo.getRecieverPhone());
+										System.out.println(deliveryInfo.getZipCode());
+												
+		
+//		DeliveryInfo deliveryInfo = new DeliveryInfo(address, zip, city, firstName, lastName, phone, note);
 
 		HashMap<Product, Integer> cart = (HashMap<Product, Integer>) session.getAttribute("cart");
 		User user = (User) session.getAttribute("user");

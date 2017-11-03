@@ -30,7 +30,7 @@
 				</form>
 			</c:if>
 		<br><br>
-		<form action="<c:url value='/cart/newOrder'/>" method="post">
+		<%-- <form action="<c:url value='/cart/newOrder'/>" method="post">
 			<h3 align ="center" text-align="center">Получател</h3>			
 			<h5 style="text-align: left;">
 				Име <input type="text" name="firstName" value="${ sessionScope.selectedDelInfo.recieverFirstName  }" required><br>
@@ -54,26 +54,33 @@
 				
 				<input type="submit" value="Потвърди" class="pisi-button_dark">
 			</h5>
-		</form>
+		</form> --%>
 	</div> 
 	
-<%-- 	<div align="center">		
-		<f:form commandName="deliveryInfo" > action="<c:url value='/cart/newDeliveryInfo'/>"  
-			
+	<div align="center">		<%-- action="${pageContext.request.contextPath}/cart/newOrder" --%>
+		<f:form commandName="deliveryInfo" > 			
 			<h3 align="left">Получател</h3>
-					Име:<f:input path="recieverFirstName" /><br>	
-					Фамилия:<f:input path="recieverLastName" /><br>
-					Телефон:<f:input path="recieverPhone" /><br>			
+					Име:<f:input path="recieverFirstName" />
+					<f:errors path="recieverFirstName" cssClass="error" style = "color:red"></f:errors><br>	
+					Фамилия:<f:input path="recieverLastName" />
+					<f:errors path="recieverLastName" cssClass="error" style = "color:red"></f:errors><br>	
+					Телефон: +359<f:input path="recieverPhone" type="number"/>
+					<f:errors path="recieverPhone" cssClass="error" style = "color:red"></f:errors><br>				
 			<h3 align="left">Адрес</h3>	
 					Град<f:select path='city' >
-							<c:forEach items="${requestScope.cities}" var="city">
+							<f:options items="${sessionScope.cities}"/>
+							<%-- <c:forEach items="${requestScope.cities}" var="city">
 								<f:option value="${city}">${city}</f:option>
-							</c:forEach>						
-						</f:select>					
-					Пощенски код:<f:input path="zipCode"  min="1000" max ="9999" /><br>
-					Адрес:<f:input path="address" /><br>	
+							</c:forEach> --%>						
+						</f:select>	
+						<f:errors path="city" cssClass="error" style = "color:red"></f:errors><br>					
+					Пощенски код:<f:input path="zipCode" min="1000" max ="9999"  type="number"/>
+					<f:errors path="zipCode" cssClass="error" style = "color:red"></f:errors><br>	
+					Адрес:<f:input path="address" />
+					<f:errors path="address" cssClass="error" style = "color:red"></f:errors><br>		
 					Бележка:<f:input path="notes" /><br>	
+					<input type="submit">
 		</f:form>
-	</div> --%>
+	</div>
 </body>
 </html>

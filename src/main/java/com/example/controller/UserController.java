@@ -43,6 +43,7 @@ import com.example.model.pojo.User;
 import com.example.utils.EmailSender;
 import com.example.utils.Hasher;
 import com.example.utils.PasswordGenerator;
+import com.example.utils.StringValidator;
 
 @Controller
 @MultipartConfig
@@ -154,24 +155,11 @@ public class UserController {
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public ModelAndView logout(HttpSession sess) {
-		sess.invalidate();
+		sess.removeAttribute("user");
 		return new ModelAndView("index");
 	}
 
-	@RequestMapping(value = "/profile", method = RequestMethod.GET)
-	public ModelAndView viewProfile(HttpSession session) {
-		session.removeAttribute("orders");
-
-		User u = (User) session.getAttribute("user");
-		if (u == null) {
-			return new ModelAndView("redirect:/user/login");
-		}
-		if (!u.getFavorites().isEmpty()) {
-			session.setAttribute("favorites", u.getFavorites());
-		}
-		return new ModelAndView("profile");
-	}
-
+	
 	@RequestMapping(value = "/profile/showOrders", method = RequestMethod.POST)
 	public ModelAndView viewOrders(HttpSession session) {
 
@@ -197,28 +185,47 @@ public class UserController {
 		m.addAttribute("user", u);
 		return new ModelAndView("updateProfile");
 	}
+	
+	@RequestMapping(value = "/profile", method = RequestMethod.GET)
+	public ModelAndView viewProfile(HttpSession session, HttpServletRequest req) {
+		session.removeAttribute("orders");
+		
+
+		User u = (User) session.getAttribute("user");
+		if (u == null) {
+			return new ModelAndView("redirect:/user/login");
+		}
+		if (!u.getFavorites().isEmpty()) {
+			session.setAttribute("favorites", u.getFavorites());
+		}
+		return new ModelAndView("profile");
+	}
+
 
 	@RequestMapping(value = "/profile", method = RequestMethod.POST)
-	public ModelAndView updateProfile(@ModelAttribute User user, HttpSession sess) {
-		try {
-			user.setId(((User) sess.getAttribute("user")).getId());
-			String hashPassword = Hasher.securePassword(user.getPassword(), user.getEmail());
-			user.setPassword(hashPassword);
-			ud.updateUser(user);
-			user = ud.getUser(user.getEmail());
-			sess.setAttribute("user", user);
-		} catch (SQLException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
-		} catch (NoSuchAlgorithmException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
-		} catch (UnsupportedEncodingException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+	public ModelAndView updateProfile(@ModelAttribute User user,HttpServletRequest req , HttpSession sess, BindingResult result) {
+		Set<ConstraintViolation<User>> violations = validator.validate(user);
+		
+		for(ConstraintViolation<User> cv : violations){
+			String propertyPath = cv.getPropertyPath().toString();
+			String message = cv.getMessage();
+			result.addError(new FieldError("user", propertyPath, message));
 		}
-		return new ModelAndView("redirect:/user/profile");
+		
+		if(result.hasErrors()){		
+			return new ModelAndView("redirect:/user/profile");
+		}
+		
+		ModelAndView m = this.updateProfile(user, sess);
+		if(m.getViewName().equals("redirect:/user/profile")){
+			m.setViewName("index");
+		}
+		return m;
 	}
 
 	@RequestMapping(value = "/favorites/{page}", method = RequestMethod.GET)
 	public ModelAndView viewFavorites(HttpSession session, @PathVariable("page") Integer page) {
+		session.removeAttribute("categoriesD");
 		session.removeAttribute("subCategories");
 		User user = (User) session.getAttribute("user");
 		if (user == null) {
@@ -278,13 +285,37 @@ public class UserController {
 	
 	@RequestMapping(value="/contactForm", method = RequestMethod.POST)
 	public ModelAndView sendMail(HttpServletRequest req){
-		User user = new User().setEmail(req.getParameter("email"))
-							  .setFirstName(req.getParameter("name"));
-		String subject = req.getParameter("subject");
-		String describe = req.getParameter("descr");
-		if(user == null || subject == null || describe == null){
-			return new ModelAndView("error", "error", "Моля попълнете всички полета с валидна информация.");
+		ModelAndView model = new ModelAndView();
+		String email = req.getParameter("email").trim();
+		String name = req.getParameter("name").trim();
+		String subject = req.getParameter("subject").trim();
+		String describe = req.getParameter("descr").trim();
+		
+		if(email == null || email.isEmpty() || !UserDao.isValidEmailAddress(email)){
+			model.setViewName("contactForm");
+			model.addObject("email", "Невалиден имейл.");
+			return model;
 		}
+		
+		if(name == null || name.isEmpty()){
+			model.setViewName("contactForm");
+			model.addObject("name", "Моля попълнете вашето име.");
+			return model;
+		}
+		
+		if(subject == null || subject.isEmpty()){
+			model.setViewName("contactForm");
+			model.addObject("subject", "Моля попълнете полето.");
+			return model;
+		}
+		if(describe == null || describe.isEmpty()){
+			model.setViewName("contactForm");
+			model.addObject("describe", "Моля попълнете полето.");
+			return model;
+		}		
+		
+		User user = new User().setEmail(email).setFirstName(name);
+		
 		EmailSender.contactUs(user, subject, describe);
 		return new ModelAndView("index");
 	}
@@ -346,14 +377,34 @@ public class UserController {
 		} catch (UnsupportedEncodingException e1) {
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		}
-		// check for categories capslock s
-
 		String name = req.getParameter("name");
 		String animal = req.getParameter("animal");
 		String category = req.getParameter("category");
-		double price = Double.parseDouble(req.getParameter("price"));
 		String description = req.getParameter("description");
 		String brand = req.getParameter("brand");
+		
+		//validation
+		if(!StringValidator.validate(name) 
+				|| !StringValidator.validate(animal) 
+				|| !StringValidator.validate(category) 
+				|| !StringValidator.validate(description) 
+				|| !StringValidator.validate(brand)){
+			req.setAttribute("productError", "Моля, въведете валидни данни за продукта.");
+			return new ModelAndView("addproduct");
+		}
+		name = name.trim();
+		animal = animal.trim();
+		category = category.trim();
+		description = description.trim();
+		brand = brand.trim();
+		
+		//validation
+		if(req.getParameter("price") == null || req.getParameter("instock_count") == null || req.getParameter("discount") == null){
+			req.setAttribute("productError", "Моля, въведете валидни данни за продукта.");
+			return new ModelAndView("addproduct");
+		}
+		
+		double price = Double.parseDouble(req.getParameter("price"));
 		int instock = Integer.parseInt(req.getParameter("instock_count"));
 		int discount = 0;
 		if (req.getParameter("discount") != null) {
@@ -374,17 +425,11 @@ public class UserController {
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		}
 
-		Product p = new Product();
-		p.setName(name);
-		p.setAnimal(animal);
-		p.setCategory(category);
-		p.setPrice(price);
-		p.setDescription(description);
-		p.setBrand(brand);
-		p.setInStock(instock);
-		p.setDiscount(discount);
-		p.setImage(imageURL);
-
+		Product p = new Product().setName(name).setAnimal(animal)
+								.setCategory(category).setPrice(price)
+								.setDescription(description).setBrand(brand)
+								.setInStock(instock).setDiscount(discount).setImage(imageURL);
+		
 		try {
 			pd.addProduct(p);
 		} catch (SQLException e) {
@@ -405,7 +450,12 @@ public class UserController {
 		}
 
 		String brandName = req.getParameter("newBrandname");
-
+		
+		if(!StringValidator.validate(brandName)){
+			req.setAttribute("brandError", "Моля въведете валидно име за марка");
+			return new ModelAndView("addproduct");
+		}
+		brandName = brandName.trim();
 		String imageFileName = brandName.replaceAll(" ", "");
 		String imageType = ".jpg";
 		String imageURL = imageFileName.concat(imageType);
@@ -433,7 +483,7 @@ public class UserController {
 	public ModelAndView addQuantity(HttpSession sess, HttpServletRequest req) {
 		int quantity = Integer.parseInt(req.getParameter("quantity"));
 		if (quantity < 1) {
-			return new ModelAndView("error", "error", "Моля не въвеждайте отрицателни стойности в полетата.");
+			return new ModelAndView("productdetail", "error", "Моля не въвеждайте отрицателни стойности в полетата.");
 		}
 		Product pro = (Product) sess.getAttribute("productCurrent");
 		try {
@@ -441,22 +491,24 @@ public class UserController {
 		} catch (SQLException e) {
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		}
-		return new ModelAndView("index");
+		return new ModelAndView("redirect:/products/productdetail/productId/"+pro.getId() );
 	}
 
 	@RequestMapping(value = "/admin/discount", method = RequestMethod.POST)
 	public ModelAndView addDiscount(HttpSession sess, HttpServletRequest req) {
 		int discount = Integer.parseInt(req.getParameter("discount"));
 		if (discount < 0 || discount > 99) {
-			return new ModelAndView("error", "error", "Моля въвеждайте коректни стойности за отстъпки.");
+			return new ModelAndView("productdetail", "error", "Моля въвеждайте коректни стойности за отстъпки.");
 		}
 		Product pro = (Product) sess.getAttribute("productCurrent");
 		long id = pro.getId();
 		try {
 			pd.setInPromotion(id, discount);
-			List<String> users = ud.userEmailsLiked(id);
-			for(String email : users){
-				EmailSender.toPromotion(email, id);
+			if(discount > 0){
+				List<String> users = ud.userEmailsLiked(id);
+				for(String email : users){
+					EmailSender.toPromotion(email, id);
+				}
 			}
 		} catch (SQLException e) {
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
@@ -471,17 +523,16 @@ public class UserController {
 
 	@RequestMapping(value = "/password", method = RequestMethod.POST)
 	public ModelAndView sendPassword(HttpServletRequest req, HttpSession sess) {
-		String email = req.getParameter("email");
+		String email = req.getParameter("email").trim();
 		String pass = PasswordGenerator.getRandomPass();
 
 		if (email == null || !UserDao.isValidEmailAddress(email)) {
-			return new ModelAndView("error", "error", "Моля въвеждайте валидни данни за вашият имейл.");
+			return new ModelAndView("password", "pass", "Невалиден имейл.");
 		}
-
 		try {
 			User user = ud.getUser(email);
-			if (user.getEmail() == null || user.getEmail().isEmpty()) {
-				return new ModelAndView("error", "error", "Моля въвеждайте валидни данни за вашият имейл.");
+			if (user.getEmail() == null || user.getEmail().isEmpty()) {	
+				return new ModelAndView("password", "pass", "Несъществуващ имейл.");
 			}
 			sess.setAttribute("user", user);
 			user.setPassword(pass);
@@ -489,9 +540,29 @@ public class UserController {
 			this.updateProfile(user, sess);
 			sess.removeAttribute("user");
 		} catch (SQLException e) {
+			e.printStackTrace();
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		}
 		return new ModelAndView("index");
 	}
 
+	
+	private ModelAndView updateProfile(User user, HttpSession sess){
+		try {
+			user.setId(((User) sess.getAttribute("user")).getId());
+			String hashPassword = Hasher.securePassword(user.getPassword(), user.getEmail());
+			user.setPassword(hashPassword);
+			ud.updateUser(user);
+			user = ud.getUser(user.getEmail());
+			sess.setAttribute("user", user);
+		} catch (SQLException e) {
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+		} catch (NoSuchAlgorithmException e) {
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+		} catch (UnsupportedEncodingException e) {
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+		}
+		return new ModelAndView("redirect:/user/profile");		
+	}
+	
 }
