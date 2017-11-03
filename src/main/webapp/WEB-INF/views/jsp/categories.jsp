@@ -11,7 +11,7 @@
 				<nav>	
 					<c:forEach items="${ sessionScope.categoriesD }" var="parentCategory">
 			   					
-						 <a href="<c:url value='/products/animal/3/category/${parentCategory.value}/0'/>" > ${parentCategory.key} </a>
+						 <a href="<c:url value='/products/animal/${sessionScope.animalId}/category/${parentCategory.value}/0'/>" > ${parentCategory.key} </a>
 								
 					</c:forEach>	                        
 				</nav>
@@ -22,7 +22,7 @@
 			<div class="container">
 				<nav>	
 					<c:forEach items="${ sessionScope.subCategories }" var="subCategory">	
-						 <a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/${requestScope.catId}/subcatId/${subCategory.value}/0'/>" > ${subCategory.key} </a>
+						 <a href="<c:url value='/products/subcategory/animal/${sessionScope.animalId}/catId/${sessionScope.catId}/subcatId/${subCategory.value}/0'/>" > ${subCategory.key} </a>
 					</c:forEach>	                        
 				</nav>
 			</div>
