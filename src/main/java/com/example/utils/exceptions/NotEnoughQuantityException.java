@@ -1,4 +1,4 @@
-package com.example.utils;
+package com.example.utils.exceptions;
 
 @SuppressWarnings("serial")
 public class NotEnoughQuantityException extends Exception {

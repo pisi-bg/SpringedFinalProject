@@ -100,14 +100,14 @@
 							<%-- <a href="<c:url value='/products/addInCart/${productCurrent.id}'/>" title="addInCart" class="pisi-button_yellow"
 							style="text-decoration: none">ДОБАВИ В КОЛИЧКА</a>  --%>
 						
-					<c:if test="${ productCurrent.inStock ==0 }">
+					<%-- <c:if test="${ productCurrent.inStock ==0 }"> --%>
 					
 						<a href="<c:url value='/products/addInCart/${productCurrent.id}'/>">
 							<img src="<c:url value='/img/buttons/shopping_cart - color.png'/>"
 							alt="ADD IN CART" title="addInCart" width="15%" height="auto">
 						</a>
 					
-					</c:if>
+					<%-- </c:if> --%>
 					
 					
 					<!-- </div>  addincart -->
