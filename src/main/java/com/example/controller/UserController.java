@@ -42,9 +42,10 @@ import com.example.model.pojo.Product;
 import com.example.model.pojo.User;
 import com.example.utils.EmailSender;
 import com.example.utils.Hasher;
-import com.example.utils.NotSuchUserException;
 import com.example.utils.PasswordGenerator;
 import com.example.utils.StringValidator;
+import com.example.utils.exceptions.NoSuchProductException;
+import com.example.utils.exceptions.NotSuchUserException;
 
 @Controller
 @MultipartConfig
@@ -440,6 +441,8 @@ public class UserController {
 			pd.addProduct(p);
 		} catch (SQLException e) {
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
+		} catch (NoSuchProductException e) {
+			return new ModelAndView("error", "error", e.getMessage());
 		}
 		// return "index";
 		return new ModelAndView("redirect:/user/admin/addProduct");

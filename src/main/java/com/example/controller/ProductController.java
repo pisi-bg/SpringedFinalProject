@@ -31,6 +31,7 @@ import com.example.model.pojo.Product;
 import com.example.model.pojo.Rating;
 import com.example.model.pojo.User;
 import com.example.utils.ImageProvider;
+import com.example.utils.exceptions.NoSuchProductException;
 
 @Controller
 @RequestMapping(value = "/products")
@@ -213,6 +214,8 @@ public class ProductController {
 			s.setAttribute("comments", comments);
 		} catch (SQLException e) {
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+		} catch (NoSuchProductException e) {
+			return new ModelAndView("error", "error", e.getMessage());
 		}
 
 		// check if product is favorite and has Rating from user
@@ -445,6 +448,8 @@ public class ProductController {
 		} catch (IOException e) {
 			// in jsp will be shown atl value
 		} catch (SQLException e) {
+			// in jsp will be shown atl value
+		} catch (NoSuchProductException e) {
 			// in jsp will be shown atl value
 		}
 	}

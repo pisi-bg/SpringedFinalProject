@@ -37,15 +37,17 @@ import com.example.model.pojo.DeliveryInfo;
 import com.example.model.pojo.Order;
 import com.example.model.pojo.Product;
 import com.example.model.pojo.User;
-import com.example.utils.NotEnoughQuantityException;
+import com.example.utils.exceptions.NoSuchCityException;
+import com.example.utils.exceptions.NoSuchProductException;
+import com.example.utils.exceptions.NotEnoughQuantityException;
 
 @Controller
 @RequestMapping(value = "/cart")
 public class CartController {
 
-	
-	//validator for spring forms
+	// validator for spring forms
 	private Validator validator;
+	private ModelAndView sqlError;
 
 	@Autowired
 	ProductDao productDao;
@@ -55,29 +57,33 @@ public class CartController {
 	DeliveryInfoDao deliveryInfoDao;
 	@Autowired
 	DBManager DBmanager;
-	
-	//constructor
+
+	// constructor
 	public CartController() {
 		ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
 		validator = validatorFactory.getValidator();
+		this.sqlError = new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 	}
-
 
 	@RequestMapping(value = "/removeFromCart/{productId}", method = RequestMethod.POST)
 	public ModelAndView removeFromCart(HttpSession session, @PathVariable("productId") Integer productId) {
-
 		Product productCurrent = null;
 		HashMap<Product, Integer> cart = (HashMap<Product, Integer>) session.getAttribute("cart");
 		try {
 			productCurrent = productDao.getProduct(productId);
+			if (productCurrent.equals((Product) session.getAttribute("productNotEnoughQuantity"))) {
+				session.removeAttribute("productNotEnoughQuantity");
+			}
 			cart.remove(productCurrent);
 			session.setAttribute("cart", cart);
 		} catch (SQLException e) {
-
+			return sqlError;
+		} catch (NoSuchProductException e) {
+			return new ModelAndView("error","error", e.getMessage());
 		}
 		return new ModelAndView("redirect:/cart/view");
 	}
-	
+
 	@RequestMapping(value = "/view", method = RequestMethod.GET)
 	public ModelAndView viewCart(HttpSession s) {
 		s.removeAttribute("productNotEnoughQuantity");
@@ -91,8 +97,8 @@ public class CartController {
 				if (quantity > product.getInStock()) {
 					quantity = product.getInStock();
 					cart.put(product, quantity);
-				}				
-			}			
+				}
+			}
 			double priceForCart = Order.calculatePriceForCart(cart);
 			s.setAttribute("priceForCart", priceForCart);
 		} else {
@@ -100,7 +106,6 @@ public class CartController {
 		}
 		return new ModelAndView("cart");
 	}
-
 
 	@RequestMapping(value = "/updateCart", method = RequestMethod.GET)
 	public ModelAndView updateCart(HttpSession session, HttpServletRequest request) {
@@ -119,17 +124,17 @@ public class CartController {
 			session.setAttribute("priceForCart", priceForCart);
 			session.setAttribute("cart", cart);
 		} catch (SQLException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
-		}catch (NumberFormatException e) {
+			return sqlError;
+		} catch (NumberFormatException e) {
 			return new ModelAndView("error", "error", "Моля въвеждайте валидни данни в полетата за количество.");
+		} catch (NoSuchProductException e) {
+			return new ModelAndView("error", "error", e.getMessage());
 		}
 		return new ModelAndView("cart");
-//		return new ModelAndView("forward:/cart/view");
 	}
 
 	@RequestMapping(value = "/deliveryInfo", method = RequestMethod.GET)
 	public ModelAndView viewDeliveryInfo(HttpSession session, HttpServletRequest request, Model m) {
-
 		DeliveryInfo selectedDelInfo = new DeliveryInfo();
 		// check if logged
 		User user = (User) session.getAttribute("user");
@@ -141,19 +146,18 @@ public class CartController {
 		String idx = request.getParameter("idxDeliveryInfo");
 		try {
 			cities = orderDao.getCitiesNames();
-			deliveries = deliveryInfoDao.getListDeliveryInfosForUser(user.getId());
+			deliveries = deliveryInfoDao.getDeliveriesInfosForUser(user.getId());
 			if (deliveries != null && !deliveries.isEmpty()) {
 				session.setAttribute("deliveries", deliveries);
 				if (idx != null) {
 					Integer idxDeliveryInfo = Integer.parseInt(idx);
 					selectedDelInfo = deliveries.get(idxDeliveryInfo);
-					// session.setAttribute("selectedDelInfo", selectedDelInfo);
-					// pazi go che shte trqbva
 				}
 			}
-
 		} catch (SQLException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+			return sqlError;
+		} catch (NumberFormatException e) {
+			return new ModelAndView("error", "error", "Моля въвеждайте валидни данни в полетата.");
 		}
 		m.addAttribute("deliveryInfo", selectedDelInfo);
 		session.setAttribute("cities", cities);
@@ -161,7 +165,8 @@ public class CartController {
 	}
 
 	@RequestMapping(value = "/deliveryInfo", method = RequestMethod.POST)
-	public ModelAndView createNewOrder(HttpSession session, HttpServletRequest request,@ModelAttribute DeliveryInfo deliveryInfo, BindingResult result) {
+	public ModelAndView createNewOrder(HttpSession session, HttpServletRequest request,
+			@ModelAttribute DeliveryInfo deliveryInfo, BindingResult result) {
 		session.removeAttribute("productNotEnoughQuantity");
 		Set<ConstraintViolation<DeliveryInfo>> violations = validator.validate(deliveryInfo);
 		for (ConstraintViolation<DeliveryInfo> cv : violations) {
@@ -209,12 +214,13 @@ public class CartController {
 			}
 			return new ModelAndView("error", "error", "Не достатъчно количество, моля да ни извините.");
 
+		} catch (NoSuchCityException e) {
+			return new ModelAndView("error", "error", "Нямаме град с такова име в системата си. Моля не преправяйте страницата ни.");
 		} finally {
 			try {
 				con.setAutoCommit(true);
 			} catch (SQLException e) {
-				return new ModelAndView("error", "error",
-						"Вътрешна грешка, моля да ни извините. Проверете в профила си дали поръчката ви е приета.");
+				return new ModelAndView("error", "error","Вътрешна грешка, моля да ни извините. Проверете в профила си дали поръчката ви е приета.");
 			}
 			if (rs != null) {
 				try {

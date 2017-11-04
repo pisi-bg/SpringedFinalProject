@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.model.pojo.DeliveryInfo;
+import com.example.utils.exceptions.NoSuchCityException;
+import com.example.utils.exceptions.NotEnoughQuantityException;
 
 @Component
 public class DeliveryInfoDao {
@@ -19,13 +21,13 @@ public class DeliveryInfoDao {
 	@Autowired
 	DBManager DBmanager;
 
-	public void insertDelivInfoOrder(DeliveryInfo delivInfo) throws SQLException {
+	public void insertDelivInfoOrder(DeliveryInfo delivInfo) throws SQLException, NoSuchCityException {
 		Connection con = DBmanager.getAdminCon();
 		String query = "INSERT INTO pisi.deliveries ( address, zip_code, city_id, reciever_first_name, reciever_last_name, reciever_phone, notes) VALUES (?,?,?,?,?,?,?)";
 		String cityName = delivInfo.getCity();
 		int cityId = retrieveCityId(cityName);
 		ResultSet rs = null;
-
+		
 		try (PreparedStatement ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
 			ps.setString(1, delivInfo.getAddress());
 			ps.setInt(2, delivInfo.getZipCode());
@@ -34,35 +36,11 @@ public class DeliveryInfoDao {
 			ps.setString(5, delivInfo.getRecieverLastName());
 			ps.setLong(6, delivInfo.getRecieverPhone());
 			ps.setString(7, delivInfo.getNotes());
-			int result = ps.executeUpdate();
+			ps.executeUpdate();
 			rs = ps.getGeneratedKeys();
 			rs.next();
 			delivInfo.setDeliveryInfoId(rs.getLong(1));
 		} catch (SQLException e) {
-			e.printStackTrace();
-			throw e;
-		} finally {
-			if(rs != null){
-				rs.close();
-			}
-		}
-	}
-
-	public ArrayList<DeliveryInfo> getListDeliveryInfosForUser(long userId) throws SQLException {
-		Connection con = DBmanager.getConnection();
-		String query = "SELECT delivery_info_id FROM pisi.orders WHERE user_id =?;";
-		ResultSet rs = null;
-
-		try (PreparedStatement stmt = con.prepareStatement(query);) {
-			stmt.setLong(1, userId);
-			rs = stmt.executeQuery();
-			HashSet<DeliveryInfo> setDeliveries = new HashSet<DeliveryInfo>();
-			while (rs.next()) {
-				setDeliveries.add(this.getDeliveryInfo(rs.getInt("delivery_info_id")));
-			}
-			return new ArrayList<>(setDeliveries);
-		} catch (SQLException e) {
-			//throw custom exception
 			throw e;
 		} finally {
 			if (rs != null) {
@@ -72,9 +50,10 @@ public class DeliveryInfoDao {
 	}
 
 	public DeliveryInfo getDeliveryInfo(long deliveryInfoId) throws SQLException {
-
 		Connection con = DBmanager.getConnection();
-		String query = "SELECT *  FROM pisi.deliveries JOIN pisi.cities AS c USING (city_id) WHERE delivery_info_id=?;";
+		String query = "SELECT c.city_id , d.delivery_info_id, d.address, d.zip_code, d.reciever_first_name, "
+						+ "d.reciever_last_name, d.reciever_phone, d.notes, c.city_name  "
+						+ "FROM pisi.deliveries AS d JOIN pisi.cities AS c USING (city_id) WHERE delivery_info_id=?;";
 		ResultSet rs = null;
 
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
@@ -94,19 +73,22 @@ public class DeliveryInfoDao {
 		}
 	}
 
-	public int retrieveCityId(String cityName) throws SQLException {
+	public ArrayList<DeliveryInfo> getDeliveriesInfosForUser(long userId) throws SQLException {
 		Connection con = DBmanager.getConnection();
-		String query = "SELECT city_id as id FROM pisi.cities WHERE city_name = ?";
+		ArrayList<DeliveryInfo> arr = new ArrayList<>();
+		String temp = "SELECT c.city_id , d.delivery_info_id, d.address, d.zip_code, d.reciever_first_name, d.reciever_last_name, d.reciever_phone, d.notes, c.city_name "
+						+ "FROM pisi.deliveries AS d " + "JOIN pisi.orders AS o ON(d.delivery_info_id = o.delivery_info_id) "
+						+ "JOIN pisi.cities AS c USING (city_id) " + "WHERE o.user_id = ?";
 		ResultSet rs = null;
-
-		try (PreparedStatement stmt = con.prepareStatement(query);) {
-			stmt.setString(1, cityName);
-			// TODO upgrate cases in DB
+		try (PreparedStatement stmt = con.prepareStatement(temp);) {
+			stmt.setLong(1, userId);
 			rs = stmt.executeQuery();
-			if (rs.next()) {
-				return rs.getInt("id");
-			} else
-				return -1; // throw exception
+			while (rs.next()) {
+				arr.add(new DeliveryInfo(rs.getLong("delivery_info_id"), rs.getString("address"), rs.getInt("zip_code"),
+										rs.getString("city_name"), rs.getString("reciever_first_name"),
+										rs.getString("reciever_last_name"), rs.getLong("reciever_phone"), rs.getString("notes")));
+			}
+			return arr;
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -114,6 +96,25 @@ public class DeliveryInfoDao {
 				rs.close();
 			}
 		}
+	}
 
+	public int retrieveCityId(String cityName) throws SQLException, NoSuchCityException {
+		Connection con = DBmanager.getConnection();
+		String query = "SELECT city_id AS id FROM pisi.cities WHERE city_name = ?";
+		ResultSet rs = null;
+		try (PreparedStatement stmt = con.prepareStatement(query);) {
+			stmt.setString(1, cityName);
+			rs = stmt.executeQuery();
+			if (rs.next()) {
+				return rs.getInt("id");
+			} else
+				throw new NoSuchCityException("No such city in our data base, please don't modify our frontend.");
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+		}
 	}
 }

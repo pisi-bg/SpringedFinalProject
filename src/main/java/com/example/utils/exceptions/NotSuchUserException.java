@@ -1,4 +1,4 @@
-package com.example.utils;
+package com.example.utils.exceptions;
 
 public class NotSuchUserException extends Exception{
 

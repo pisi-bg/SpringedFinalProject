@@ -19,7 +19,8 @@ public class CategoryDao {
 	public Map<String, String> getTopBrands(int limit) throws SQLException {
 		String query = "SELECT b.brand_name AS name, b.logo_image AS logo FROM pisi.brands AS b "
 				+ "JOIN pisi.products AS p ON (b.brand_id = p.brand_id) "
-				+ "JOIN pisi.orders_has_products AS op ON(p.product_id = op.product_id) " + " GROUP BY b.brand_name "
+				+ "JOIN pisi.orders_has_products AS op ON(p.product_id = op.product_id) " 
+				+ " GROUP BY b.brand_name "
 				+ "ORDER BY op.product_quantity DESC LIMIT ?";
 		Map<String, String> brands = new HashMap<>();
 		Connection con = db.getConnection();
@@ -46,7 +47,8 @@ public class CategoryDao {
 				+ "FROM pisi.products AS p "
 				+ "JOIN pisi.product_categories AS c ON(p.product_category_id = c.product_category_id) "
 				+ "JOIN pisi.product_categories AS pc ON(pc.product_category_id = c.parent_category_id) "
-				+ "WHERE p.animal_id = ? AND pc.parent_category_id IS NULL " + "ORDER BY id ASC";
+				+ "WHERE p.animal_id = ? AND pc.parent_category_id IS NULL " 
+				+ "ORDER BY id ASC";
 		Connection con = db.getConnection();
 		ResultSet rs = null;
 		Map<String, Integer> categories = new HashMap<>();

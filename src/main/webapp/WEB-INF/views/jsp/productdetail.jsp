@@ -98,8 +98,8 @@
 					<!-- <div class="addincart" > -->
 					<br>
 							<%-- <a href="<c:url value='/products/addInCart/${productCurrent.id}'/>" title="addInCart" class="pisi-button_yellow"
-							style="text-decoration: none">ДОБАВИ В КОЛИЧКА</a>  --%>
-						
+							style="text-decoration: none">ДОБАВИ В КОЛИЧКА</a>  --%>			
+
 					<c:if test="${ productCurrent.inStock !=0 }">					
 						<a href="<c:url value='/products/addInCart/${productCurrent.id}'/>">
 							<img src="<c:url value='/img/buttons/shopping_cart - color.png'/>"
