@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,9 +42,9 @@ import com.example.utils.NotEnoughQuantityException;
 @Controller
 @RequestMapping(value = "/cart")
 public class CartController {
-	
+
 	private Validator validator;
-	
+
 	@Autowired
 	ProductDao productDao;
 	@Autowired
@@ -53,7 +53,7 @@ public class CartController {
 	DeliveryInfoDao deliveryInfoDao;
 	@Autowired
 	DBManager DBmanager;
-	
+
 	public CartController() {
 		ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
 		validator = validatorFactory.getValidator();
@@ -128,7 +128,7 @@ public class CartController {
 
 	@RequestMapping(value = "/deliveryInfo", method = RequestMethod.GET)
 	public ModelAndView viewDeliveryInfo(HttpSession session, HttpServletRequest request, Model m) {
-		
+
 		DeliveryInfo selectedDelInfo = new DeliveryInfo();
 		// check if logged
 		User user = (User) session.getAttribute("user");
@@ -145,42 +145,34 @@ public class CartController {
 				session.setAttribute("deliveries", deliveries);
 				if (idx != null) {
 					Integer idxDeliveryInfo = Integer.parseInt(idx);
-					selectedDelInfo = deliveries.get(idxDeliveryInfo); 
-//					session.setAttribute("selectedDelInfo", selectedDelInfo);    pazi go che shte trqbva 
+					selectedDelInfo = deliveries.get(idxDeliveryInfo);
+					// session.setAttribute("selectedDelInfo", selectedDelInfo);
+					// pazi go che shte trqbva
 				}
 			}
 
 		} catch (SQLException e) {
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		}
-		m.addAttribute("deliveryInfo",selectedDelInfo);		
+		m.addAttribute("deliveryInfo", selectedDelInfo);
 		session.setAttribute("cities", cities);
 		return new ModelAndView("deliveryInfo");
 	}
 
 	@RequestMapping(value = "/deliveryInfo", method = RequestMethod.POST)
-	public ModelAndView createNewOrder(HttpSession session, HttpServletRequest request,@ModelAttribute DeliveryInfo deliveryInfo, BindingResult result) {
-		
+	public ModelAndView createNewOrder(HttpSession session, HttpServletRequest request,
+			@ModelAttribute DeliveryInfo deliveryInfo, BindingResult result) {
+
 		Set<ConstraintViolation<DeliveryInfo>> violations = validator.validate(deliveryInfo);
-		for(ConstraintViolation<DeliveryInfo> cv : violations){
+		for (ConstraintViolation<DeliveryInfo> cv : violations) {
 			String propertyPath = cv.getPropertyPath().toString();
 			String message = cv.getMessage();
 			result.addError(new FieldError("deliveryInfo", propertyPath, message));
 		}
-		
-		if(result.hasErrors()){
+
+		if (result.hasErrors()) {
 			return new ModelAndView("deliveryInfo");
 		}
-
-		System.out.println(deliveryInfo + " *******************************************************************************************");
-		System.out.println(deliveryInfo.getCity());
-				System.out.println(deliveryInfo.getAddress());
-						System.out.println(deliveryInfo.getDeliveryInfoId());
-								System.out.println(deliveryInfo.getRecieverPhone());
-										System.out.println(deliveryInfo.getZipCode());
-												
-		
-//		DeliveryInfo deliveryInfo = new DeliveryInfo(address, zip, city, firstName, lastName, phone, note);
 
 		HashMap<Product, Integer> cart = (HashMap<Product, Integer>) session.getAttribute("cart");
 		User user = (User) session.getAttribute("user");

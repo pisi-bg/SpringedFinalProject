@@ -275,10 +275,12 @@ public class ProductController {
 		rating.setUserName(u.getFirstName());
 		rating.setDateTime(LocalDateTime.now());
 		try {
-			rd.addProductRating(rating);
+			rd.addProductRating(rating, u);
 			pro.setCountRating(pro.getCountRating() + 1);
 		} catch (SQLException e) {
+			e.printStackTrace();
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+
 		}
 
 		return new ModelAndView("redirect:/products/productdetail/productId/" + pro.getId());

@@ -128,6 +128,7 @@ public class UserDao {
 	}
 
 	// return user by email
+
 	public User getUser(String email) throws SQLException {
 		Connection con = db.getConnection();
 		String query = "SELECT user_id as id, first_name , last_name, password, gender, isAdmin as admin"
@@ -137,10 +138,36 @@ public class UserDao {
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
 			stmt.setString(1, email);
 			rs = stmt.executeQuery();
-			if(!rs.next()){
+			if (!rs.next()) {
 				return new User();
 			}
 			User u = new User(rs.getInt("id"), rs.getString("first_name"), rs.getString("last_name"), email,
+					rs.getString("password"), rs.getBoolean("gender"), rs.getBoolean("admin"),
+					pd.getFavorites(rs.getLong("id")));
+			return u;
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+		}
+
+	}
+
+	public User getUserByFirstName(String firstName) throws SQLException {
+		Connection con = db.getConnection();
+		String query = "SELECT user_id as id , last_name, password, gender, isAdmin as admin, email"
+				+ " FROM pisi.users WHERE first_name = ?";
+		ResultSet rs = null;
+
+		try (PreparedStatement stmt = con.prepareStatement(query);) {
+			stmt.setString(1, firstName);
+			rs = stmt.executeQuery();
+			if (!rs.next()) {
+				return new User();
+			}
+			User u = new User(rs.getInt("id"), firstName, rs.getString("last_name"), rs.getString("email"),
 					rs.getString("password"), rs.getBoolean("gender"), rs.getBoolean("admin"),
 					pd.getFavorites(rs.getLong("id")));
 			return u;
@@ -172,8 +199,8 @@ public class UserDao {
 			throw e;
 		}
 	}
-	
-	public User getUserByID(long id) throws SQLException{
+
+	public User getUserByID(long id) throws SQLException {
 		Connection con = db.getConnection();
 		String query = "SELECT email as email, first_name , last_name, password, gender, isAdmin as admin"
 				+ " FROM pisi.users WHERE user_id = ?";
@@ -184,8 +211,7 @@ public class UserDao {
 			rs = stmt.executeQuery();
 			rs.next();
 			User u = new User(id, rs.getString("first_name"), rs.getString("last_name"), rs.getString("email"),
-					rs.getString("password"), rs.getBoolean("gender"), rs.getBoolean("admin"),
-					pd.getFavorites(id));
+					rs.getString("password"), rs.getBoolean("gender"), rs.getBoolean("admin"), pd.getFavorites(id));
 			return u;
 		} catch (SQLException e) {
 			throw e;
@@ -195,29 +221,28 @@ public class UserDao {
 			}
 		}
 	}
-	
-	public List<String> userEmailsLiked(long productId) throws SQLException{
+
+	public List<String> userEmailsLiked(long productId) throws SQLException {
 		String query = "SELECT u.email AS email FROM pisi.users AS u "
-						+ "JOIN pisi.users_has_favorites AS f ON(u.user_id = f.user_id) "
-						+ "JOIN pisi.products AS p ON(f.product_id = p.product_id) "
-						+ "WHERE f.product_id = ?";
+				+ "JOIN pisi.users_has_favorites AS f ON(u.user_id = f.user_id) "
+				+ "JOIN pisi.products AS p ON(f.product_id = p.product_id) " + "WHERE f.product_id = ?";
 		List<String> emails = new ArrayList<String>();
 		Connection con = db.getAdminCon();
 		ResultSet rs = null;
-		try(PreparedStatement stmt = con.prepareStatement(query)){
+		try (PreparedStatement stmt = con.prepareStatement(query)) {
 			stmt.setLong(1, productId);
 			rs = stmt.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				emails.add(rs.getString("email"));
 			}
 		} catch (SQLException e) {
 			throw e;
-		}finally {
-			if(rs != null){
+		} finally {
+			if (rs != null) {
 				rs.close();
 			}
-		}		
+		}
 		return emails;
 	}
-	
+
 }
