@@ -98,17 +98,17 @@
 					<!-- <div class="addincart" > -->
 					<br>
 							<%-- <a href="<c:url value='/products/addInCart/${productCurrent.id}'/>" title="addInCart" class="pisi-button_yellow"
-							style="text-decoration: none">ДОБАВИ В КОЛИЧКА</a>  --%>
-						
-					<%-- <c:if test="${ productCurrent.inStock ==0 }"> --%>
-					
+							style="text-decoration: none">ДОБАВИ В КОЛИЧКА</a>  --%>			
+
+					<c:if test="${ productCurrent.inStock !=0 }">					
 						<a href="<c:url value='/products/addInCart/${productCurrent.id}'/>">
 							<img src="<c:url value='/img/buttons/shopping_cart - color.png'/>"
 							alt="ADD IN CART" title="addInCart" width="15%" height="auto">
-						</a>
-					
-					<%-- </c:if> --%>
-					
+						</a>					
+					</c:if>
+					<c:if test="${ productCurrent.inStock ==0 }">	
+						<p class="has-error"> ИЗВИНИ НИ!<br> ПРОДУКТЪТ Е ИЗЧЕРПАН В МОМЕНТА. <br> ОПИТАЙ ПАК СЛЕДВАЩАТА СЕДМИЦА! </p>
+					</c:if>
 					
 					<!-- </div>  addincart -->
 				</h5>
@@ -126,7 +126,7 @@
 						<br>
 						<h5 class="has-error"><c:out value="${error }"></c:out></h5>
 						<form action="${pageContext.request.contextPath}/user/admin/quantity" method="post">
-							<input type="number" name="quantity" placeholder="Количество" min="1" max="200000" style="width: 150px;"> 
+							<input type="number" name="quantity" placeholder="Количество" min="1" style="width: 150px;"> 
 							<input type="submit" value="Добави">
 						</form>
 						
