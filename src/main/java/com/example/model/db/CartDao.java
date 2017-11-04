@@ -20,24 +20,7 @@
 // // return productPrice * quantity;
 // // }
 //
-// // public double calculatePriceForCart(HashMap<Product, Integer> products) {
-// // if (products != null) {
-// // double cartPrice = 0;
-// // for (Entry<Product, Integer> entry : products.entrySet()) {
-// // Product product = entry.getKey();
-// // int quantity = entry.getValue();
-// // double productPrice = product.getPrice();
-// // if (product.getDiscount() != 0) {
-// // productPrice = product.calcDiscountedPrice();
-// // }
-// // cartPrice += (productPrice * quantity);
-// // }
-// // return cartPrice;
-// // } else
-// // // throw exception
-// // return 0;
-// //
-// // }
+
 //
 // // for testing
 // // public static void main(String[] args) throws SQLException {

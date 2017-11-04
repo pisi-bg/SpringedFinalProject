@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class Order {
 
@@ -86,6 +87,20 @@ public class Order {
 		if (orderId != other.orderId)
 			return false;
 		return true;
+	}
+
+	public static double calculatePriceForCart(HashMap<Product, Integer> products) {
+		double cartPrice = 0;
+		for (Entry<Product, Integer> entry : products.entrySet()) {
+			Product product = entry.getKey();
+			int quantity = entry.getValue();			
+			double productPrice = product.getPrice();
+			if (product.getDiscount() != 0) {
+				productPrice = product.calcDiscountedPrice();
+			}
+			cartPrice += (productPrice * quantity);
+		}
+		return cartPrice;
 	}
 
 }

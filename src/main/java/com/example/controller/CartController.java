@@ -43,6 +43,7 @@ import com.example.utils.NotEnoughQuantityException;
 @RequestMapping(value = "/cart")
 public class CartController {
 	
+	//validator for spring forms
 	private Validator validator;
 	
 	@Autowired
@@ -54,42 +55,12 @@ public class CartController {
 	@Autowired
 	DBManager DBmanager;
 	
+	//constructor
 	public CartController() {
 		ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
 		validator = validatorFactory.getValidator();
 	}
 
-	@RequestMapping(value = "/view", method = RequestMethod.GET)
-	public ModelAndView viewCart(HttpSession s) {
-
-		HashMap<Product, Integer> cart = (HashMap<Product, Integer>) s.getAttribute("cart");
-
-		if (cart != null) {
-			double priceForCart = 0;
-			Iterator<Entry<Product, Integer>> entryIt = cart.entrySet().iterator();
-			while (entryIt.hasNext()) {
-				Entry<Product, Integer> entry = entryIt.next();
-				Product product = entry.getKey();
-				int quantity = entry.getValue();
-				if (product.getInStock() == 0) {
-					entryIt.remove();
-					break;
-				} else if (quantity > product.getInStock()) {
-					quantity = product.getInStock();
-					cart.put(product, quantity);
-				}
-				double productPrice = product.getPrice();
-				if (product.getDiscount() != 0) {
-					productPrice = product.calcDiscountedPrice();
-				}
-				priceForCart += (productPrice * quantity);
-			}
-			s.setAttribute("priceForCart", priceForCart);
-		} else {
-			cart = new HashMap<>();
-		}
-		return new ModelAndView("cart");
-	}
 
 	@RequestMapping(value = "/removeFromCart/{productId}", method = RequestMethod.POST)
 	public ModelAndView removeFromCart(HttpSession session, @PathVariable("productId") Integer productId) {
@@ -105,6 +76,30 @@ public class CartController {
 		}
 		return new ModelAndView("redirect:/cart/view");
 	}
+	
+	@RequestMapping(value = "/view", method = RequestMethod.GET)
+	public ModelAndView viewCart(HttpSession s) {
+		s.removeAttribute("productNotEnoughQuantity");
+		HashMap<Product, Integer> cart = (HashMap<Product, Integer>) s.getAttribute("cart");
+		if (cart != null) {
+			Iterator<Entry<Product, Integer>> entryIt = cart.entrySet().iterator();
+			while (entryIt.hasNext()) {
+				Entry<Product, Integer> entry = entryIt.next();
+				Product product = entry.getKey();
+				int quantity = entry.getValue();
+				if (quantity > product.getInStock()) {
+					quantity = product.getInStock();
+					cart.put(product, quantity);
+				}				
+			}			
+			double priceForCart = Order.calculatePriceForCart(cart);
+			s.setAttribute("priceForCart", priceForCart);
+		} else {
+			cart = new HashMap<>();
+		}
+		return new ModelAndView("cart");
+	}
+
 
 	@RequestMapping(value = "/updateCart", method = RequestMethod.GET)
 	public ModelAndView updateCart(HttpSession session, HttpServletRequest request) {
@@ -119,13 +114,16 @@ public class CartController {
 				session.setAttribute("productNotEnoughQuantity", productCurrent);
 			}
 			cart.replace(productCurrent, quantity);
+			double priceForCart = Order.calculatePriceForCart(cart);
+			session.setAttribute("priceForCart", priceForCart);
 			session.setAttribute("cart", cart);
 		} catch (SQLException e) {
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		}catch (NumberFormatException e) {
 			return new ModelAndView("error", "error", "Моля въвеждайте валидни данни в полетата за количество.");
 		}
-		return new ModelAndView("forward:/cart/view");
+		return new ModelAndView("cart");
+//		return new ModelAndView("forward:/cart/view");
 	}
 
 	@RequestMapping(value = "/deliveryInfo", method = RequestMethod.GET)
@@ -162,7 +160,7 @@ public class CartController {
 
 	@RequestMapping(value = "/deliveryInfo", method = RequestMethod.POST)
 	public ModelAndView createNewOrder(HttpSession session, HttpServletRequest request,@ModelAttribute DeliveryInfo deliveryInfo, BindingResult result) {
-		
+		session.removeAttribute("productNotEnoughQuantity");
 		Set<ConstraintViolation<DeliveryInfo>> violations = validator.validate(deliveryInfo);
 		for(ConstraintViolation<DeliveryInfo> cv : violations){
 			String propertyPath = cv.getPropertyPath().toString();
@@ -173,16 +171,6 @@ public class CartController {
 		if(result.hasErrors()){
 			return new ModelAndView("deliveryInfo");
 		}
-
-		System.out.println(deliveryInfo + " *******************************************************************************************");
-		System.out.println(deliveryInfo.getCity());
-				System.out.println(deliveryInfo.getAddress());
-						System.out.println(deliveryInfo.getDeliveryInfoId());
-								System.out.println(deliveryInfo.getRecieverPhone());
-										System.out.println(deliveryInfo.getZipCode());
-												
-		
-//		DeliveryInfo deliveryInfo = new DeliveryInfo(address, zip, city, firstName, lastName, phone, note);
 
 		HashMap<Product, Integer> cart = (HashMap<Product, Integer>) session.getAttribute("cart");
 		User user = (User) session.getAttribute("user");
