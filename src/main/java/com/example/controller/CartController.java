@@ -42,12 +42,9 @@ import com.example.utils.NotEnoughQuantityException;
 @Controller
 @RequestMapping(value = "/cart")
 public class CartController {
-<<<<<<< HEAD
+
 	
 	//validator for spring forms
-=======
-
->>>>>>> 1f867f0c0703c3694fb8714bbaf69f5b9d8a5865
 	private Validator validator;
 
 	@Autowired
@@ -58,12 +55,8 @@ public class CartController {
 	DeliveryInfoDao deliveryInfoDao;
 	@Autowired
 	DBManager DBmanager;
-<<<<<<< HEAD
 	
 	//constructor
-=======
-
->>>>>>> 1f867f0c0703c3694fb8714bbaf69f5b9d8a5865
 	public CartController() {
 		ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
 		validator = validatorFactory.getValidator();
