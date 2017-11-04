@@ -111,8 +111,8 @@ public class CartController {
 		Long productId = Long.parseLong(request.getParameter("productId"));
 		Product productCurrent = null;
 		HashMap<Product, Integer> cart = (HashMap<Product, Integer>) session.getAttribute("cart");
-		int quantity = Integer.parseInt(request.getParameter("count"));
 		try {
+			int quantity = Integer.parseInt(request.getParameter("count"));
 			productCurrent = productDao.getProduct(productId);
 			if (quantity > productCurrent.getInStock()) {
 				quantity = productCurrent.getInStock();
@@ -122,6 +122,8 @@ public class CartController {
 			session.setAttribute("cart", cart);
 		} catch (SQLException e) {
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+		}catch (NumberFormatException e) {
+			return new ModelAndView("error", "error", "Моля въвеждайте валидни данни в полетата за количество.");
 		}
 		return new ModelAndView("forward:/cart/view");
 	}

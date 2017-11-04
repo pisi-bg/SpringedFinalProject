@@ -7,12 +7,14 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Component;
 
 public class User {
 	
 	private long id;
 	@NotBlank(message="Ivalid input.")
+//	@Required
 	private String firstName;
 	@NotBlank(message="Ivalid input.")
 	private String lastName;
@@ -131,7 +133,7 @@ public class User {
 		this.password = password;
 	}
 
-	public void setMale(boolean isMale) {
+	public void setIsMale(boolean isMale) {
 		this.isMale = isMale;
 	}
 

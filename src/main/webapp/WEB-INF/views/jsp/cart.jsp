@@ -106,7 +106,7 @@
 													
 								<form action="<c:url value='/cart/updateCart'/>" method="get">
 									<input type="hidden" value="${ product.id }" name=productId> 								
-									<input type="text" style="width: 35px; height: 35px; font-size: 14px; border: 1px solid #C0C0C0;" name="count" size="2" value="${productEntry.value}" maxlength="2">
+									<input type="number" style="width: 35px; height: 35px; font-size: 14px; border: 1px solid #C0C0C0;" name="count" size="2" min="1" max="99" value="${productEntry.value}" maxlength="2" required>
 									<input type="image" name="submit"
 										src="<c:url value='/img/buttons/update.png'/>" alt="UPDATE" title="Update">									
 								</form>

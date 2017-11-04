@@ -50,6 +50,8 @@ import com.example.utils.StringValidator;
 @RequestMapping(value = "/user")
 public class UserController {
 
+	public static final String ALL_DIGITS_REGEX = "[0-9]+";
+	public static final String ALL_DOUBLE_DIGIT_REGEX = "([0-9]{1,13}(\\.[0-9]*)?){1}";
 	private Validator validator;
 	
 	@Autowired
@@ -133,7 +135,6 @@ public class UserController {
 		if(result.hasErrors()){
 			return new ModelAndView("register");
 		}
-		
 		try {
 			String userpass = user.getPassword();
 			userpass = Hasher.securePassword(userpass, user.getEmail());
@@ -400,6 +401,10 @@ public class UserController {
 		
 		//validation
 		if(req.getParameter("price") == null || req.getParameter("instock_count") == null || req.getParameter("discount") == null){
+			if(!req.getParameter("price").matches(ALL_DOUBLE_DIGIT_REGEX) || !req.getParameter("instock_count").matches(ALL_DIGITS_REGEX) || !req.getParameter("discount").matches(ALL_DIGITS_REGEX)){
+				req.setAttribute("productError", "Моля, въведете валидни данни за продукта.");
+				return new ModelAndView("addproduct");
+			}
 			req.setAttribute("productError", "Моля, въведете валидни данни за продукта.");
 			return new ModelAndView("addproduct");
 		}

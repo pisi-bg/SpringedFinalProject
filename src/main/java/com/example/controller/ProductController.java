@@ -278,6 +278,7 @@ public class ProductController {
 			rd.addProductRating(rating);
 			pro.setCountRating(pro.getCountRating() + 1);
 		} catch (SQLException e) {
+			e.printStackTrace();
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		}
 
