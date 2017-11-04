@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.model.pojo.Rating;
+import com.example.model.pojo.User;
 import com.example.utils.DateTimeConvertor;
 
 @Component
@@ -114,7 +115,7 @@ public class RatingDao {
 		}
 	}
 
-	public boolean addProductRating(Rating rating) throws SQLException {
+	public boolean addProductRating(Rating rating, User u) throws SQLException {
 
 		Connection con = db.getConnection();
 		String query = "INSERT INTO pisi.ratings (product_id, user_id, rating, comment, date_time ) VALUES (?,?,?,?,?)";
@@ -122,7 +123,7 @@ public class RatingDao {
 
 		try (PreparedStatement ps = con.prepareStatement(query);) {
 			ps.setLong(1, rating.getProductId());
-			ps.setLong(2, ud.getUser(rating.getUserEmail()).getId());
+			ps.setLong(2, u.getId());
 			ps.setDouble(3, rating.getRating());
 			ps.setString(4, rating.getComment());
 			ps.setString(5, DateTimeConvertor.localDateTimeToSql(rating.getDateTime()));

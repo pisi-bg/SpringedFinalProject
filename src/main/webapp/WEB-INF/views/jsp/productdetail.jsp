@@ -96,15 +96,20 @@
 				<br><br><br>
 				<h5>
 					<!-- <div class="addincart" > -->
-						<br>
+					<br>
 							<%-- <a href="<c:url value='/products/addInCart/${productCurrent.id}'/>" title="addInCart" class="pisi-button_yellow"
 							style="text-decoration: none">ДОБАВИ В КОЛИЧКА</a>  --%>
 						
-						
-							<a href="<c:url value='/products/addInCart/${productCurrent.id}'/>">
-								<img src="<c:url value='/img/buttons/shopping_cart - color.png'/>"
-								alt="ADD IN CART" title="addInCart" width="15%" height="auto">
-							</a>
+					<c:if test="${ productCurrent.inStock ==0 }">
+					
+						<a href="<c:url value='/products/addInCart/${productCurrent.id}'/>">
+							<img src="<c:url value='/img/buttons/shopping_cart - color.png'/>"
+							alt="ADD IN CART" title="addInCart" width="15%" height="auto">
+						</a>
+					
+					</c:if>
+					
+					
 					<!-- </div>  addincart -->
 				</h5>
 			<br>		
@@ -152,19 +157,19 @@
 								</tr>
 							</thead>						
 							<tbody>			
-								<c:forEach items="${ sessionScope.comments }" var="com">
+								<c:forEach items="${ sessionScope.comments }" var="comment">
 									<tr>
 									
 										<td width = "130px">										
-											<fmt:parseDate value="${com.dateTime}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
+											<fmt:parseDate value="${comment.dateTime}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
 											<fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${ parsedDateTime }" />									
 										</td>
-										<td>${ com.userEmail }</td>
+										<td>${ comment.userName }</td>
 										<td align="left">
-											<fmt:formatNumber	type="number" pattern="#####.##" value="${com.rating }" />	
+											<fmt:formatNumber	type="number" pattern="#####.##" value="${comment.rating }" />	
 											<img src="<c:url value='/img/buttons/has_rating.png'/>" alt="rating" title="rating" width="5%" height="auto">
 											<p align="center">
-												${com.comment }
+												${comment.comment }
 											</p>
 										</td>
 																																			

@@ -16,10 +16,6 @@ public class Rating implements Serializable {
 		return productId;
 	}
 
-	public String getUserEmail() {
-		return userName;
-	}
-
 	public double getRating() {
 		return rating;
 	}
@@ -31,6 +27,12 @@ public class Rating implements Serializable {
 	public LocalDateTime getDateTime() {
 		return dateTime;
 	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	// setters
 
 	public Rating setProductId(long productId) {
 		this.productId = productId;
@@ -56,7 +58,5 @@ public class Rating implements Serializable {
 		this.dateTime = dateTime;
 		return this;
 	}
-
-	// setters
 
 }
