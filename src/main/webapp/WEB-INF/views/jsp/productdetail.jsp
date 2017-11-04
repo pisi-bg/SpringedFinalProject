@@ -107,7 +107,7 @@
 						</a>					
 					</c:if>
 					<c:if test="${ productCurrent.inStock ==0 }">	
-						<p class="has-error"> ИЗВИНИ НИ!<br> ПРОДУКТЪТ Е ИЗЧЕРПАН В МОМЕНТА. <br> ОПИТАЙ ПАК СЛЕДВАЩАТА СЕДМИЦА! </p>
+						<p class="has-error">  ПРОДУКТЪТ Е ИЗЧЕРПАН В МОМЕНТА </p>
 					</c:if>
 					
 					<!-- </div>  addincart -->

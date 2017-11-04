@@ -49,10 +49,10 @@
 			<table border="1">
 							<thead class="">
 								<tr>
-									<th>Дата</th>
-									<th>Цена</th>											
-									<th>Продукти</th>
-									<th>Доставка</th>
+									<th class="col-xs-12 col-md-1">Дата</th>
+									<th class="col-xs-12 col-md-1">Цена</th>											
+									<th class="col-xs-12 col-md-8">Продукти</th>
+									<th class="col-xs-12 col-md-2">Доставка</th>
 								</tr>
 							</thead>						
 							<tbody>			
@@ -70,20 +70,20 @@
 												<table  style="border-color:#FFF8DC; border:0;">
 													<thead class="light">
 														<tr>
-															<th style="font-size: 12px;">име</th>
-															<th style="font-size: 12px;">к-во</th>																				
-															<th style="font-size: 12px;">марка</th>	
-															<th style="font-size: 12px;">категория</th>
+															<th class="col-xs-12 col-md-2" style="font-size: 12px; text-transform: lowercase; width:100%">име</th>
+															<th class="col-xs-12 col-md-2" style="font-size: 12px; text-transform: lowercase; width:100%">к-во</th>																				
+															<th class="col-xs-12 col-md-2" style="font-size: 12px; text-transform: lowercase; width:100%">марка</th>	
+															<th class="col-xs-12 col-md-2" style="font-size: 12px; text-transform: lowercase; width:100%">категория</th>
 														</tr>
 													</thead>						
 													<tbody>			
 														<c:forEach items="${ order.products }" var="productEntry">
 															<tr class="light">
-																<td width = "200px">${productEntry.key.name }</td>
-																<td  width = "40px">${productEntry.value }</td>
-																<td>${productEntry.key.brand }</td>
-																<td>${productEntry.key.category }</td>														
-															</tr> 
+																<td class="col-xs-12 col-md-2" style="font-weight: lighter; width:100%">${productEntry.key.name }</td>
+																<td class="col-xs-12 col-md-2" style="font-weight: lighter; width:100%">${productEntry.value }</td>
+																<td class="col-xs-12 col-md-2" style="font-weight: lighter; width:100%">${productEntry.key.brand }</td>
+																<td class="col-xs-12 col-md-2" style="font-weight: lighter; width:100%">${productEntry.key.category }</td>														
+															</tr>                                    
 														</c:forEach>	
 													</tbody>
 												</table>

@@ -31,6 +31,15 @@ ul{
 	margin-left: 0px;
 }
 
+table, th, td {
+    /*border: 1px; */
+    border-collapse: collapse;
+	padding: 3px;
+	/*text-align: left;*/
+	word-wrap: break-word;
+	
+}
+
 th{
 	font-size: 18px;
 	text-transform: uppercase;
@@ -45,16 +54,22 @@ thead .light{
 }
 
 tr{
-	font-size: 14px;
+	font-size: 16px;
 	text-align: center;
 	font-weight: bold;
 	color: #440008;
+	border-bottom: 1px solid black;
+    border-top: 1px solid black;
+	border: 1px; 
 }
 
 tr .light{
-	font-size: 12px;
+	font-size: 14px;
 	text-align: center;
 	color: #440008;
+	border-bottom: 1px solid black;
+    border-top: 1px solid black;
+	border: 1px; 
 }
 
 .left-lighter{

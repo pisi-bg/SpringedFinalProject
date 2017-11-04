@@ -21,8 +21,7 @@
 		<div class="pisi-nav pisi-nav_upper">
 		
 			<nav>
-				<a href="<c:url value='/user/contactForm'/>" title="Контакти"
-					class="nav_user" style="text-decoration: none">КОНТАКТИ</a> 
+				<a href="<c:url value='/user/contactForm'/>" title="Контакти">КОНТАКТИ</a> 
 				<c:if test="${sessionScope.user == null}">
 	
 					<a href="<c:url value='/user/login'/>" title="LogIn">ВХОД</a> 
