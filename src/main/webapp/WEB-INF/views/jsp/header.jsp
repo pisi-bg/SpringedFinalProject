@@ -54,8 +54,8 @@
 				</div>
 				<div class="col-xs-12 col-md-4 pisi-brand_search">					
 					<form action="${pageContext.request.contextPath}/products/search/0" method="post">
-						<input type="text" name="keyword">						
-						<input type="image" name="submit"	src="<c:url value='/img/buttons/search2.png'/>" alt="ТЪРСИ" title="ТЪРСИ">							
+						<input type="text" name="keyword" required>						
+						<input type="image" name="submit" 	src="<c:url value='/img/buttons/search2.png'/>" alt="ТЪРСИ" title="ТЪРСИ" >							
 					</form>					
 				</div>
 				<div class="col-xs-12 col-md-4 pisi-brand_cart">

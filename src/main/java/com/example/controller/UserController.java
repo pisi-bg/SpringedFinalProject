@@ -42,6 +42,7 @@ import com.example.model.pojo.Product;
 import com.example.model.pojo.User;
 import com.example.utils.EmailSender;
 import com.example.utils.Hasher;
+import com.example.utils.NotSuchUserException;
 import com.example.utils.PasswordGenerator;
 import com.example.utils.StringValidator;
 
@@ -545,10 +546,27 @@ public class UserController {
 			this.updateProfile(user, sess);
 			sess.removeAttribute("user");
 		} catch (SQLException e) {
-			e.printStackTrace();
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		}
 		return new ModelAndView("index");
+	}
+	
+	@RequestMapping(value="/admin/changeStatus")
+	public ModelAndView changeUserStatus(HttpServletRequest req){
+		String email = req.getParameter("email");
+		if(email == null || !UserDao.isValidEmailAddress(email.trim())){
+			return new ModelAndView("error", "error", "Моля, въвеждайте валидни данни.");			
+		}
+		email = email.trim();
+		try {
+			ud.changeStatus(email);
+		} catch (SQLException e) {
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
+		} catch (NotSuchUserException e) {
+			return new ModelAndView("profile", "error", "Несъществуващ имейл.");
+		}
+		req.setAttribute("success", "Успешно променихте статуса на потребител с имейл: " + email);
+		return new ModelAndView("profile");
 	}
 
 	

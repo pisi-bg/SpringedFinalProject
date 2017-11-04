@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.model.pojo.User;
+import com.example.utils.NotSuchUserException;
 
 @Component
 public class UserDao {
@@ -218,6 +219,20 @@ public class UserDao {
 			}
 		}		
 		return emails;
+	}
+
+	public void changeStatus(String email) throws SQLException, NotSuchUserException {
+		String query = "UPDATE pisi.users SET isAdmin = !isAdmin WHERE email = ?;";
+		Connection con = db.getAdminCon();		
+		try(PreparedStatement stmt = con.prepareStatement(query)){
+			stmt.setString(1, email);
+			int result = stmt.executeUpdate();
+			if(result != 1){
+				throw new NotSuchUserException("User not found");
+			}
+		} catch (SQLException e) {
+			throw e;
+		}		
 	}
 	
 }
