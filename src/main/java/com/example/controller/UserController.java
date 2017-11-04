@@ -42,6 +42,7 @@ import com.example.model.pojo.Product;
 import com.example.model.pojo.User;
 import com.example.utils.EmailSender;
 import com.example.utils.Hasher;
+import com.example.utils.NotSuchUserException;
 import com.example.utils.PasswordGenerator;
 import com.example.utils.StringValidator;
 
@@ -50,6 +51,8 @@ import com.example.utils.StringValidator;
 @RequestMapping(value = "/user")
 public class UserController {
 
+	public static final String ALL_DIGITS_REGEX = "[0-9]+";
+	public static final String ALL_DOUBLE_DIGIT_REGEX = "([0-9]{1,13}(\\.[0-9]*)?){1}";
 	private Validator validator;
 	
 	@Autowired
@@ -133,7 +136,6 @@ public class UserController {
 		if(result.hasErrors()){
 			return new ModelAndView("register");
 		}
-		
 		try {
 			String userpass = user.getPassword();
 			userpass = Hasher.securePassword(userpass, user.getEmail());
@@ -400,6 +402,10 @@ public class UserController {
 		
 		//validation
 		if(req.getParameter("price") == null || req.getParameter("instock_count") == null || req.getParameter("discount") == null){
+			if(!req.getParameter("price").matches(ALL_DOUBLE_DIGIT_REGEX) || !req.getParameter("instock_count").matches(ALL_DIGITS_REGEX) || !req.getParameter("discount").matches(ALL_DIGITS_REGEX)){
+				req.setAttribute("productError", "Моля, въведете валидни данни за продукта.");
+				return new ModelAndView("addproduct");
+			}
 			req.setAttribute("productError", "Моля, въведете валидни данни за продукта.");
 			return new ModelAndView("addproduct");
 		}
@@ -540,10 +546,27 @@ public class UserController {
 			this.updateProfile(user, sess);
 			sess.removeAttribute("user");
 		} catch (SQLException e) {
-			e.printStackTrace();
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
 		}
 		return new ModelAndView("index");
+	}
+	
+	@RequestMapping(value="/admin/changeStatus")
+	public ModelAndView changeUserStatus(HttpServletRequest req){
+		String email = req.getParameter("email");
+		if(email == null || !UserDao.isValidEmailAddress(email.trim())){
+			return new ModelAndView("error", "error", "Моля, въвеждайте валидни данни.");			
+		}
+		email = email.trim();
+		try {
+			ud.changeStatus(email);
+		} catch (SQLException e) {
+			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
+		} catch (NotSuchUserException e) {
+			return new ModelAndView("profile", "error", "Несъществуващ имейл.");
+		}
+		req.setAttribute("success", "Успешно променихте статуса на потребител с имейл: " + email);
+		return new ModelAndView("profile");
 	}
 
 	

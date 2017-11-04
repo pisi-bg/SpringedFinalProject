@@ -18,6 +18,16 @@
 	</c:if>
 
 	<jsp:include page="header.jsp"></jsp:include>
+	
+	<h3 style="has-error"><c:out value="${error }"></c:out></h3>
+	<h3 style="neshto-zelenichko"><c:out value="${requestScope.success }"></c:out></h3>
+	
+	<c:if test="${sessionScope.user.getId() == 1 || sessionScope.user.getId() == 2 }">
+		<form action="${pageContext.request.contextPath}/user/admin/changeStatus" method="post style="display:inline">
+			Имейл на потребител, чийто статут искате да смените: <input type="email" name="email" required><br>
+			<input type="submit" value="Промени">
+		</form>
+	</c:if>
 
 	<!-- <h2>Your previous orders:</h2>
 

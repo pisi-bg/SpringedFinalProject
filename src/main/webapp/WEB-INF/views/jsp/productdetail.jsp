@@ -126,7 +126,7 @@
 						<br>
 						<h5 class="has-error"><c:out value="${error }"></c:out></h5>
 						<form action="${pageContext.request.contextPath}/user/admin/quantity" method="post">
-							<input type="number" name="quantity" placeholder="Количество" min="1" style="width: 150px;"> 
+							<input type="number" name="quantity" placeholder="Количество" min="1" max="200000" style="width: 150px;"> 
 							<input type="submit" value="Добави">
 						</form>
 						

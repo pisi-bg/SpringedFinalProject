@@ -53,7 +53,7 @@
 			</select><br>
 		
 		Брой в наличност: 
-			<input type="number" min="0" step="1" name="instock_count" style="width: 150px;" required/><br>
+			<input type="number" min="0" max="200000" step="1" name="instock_count" style="width: 150px;" required/><br>
 		Намаление в процент: 
 			<input type="number" min="0" max="99" step="1" name="discount" required /><br>		
 		Снимка:	 
