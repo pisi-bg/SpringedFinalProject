@@ -53,7 +53,7 @@ import com.example.utils.exceptions.NotSuchUserException;
 @RequestMapping(value = "/user")
 public class UserController {
 
-	public static final String ALL_DIGITS_REGEX = "[0-9]{6}+";
+	public static final String ALL_DIGITS_REGEX = "[0-9]{1,6}+";
 	public static final String ALL_DIGITS_REGEX_DISCOUNT = "[0-9]{1,2}+";
 	public static final String ALL_DOUBLE_DIGIT_REGEX = "([0-9]{1,13}(\\.[0-9]*)?){1}";
 	private Validator validator;
@@ -86,7 +86,6 @@ public class UserController {
 			HttpSession ses) {
 
 		String email = user.getEmail();
-		// validate email and password in spring form
 		if (!UserDao.isValidEmailAddress(email)) {
 			request.setAttribute("wrongEmail", true);
 			return new ModelAndView("login");
@@ -108,18 +107,14 @@ public class UserController {
 				return new ModelAndView("login");
 			}
 		} catch (SQLException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+			return CartController.sqlError;
 		} catch (NoSuchAlgorithmException e) {
-			// TODO handle it
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+			return CartController.sqlError;
 		} catch (UnsupportedEncodingException e) {
-			// TODO handle it
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
-
+			return CartController.sqlError;
 		} catch (IllegalDiscountException e) {
 			return CartController.discountError;
 		}
-
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
@@ -136,8 +131,7 @@ public class UserController {
 			String propertyPath = cv.getPropertyPath().toString();
 			String message = cv.getMessage();
 			result.addError(new FieldError("user", propertyPath, message));
-		}
-		
+		}		
 		if(result.hasErrors()){
 			return new ModelAndView("register");
 		}
@@ -146,13 +140,14 @@ public class UserController {
 			userpass = Hasher.securePassword(userpass, user.getEmail());
 			user.setPassword(userpass);
 			ud.insertUser(user);
+			sess.setAttribute("user", user);
 		} catch (SQLException e) {
 			sess.setAttribute("regError", true);
 			return new ModelAndView("redirect:/user/register");
 		} catch (NoSuchAlgorithmException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+			return CartController.sqlError;
 		} catch (UnsupportedEncodingException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+			return CartController.sqlError;
 		}
 		if (sess.getAttribute("regError") != null) {
 			sess.removeAttribute("regError");
@@ -162,7 +157,7 @@ public class UserController {
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public ModelAndView logout(HttpSession sess) {
-		sess.removeAttribute("user");
+		sess.invalidate();
 		return new ModelAndView("index");
 	}
 
@@ -180,7 +175,7 @@ public class UserController {
 				session.setAttribute("orders", orders);
 			}
 		} catch (SQLException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+			return CartController.sqlError;
 		} catch (IllegalDiscountException e) {
 			return CartController.discountError;
 		}
@@ -190,7 +185,6 @@ public class UserController {
 	@RequestMapping(value = "/update", method = RequestMethod.GET)
 	public ModelAndView updateForm(Model m, HttpSession sess, HttpServletRequest req) {
 		User u = (User) sess.getAttribute("user");
-//		req.setAttribute("update", 1);
 		m.addAttribute("user", u);
 		return new ModelAndView("updateProfile");
 	}
@@ -199,7 +193,6 @@ public class UserController {
 	public ModelAndView viewProfile(HttpSession session, HttpServletRequest req) {
 		session.removeAttribute("orders");
 		
-
 		User u = (User) session.getAttribute("user");
 		if (u == null) {
 			return new ModelAndView("redirect:/user/login");
@@ -253,7 +246,6 @@ public class UserController {
 		}else {
 			session.setAttribute("favorite", true);
 		}
-		// maybe here set attribute for empty list
 		
 		if(productList != null){
 			if(!productList.getSource().equals(products)){
@@ -275,7 +267,7 @@ public class UserController {
 				productList.previousPage();
 			}
 			if (paging < -2) {
-				return new ModelAndView("Error", "message", "Моля не пишете в адрес бара сами. Пробвайте отново.");
+				return CartController.urlError;
 			}
 		}
 		
@@ -347,8 +339,7 @@ public class UserController {
 			try {
 				pd.removeProduct(pro);
 			} catch (SQLException e) {
-				// TODO error page
-				e.printStackTrace();
+				return CartController.sqlError;
 			}
 			return new ModelAndView("index");
 		} else {
@@ -370,7 +361,7 @@ public class UserController {
 			List<String> brands = pd.getBrands();
 			sess.setAttribute("brands", brands);
 		} catch (SQLException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
+			return CartController.sqlError;
 		}
 		return new ModelAndView("addproduct");
 	}
@@ -489,7 +480,7 @@ public class UserController {
 		try {
 			pd.insertBrand(brandName, imageURL);
 		} catch (SQLException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
+			return CartController.sqlError;
 		}
 		// return "index";
 		return new ModelAndView("redirect:/user/admin/addProduct");
@@ -508,7 +499,7 @@ public class UserController {
 		try {
 			pd.addQuantity(pro.getId(), quantity);
 		} catch (SQLException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
+			return CartController.sqlError;
 		}
 		return new ModelAndView("redirect:/products/productdetail/productId/"+pro.getId() );
 	}
@@ -516,11 +507,11 @@ public class UserController {
 	@RequestMapping(value = "/admin/discount", method = RequestMethod.POST)
 	public ModelAndView addDiscount(HttpSession sess, HttpServletRequest req) {
 		if(!req.getParameter("discount").matches(ALL_DIGITS_REGEX_DISCOUNT)){
-			return new ModelAndView("error", "error", "Моля въвеждайте коректни стойности за отстъпки.");
+			return CartController.discountError;
 		}
 		int discount = Integer.parseInt(req.getParameter("discount"));
 		if (discount < 0 || discount > 99) {
-			return new ModelAndView("error", "error", "Моля въвеждайте коректни стойности за отстъпки.");
+			return CartController.discountError;
 		}
 		Product pro = (Product) sess.getAttribute("productCurrent");
 		long id = pro.getId();

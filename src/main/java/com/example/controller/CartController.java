@@ -50,6 +50,7 @@ public class CartController {
 	private Validator validator;
 	public static ModelAndView sqlError;
 	public static ModelAndView discountError; 
+	public static ModelAndView urlError;
 
 	@Autowired
 	ProductDao productDao;
@@ -66,6 +67,7 @@ public class CartController {
 		validator = validatorFactory.getValidator();
 		this.sqlError = new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		this.discountError = new ModelAndView("error", "error", "Не валидни данни за отстъпка на продукт!");
+		this.urlError = new ModelAndView("error", "error", "Моля не пишете в адрес бара сами. Пробвайте отново.");
 	}
 
 	@RequestMapping(value = "/removeFromCart/{productId}", method = RequestMethod.POST)

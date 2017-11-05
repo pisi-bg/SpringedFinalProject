@@ -57,8 +57,7 @@ public class WelcomeController {
 			ses.setAttribute("brands", brands);
 			ses.setAttribute("topProducts", topProducts);
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините.");
+			return CartController.sqlError;
 		} catch (IllegalDiscountException e) {
 			return CartController.discountError;
 		}

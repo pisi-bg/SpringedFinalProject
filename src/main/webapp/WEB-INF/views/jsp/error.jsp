@@ -12,6 +12,6 @@
 		<h1 class="has-error">
 		 	<c:out value="${requestScope.error }"></c:out>
 		</h1>	
-	</div>
+	</div>	
 </body>
 </html>
