@@ -28,29 +28,7 @@ public class User {
 	private boolean isAdmin;
 	private Set<Product> favorites;
 
-	// constructor with email and pass for login
-	public User(String email, String pass) {
-		this.email = email;
-		this.password = pass;
-	}
-	
-	// constructor for spring form
-	public User() {
-		
-	}
-
-	// constructor with all fields
-	public User(long id, String firstName, String lastName, String email, String password, boolean isMale,
-			boolean isAdmin, Set<Product> favorites) {
-		this.id = id;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.password = password;
-		this.isMale = isMale;
-		this.isAdmin = isAdmin;
-		this.favorites = favorites;
-	}
+				// ***** GETTERS *** //
 
 	// check if user is admin
 	public boolean isAdmin() {
@@ -81,39 +59,25 @@ public class User {
 	public String getLastName() {
 		return lastName;
 	}
-
-	//** SETTERS **//
 	
-	// set id which is returned by the database
-	public void setId(long id) {
-		this.id = id;
-	}
-
 	// returns user id
 	public long getId() {
 		return id;
 	}
 
+	// returns user favorites
 	public Set<Product> getFavorites() {
 		return Collections.unmodifiableSet(favorites);
 	}
 
-	// add favorites after adding it to DB
-	public void addToFavorites(Product p) {
-		this.favorites.add(p);
+	//** SETTERS **//
+	
+	// set id which is returned by the database
+	public User setId(long id) {
+		this.id = id;
+		return this;
 	}
-
-	public void removeFromFavorites(Product p) {
-		this.favorites.remove(p);
-	}
-
-	public boolean hasInFavorites(Product p) {
-		if (p != null) {
-			return favorites.contains(p);
-		}
-		return false;
-	}
-
+	
 	public User setFirstName(String firstName) {
 		this.firstName = firstName;
 		return this;
@@ -129,30 +93,63 @@ public class User {
 		return this;
 	}
 
-	public void setPassword(String password) {
+	public User setPassword(String password) {
 		this.password = password;
+		return this;
 	}
 
-	public void setIsMale(boolean isMale) {
+	public User setIsMale(boolean isMale) {
 		this.isMale = isMale;
+		return this;
 	}
 
-	public void setAdmin(boolean isAdmin) {
+	public User setAdmin(boolean isAdmin) {
 		this.isAdmin = isAdmin;
+		return this;
 	}
 
-	public void setFavorites(Set<Product> favorites) {
+	public User setFavorites(Set<Product> favorites) {
 		this.favorites = favorites;
+		return this;
 	}
 
+
+	
+				// *** ADDITIONAL METHODS **//
+	/**
+	 * Add <code>Product</code> to collection of favorite products;
+	 * @param product POJO of type <code>Product</code>
+	 */
+	public void addToFavorites(Product product) {
+		this.favorites.add(product);
+	}
+
+	/**
+	 * Removes <code>Product</code> from collection of favorite products
+	 * @param product POJO of type <code>Product</code>
+	 */
+	public void removeFromFavorites(Product product) {
+		this.favorites.remove(product);
+	}
+
+	/**
+	 * Check if given product is already into collection ot favorite products
+	 * @param product POJO of type <code>Product</code>
+	 * @return <code>boolean</code> true - if given product is into user favorites, false - otherwise;
+	 */
+	public boolean hasInFavorites(Product product) {
+		if (product != null) {
+			return favorites.contains(product);
+		}
+		return false;
+	}
+
+	
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
 				+ ", password=" + password + ", isMale=" + isMale + ", isAdmin=" + isAdmin + ", favorites=" + favorites
 				+ "]";
-	}
-	
-	
-	
+	}	
 
 }

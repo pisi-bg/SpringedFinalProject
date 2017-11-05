@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.model.pojo.User;
+import com.example.utils.exceptions.IllegalDiscountException;
 import com.example.utils.exceptions.NotSuchUserException;
 
 @Component
@@ -147,8 +148,9 @@ public class UserDao {
 	 * @param email <code>String</code> of the given email;
 	 * @return <code>User</code>
 	 * @throws SQLException
+	 * @throws IllegalDiscountException 
 	 */
-	public User getUser(String email) throws SQLException {
+	public User getUser(String email) throws SQLException, IllegalDiscountException {
 		Connection con = db.getConnection();
 		String query = "SELECT user_id AS id, first_name , last_name, password, gender, isAdmin AS admin"
 					+ " FROM pisi.users WHERE email = ?";
@@ -160,10 +162,15 @@ public class UserDao {
 			if (!rs.next()) {
 				return new User();
 			}
-			User u = new User(rs.getInt("id"), rs.getString("first_name"), rs.getString("last_name"), email,
-					rs.getString("password"), rs.getBoolean("gender"), rs.getBoolean("admin"),
-					pd.getFavorites(rs.getLong("id")));
-			return u;
+			User user = new User().setId(rs.getInt("id"))
+								  .setFirstName(rs.getString("first_name"))
+								  .setLastName(rs.getString("last_name"))
+								  .setEmail(email)
+								  .setPassword(rs.getString("password"))
+								  .setIsMale(rs.getBoolean("gender"))
+								  .setAdmin(rs.getBoolean("admin"))
+								  .setFavorites(pd.getFavorites(rs.getLong("id")));			
+			return user;
 		} finally {
 			if (rs != null) {
 				rs.close();
@@ -199,8 +206,9 @@ public class UserDao {
 	 * @param id ID number of the requested <code>User</code>
 	 * @return <code>User</code>
 	 * @throws SQLException
+	 * @throws IllegalDiscountException 
 	 */
-	public User getUserByID(long id) throws SQLException {
+	public User getUserByID(long id) throws SQLException, IllegalDiscountException {
 		Connection con = db.getConnection();
 		String query = "SELECT email AS email, first_name , last_name, password, gender, isAdmin AS admin"
 					+ " FROM pisi.users WHERE user_id = ?";
@@ -210,8 +218,15 @@ public class UserDao {
 			stmt.setLong(1, id);
 			rs = stmt.executeQuery();
 			rs.next();
-			User user = new User(id, rs.getString("first_name"), rs.getString("last_name"), rs.getString("email"),
-					rs.getString("password"), rs.getBoolean("gender"), rs.getBoolean("admin"), pd.getFavorites(id));
+			
+			User user = new User().setId(id)
+					.setFirstName(rs.getString("first_name"))
+					.setLastName(rs.getString("last_name"))
+					.setEmail(rs.getString("email"))
+					.setPassword(rs.getString("password"))
+					.setIsMale(rs.getBoolean("gender"))
+					.setAdmin(rs.getBoolean("admin"))
+					.setFavorites(pd.getFavorites(id));
 			return user;
 		} finally {
 			if (rs != null) {

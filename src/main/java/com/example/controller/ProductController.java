@@ -31,6 +31,7 @@ import com.example.model.pojo.Product;
 import com.example.model.pojo.Rating;
 import com.example.model.pojo.User;
 import com.example.utils.ImageProvider;
+import com.example.utils.exceptions.IllegalDiscountException;
 import com.example.utils.exceptions.NoSuchProductException;
 
 @Controller
@@ -96,6 +97,8 @@ public class ProductController {
 			sess.setAttribute("categoriesD", categoriesD);
 		} catch (SQLException e) {
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+		} catch (IllegalDiscountException e) {
+			return CartController.discountError;
 		}
 		return new ModelAndView("products", "productPage", productList);
 
@@ -148,6 +151,8 @@ public class ProductController {
 			// sub-categories will be not remembered
 		} catch (SQLException e) {
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+		} catch (IllegalDiscountException e) {
+			return CartController.discountError;
 		}
 		return new ModelAndView("products", "productPage", productList);
 
@@ -196,6 +201,8 @@ public class ProductController {
 			request.setAttribute("subCatId", categoryId);
 		} catch (SQLException e) {
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+		} catch (IllegalDiscountException e) {
+			return CartController.discountError;
 		}
 		return new ModelAndView("products", "productPage", productList);
 
@@ -216,6 +223,8 @@ public class ProductController {
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 		} catch (NoSuchProductException e) {
 			return new ModelAndView("error", "error", e.getMessage());
+		} catch (IllegalDiscountException e) {
+			return CartController.discountError;
 		}
 
 		// check if product is favorite and has Rating from user
@@ -440,7 +449,7 @@ public class ProductController {
 	}
 
 	@RequestMapping(value = "/image/{id}")
-	public void showPicture(HttpServletResponse resp, @PathVariable Integer id) {
+	public void showPicture(HttpServletResponse resp, @PathVariable Integer id) throws IllegalDiscountException {
 
 		try {
 			Product p = pd.getProduct(id);

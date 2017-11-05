@@ -37,6 +37,7 @@ import com.example.model.pojo.DeliveryInfo;
 import com.example.model.pojo.Order;
 import com.example.model.pojo.Product;
 import com.example.model.pojo.User;
+import com.example.utils.exceptions.IllegalDiscountException;
 import com.example.utils.exceptions.NoSuchCityException;
 import com.example.utils.exceptions.NoSuchProductException;
 import com.example.utils.exceptions.NotEnoughQuantityException;
@@ -47,7 +48,8 @@ public class CartController {
 
 	// validator for spring forms
 	private Validator validator;
-	private ModelAndView sqlError;
+	public static ModelAndView sqlError;
+	public static ModelAndView discountError; 
 
 	@Autowired
 	ProductDao productDao;
@@ -63,6 +65,7 @@ public class CartController {
 		ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
 		validator = validatorFactory.getValidator();
 		this.sqlError = new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+		this.discountError = new ModelAndView("error", "error", "Не валидни данни за отстъпка на продукт!");
 	}
 
 	@RequestMapping(value = "/removeFromCart/{productId}", method = RequestMethod.POST)
@@ -80,6 +83,8 @@ public class CartController {
 			return sqlError;
 		} catch (NoSuchProductException e) {
 			return new ModelAndView("error","error", e.getMessage());
+		} catch (IllegalDiscountException e) {
+			return discountError;
 		}
 		return new ModelAndView("redirect:/cart/view");
 	}
@@ -129,6 +134,8 @@ public class CartController {
 			return new ModelAndView("error", "error", "Моля въвеждайте валидни данни в полетата за количество.");
 		} catch (NoSuchProductException e) {
 			return new ModelAndView("error", "error", e.getMessage());
+		} catch (IllegalDiscountException e) {
+			return discountError;
 		}
 		return new ModelAndView("cart");
 	}
@@ -191,8 +198,12 @@ public class CartController {
 
 		try {
 			con.setAutoCommit(false);
-			deliveryInfoDao.insertDelivInfoOrder(deliveryInfo);
-			Order order = new Order(user, LocalDateTime.now(), priceForCart, deliveryInfo, cart);
+			deliveryInfoDao.insertDelivInfoOrder(deliveryInfo); //user, LocalDateTime.now(), priceForCart, deliveryInfo, cart
+			Order order = new Order().setUser(user)
+									.setDateTime(LocalDateTime.now())
+									.setFinalPrice(priceForCart)
+									.setDeliveryInfo(deliveryInfo)
+									.setProducts(cart);
 			orderDao.insertOrderForUser(order);
 			long orderId = order.getOrderId();
 			orderDao.insertProductsFromOrder(orderId, cart);
@@ -256,6 +267,8 @@ public class CartController {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+		} catch (IllegalDiscountException e) {
+			return discountError;
 		}
 		return new ModelAndView("thanks");
 

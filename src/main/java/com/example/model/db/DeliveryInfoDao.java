@@ -21,6 +21,12 @@ public class DeliveryInfoDao {
 	@Autowired
 	DBManager DBmanager;
 
+	/**
+	 * This method insert Delivery Info info DB;
+	 * @param delivInfo POJO of <code>DeliveryInfo</code> to be inserted;
+	 * @throws SQLException
+	 * @throws NoSuchCityException - when there is no such city in the DB;
+	 */
 	public void insertDelivInfoOrder(DeliveryInfo delivInfo) throws SQLException, NoSuchCityException {
 		Connection con = DBmanager.getAdminCon();
 		String query = "INSERT INTO pisi.deliveries ( address, zip_code, city_id, reciever_first_name, reciever_last_name, reciever_phone, notes) VALUES (?,?,?,?,?,?,?)";
@@ -40,8 +46,6 @@ public class DeliveryInfoDao {
 			rs = ps.getGeneratedKeys();
 			rs.next();
 			delivInfo.setDeliveryInfoId(rs.getLong(1));
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			if (rs != null) {
 				rs.close();
@@ -49,6 +53,12 @@ public class DeliveryInfoDao {
 		}
 	}
 
+	/**
+	 * Returns <code>DeliveryInfo</code> by given ID;
+	 * @param deliveryInfoId ID number of <code>DeliveryInfo</code> to be returned
+	 * @return <code>DeliveryInfo</code>
+	 * @throws SQLException
+	 */
 	public DeliveryInfo getDeliveryInfo(long deliveryInfoId) throws SQLException {
 		Connection con = DBmanager.getConnection();
 		String query = "SELECT c.city_id , d.delivery_info_id, d.address, d.zip_code, d.reciever_first_name, "
@@ -64,8 +74,6 @@ public class DeliveryInfoDao {
 					rs.getString("city_name"), rs.getString("reciever_first_name"), rs.getString("reciever_last_name"),
 					rs.getLong("reciever_phone"), rs.getString("notes"));
 			return delInfo;
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			if (rs != null) {
 				rs.close();
@@ -73,6 +81,12 @@ public class DeliveryInfoDao {
 		}
 	}
 
+	/**
+	 * Returns previous <code>DeliveryInfo</code> if there is any, by given <code>User</code> ID;
+	 * @param userId ID number if the logged <code>User</code>
+	 * @return <code>ArrayList<DeliveryInfo></code> - may be empty;
+	 * @throws SQLException
+	 */
 	public ArrayList<DeliveryInfo> getDeliveriesInfosForUser(long userId) throws SQLException {
 		Connection con = DBmanager.getConnection();
 		ArrayList<DeliveryInfo> arr = new ArrayList<>();
@@ -89,8 +103,6 @@ public class DeliveryInfoDao {
 										rs.getString("reciever_last_name"), rs.getLong("reciever_phone"), rs.getString("notes")));
 			}
 			return arr;
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			if (rs != null) {
 				rs.close();
@@ -98,6 +110,13 @@ public class DeliveryInfoDao {
 		}
 	}
 
+	/**
+	 * Returns city ID, if it exists in the DB, by given Name;
+	 * @param cityName <code>String</code> name of the city;
+	 * @return <code>Integer</code>
+	 * @throws SQLException
+	 * @throws NoSuchCityException - when there is no such city name in the DB;
+	 */
 	public int retrieveCityId(String cityName) throws SQLException, NoSuchCityException {
 		Connection con = DBmanager.getConnection();
 		String query = "SELECT city_id AS id FROM pisi.cities WHERE city_name = ?";
@@ -109,8 +128,6 @@ public class DeliveryInfoDao {
 				return rs.getInt("id");
 			} else
 				throw new NoSuchCityException("No such city in our data base, please don't modify our frontend.");
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			if (rs != null) {
 				rs.close();

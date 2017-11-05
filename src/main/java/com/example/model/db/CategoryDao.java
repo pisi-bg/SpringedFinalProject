@@ -16,12 +16,18 @@ public class CategoryDao {
 	@Autowired
 	DBManager db;
 
+	/**
+	 * This method returns Map<name, logo_url> of the top brands by sells count.
+	 * @param limit count of the returned brands
+	 * @return <code>Map<String , String></code>
+	 * @throws SQLException
+	 */
 	public Map<String, String> getTopBrands(int limit) throws SQLException {
 		String query = "SELECT b.brand_name AS name, b.logo_image AS logo FROM pisi.brands AS b "
-				+ "JOIN pisi.products AS p ON (b.brand_id = p.brand_id) "
-				+ "JOIN pisi.orders_has_products AS op ON(p.product_id = op.product_id) " 
-				+ " GROUP BY b.brand_name "
-				+ "ORDER BY op.product_quantity DESC LIMIT ?";
+					+ "JOIN pisi.products AS p ON (b.brand_id = p.brand_id) "
+					+ "JOIN pisi.orders_has_products AS op ON(p.product_id = op.product_id) " 
+					+ " GROUP BY b.brand_name "
+					+ "ORDER BY op.product_quantity DESC LIMIT ?";
 		Map<String, String> brands = new HashMap<>();
 		Connection con = db.getConnection();
 		ResultSet rs = null;
@@ -32,8 +38,6 @@ public class CategoryDao {
 			while (rs.next()) {
 				brands.put(rs.getString("name"), rs.getString("logo"));
 			}
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			if (rs != null) {
 				rs.close();
@@ -42,6 +46,12 @@ public class CategoryDao {
 		return brands;
 	}
 
+	/**
+	 * This method returns Map<name, id> of the categories by given animal ID;
+	 * @param animalId ID number of the animal
+	 * @return <code>Map<String , Integer></code>
+	 * @throws SQLException
+	 */
 	public Map<String, Integer> getCategoriesForAnimal(int animalId) throws SQLException {
 		String query = "SELECT DISTINCT(pc.category_name) AS name, pc.product_category_id AS id "
 				+ "FROM pisi.products AS p "
@@ -59,8 +69,6 @@ public class CategoryDao {
 			while (rs.next()) {
 				categories.put(rs.getString("name"), rs.getInt("id"));
 			}
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			if (rs != null) {
 				rs.close();
@@ -69,10 +77,17 @@ public class CategoryDao {
 		return categories;
 	}
 
+	/**
+	 * This method returns Map<name , id> with sub-categories by given parent-category ID and animal ID;
+	 * @param animalId ID of the animal;
+	 * @param categoryId ID of the parent-category;
+	 * @return <code>Map<String , Integer></code>
+	 * @throws SQLException
+	 */
 	public Map<String, Integer> getSubCategoriesForCategory(int animalId, int categoryId) throws SQLException {
 		String query = "SELECT DISTINCT(p.product_category_id) AS id, c.category_name AS name FROM pisi.products AS p "
-				+ "JOIN pisi.product_categories AS c ON(p.product_category_id = c.product_category_id) "
-				+ "WHERE animal_id = ? AND parent_category_id = ?";
+					+ "JOIN pisi.product_categories AS c ON(p.product_category_id = c.product_category_id) "
+					+ "WHERE animal_id = ? AND parent_category_id = ?";
 		Connection con = db.getConnection();
 		Map<String, Integer> subCategories = new HashMap<>();
 		ResultSet rs = null;
