@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import javax.annotation.PreDestroy;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,13 +17,9 @@ public class DBManager {
 	private Connection adminCon;
 
 	// constructor
-	private DBManager() {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			// TODO throw custom exception that leads to error page
-			System.out.println("Driver not found or failed to load. Check your libraries");
-		}
+	private DBManager() throws ClassNotFoundException, SQLException {
+
+		Class.forName("com.mysql.jdbc.Driver");
 
 		final String DB_IP = "localhost";
 		final String DB_PORT = "3306";
@@ -29,25 +27,10 @@ public class DBManager {
 		final String DB_USER = "root";
 		final String DB_PASS = "balonche1";
 
-		try {
-			con = DriverManager.getConnection("jdbc:mysql://" + DB_IP + ":" + DB_PORT + "/" + DB_DBNAME, DB_USER,
-					DB_PASS);
-			adminCon = DriverManager.getConnection("jdbc:mysql://" + DB_IP + ":" + DB_PORT + "/" + DB_DBNAME, DB_USER,
-					DB_PASS);
-		} catch (SQLException e) {
-			// TODO handle exception
-			System.out.println("Ops" + e.getMessage());
-		}
+		con = DriverManager.getConnection("jdbc:mysql://" + DB_IP + ":" + DB_PORT + "/" + DB_DBNAME, DB_USER, DB_PASS);
+		adminCon = DriverManager.getConnection("jdbc:mysql://" + DB_IP + ":" + DB_PORT + "/" + DB_DBNAME, DB_USER,
+				DB_PASS);
 
-	}
-
-	// return only instance of this class
-	public static synchronized DBManager getInstance() {
-		if (instance == null) {
-			instance = new DBManager();
-
-		}
-		return instance;
 	}
 
 	// return connection to the database
@@ -61,22 +44,13 @@ public class DBManager {
 	}
 
 	// close connection to the database when server is shutdown
-	public void closeConnections() {
-		if (con != null) {
-			try {
-				con.close();
-			} catch (SQLException e) {
-				// TODO handle exception
-				e.printStackTrace();
-			}
+	public void closeConnections() throws SQLException {
+		if (con != null) {			
+			con.close();			
 		}
-		if (adminCon != null) {
-			try {
-				adminCon.close();
-			} catch (SQLException e) {
-				// TODO handle exception
-				e.printStackTrace();
-			}
+		if (adminCon != null) {			
+			adminCon.close();
+			
 		}
 	}
 
