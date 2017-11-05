@@ -3,6 +3,7 @@ package com.example.model.pojo;
 import java.util.Collections;
 import java.util.Set;
 
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
@@ -14,12 +15,11 @@ public class User {
 	
 	private long id;
 	@NotBlank(message="Ivalid input.")
-//	@Required
 	private String firstName;
 	@NotBlank(message="Ivalid input.")
 	private String lastName;
 	@NotBlank(message="Please enter an email")
-	@Email(message="Please enter a valid email.")
+	@Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "Please enter a valid email.")
 	private String email;
 	@NotBlank(message="")
 	@Size(min=6,max=50 , message="Ivalid password. Length must be more than 6 characters.")
