@@ -44,6 +44,7 @@ import com.example.utils.EmailSender;
 import com.example.utils.Hasher;
 import com.example.utils.PasswordGenerator;
 import com.example.utils.StringValidator;
+import com.example.utils.exceptions.IllegalDiscountException;
 import com.example.utils.exceptions.NoSuchProductException;
 import com.example.utils.exceptions.NotSuchUserException;
 
@@ -114,6 +115,8 @@ public class UserController {
 			// TODO handle it
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
 
+		} catch (IllegalDiscountException e) {
+			return CartController.discountError;
 		}
 
 	}
@@ -177,6 +180,8 @@ public class UserController {
 			}
 		} catch (SQLException e) {
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+		} catch (IllegalDiscountException e) {
+			return CartController.discountError;
 		}
 		return new ModelAndView("profile");
 	}
@@ -373,12 +378,12 @@ public class UserController {
 
 	@RequestMapping(value = "/admin/addProduct", method = RequestMethod.POST)
 	public ModelAndView addProduct(HttpServletResponse resp, HttpServletRequest req,
-			@RequestParam("image") MultipartFile file) {
+			@RequestParam("image") MultipartFile file) throws IllegalDiscountException {
 
 		try {
 			req.setCharacterEncoding("UTF-8");
 		} catch (UnsupportedEncodingException e1) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
+			return CartController.sqlError;
 		}
 		String name = req.getParameter("name");
 		String animal = req.getParameter("animal");
@@ -427,24 +432,27 @@ public class UserController {
 		try {
 			file.transferTo(imageFile);
 		} catch (IllegalStateException e1) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
+			return CartController.sqlError;
 		} catch (IOException e1) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
+			return CartController.sqlError;
 		}
 
 		Product p = new Product().setName(name).setAnimal(animal)
-								.setCategory(category).setPrice(price)
-								.setDescription(description).setBrand(brand)
-								.setInStock(instock).setDiscount(discount).setImage(imageURL);
+								.setCategory(category)
+								.setPrice(price)
+								.setDescription(description)
+								.setBrand(brand)
+								.setInStock(instock)
+								.setDiscount(discount)
+								.setImage(imageURL);
 		
 		try {
 			pd.addProduct(p);
 		} catch (SQLException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
+			return CartController.sqlError;
 		} catch (NoSuchProductException e) {
 			return new ModelAndView("error", "error", e.getMessage());
 		}
-		// return "index";
 		return new ModelAndView("redirect:/user/admin/addProduct");
 	}
 
@@ -455,7 +463,7 @@ public class UserController {
 		try {
 			req.setCharacterEncoding("UTF-8");
 		} catch (UnsupportedEncodingException e1) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
+			return CartController.sqlError;
 		}
 
 		String brandName = req.getParameter("newBrandname");
@@ -474,9 +482,9 @@ public class UserController {
 		try {
 			brandFile.transferTo(imageFile);
 		} catch (IllegalStateException e1) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
+			return CartController.sqlError;
 		} catch (IOException e1) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
+			return CartController.sqlError;
 		}
 
 		try {
@@ -514,13 +522,13 @@ public class UserController {
 		try {
 			pd.setInPromotion(id, discount);
 			if(discount > 0){
-				List<String> users = ud.userEmailsLiked(id);
+				List<String> users = ud.emailsOfUsersLiked(id);
 				for(String email : users){
 					EmailSender.toPromotion(email, id);
 				}
 			}
 		} catch (SQLException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
+			return CartController.sqlError;
 		}
 		return new ModelAndView("products");
 	}
@@ -549,7 +557,9 @@ public class UserController {
 			this.updateProfile(user, sess);
 			sess.removeAttribute("user");
 		} catch (SQLException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
+			return CartController.sqlError;
+		} catch (IllegalDiscountException e) {
+			return CartController.discountError;
 		}
 		return new ModelAndView("index");
 	}
@@ -564,7 +574,7 @@ public class UserController {
 		try {
 			ud.changeStatus(email);
 		} catch (SQLException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отначало.");
+			return CartController.sqlError;
 		} catch (NotSuchUserException e) {
 			return new ModelAndView("profile", "error", "Несъществуващ имейл.");
 		}
@@ -582,11 +592,13 @@ public class UserController {
 			user = ud.getUser(user.getEmail());
 			sess.setAttribute("user", user);
 		} catch (SQLException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+			return CartController.sqlError;
 		} catch (NoSuchAlgorithmException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+			return CartController.sqlError;
 		} catch (UnsupportedEncodingException e) {
-			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+			return CartController.sqlError;
+		} catch (IllegalDiscountException e) {
+			return CartController.discountError;
 		}
 		return new ModelAndView("redirect:/user/profile");		
 	}

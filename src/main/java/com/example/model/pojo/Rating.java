@@ -11,7 +11,7 @@ public class Rating implements Serializable {
 	private String comment;
 	private LocalDateTime dateTime;
 
-	// getters
+				//*** GETTERS ***//
 	public long getProductId() {
 		return productId;
 	}
@@ -32,7 +32,7 @@ public class Rating implements Serializable {
 		return userName;
 	}
 
-	// setters
+					//*** SETTERS ***//
 
 	public Rating setProductId(long productId) {
 		this.productId = productId;

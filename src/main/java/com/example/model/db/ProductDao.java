@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.model.pojo.Product;
-import com.example.utils.exceptions.NoSuchCityException;
+import com.example.utils.exceptions.IllegalDiscountException;
 import com.example.utils.exceptions.NoSuchProductException;
 import com.example.utils.exceptions.NotEnoughQuantityException;
 
@@ -26,9 +26,10 @@ public class ProductDao {
 	DBManager db;
 	@Autowired
 	RatingDao rd;
+	
 
 	// returns list of products for specific animal category type
-	public ArrayList<Product> getProductsByAnimal(int animalId) throws SQLException {
+	public ArrayList<Product> getProductsByAnimal(int animalId) throws SQLException, IllegalDiscountException {
 		ArrayList<Product> products = new ArrayList<>();
 
 		Connection con = db.getConnection();
@@ -47,11 +48,18 @@ public class ProductDao {
 			String category = null;
 			while (rs.next()) {
 				double rating = rd.getProductRating(rs.getLong("id"));
-				products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
-						rs.getDouble("price"), category, rating, rs.getString("image"), rs.getInt("discount")));
+				Product product = new Product().setId(rs.getLong("id"))
+										.setName(rs.getString("name"))
+										.setDescription(rs.getString("description"))
+										.setPrice(rs.getDouble("price"))
+										.setCategory(category)
+										.setRating(rating)
+										.setImage(rs.getString("image"))
+										.setDiscount(rs.getInt("discount"));						
+				products.add(product);
 			}
 			return products;
-		} finally {
+		}finally {
 			if (rs != null) {
 				rs.close();
 			}
@@ -59,7 +67,7 @@ public class ProductDao {
 	}
 
 	// returns list of products for specific animal category type and given parent category ID
-	public List<Product> getProductsByAnimalAndParentCategory(long animalId, long parentCategoryId)	throws SQLException {
+	public List<Product> getProductsByAnimalAndParentCategory(long animalId, long parentCategoryId)	throws SQLException, IllegalDiscountException {
 		ArrayList<Product> products = new ArrayList<>();
 		Connection con = db.getConnection();
 		String query = "SELECT p.product_id as id, p.product_name as name , a.animal_name as animal, c.category_name as category , p.price,"
@@ -77,10 +85,16 @@ public class ProductDao {
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				double rating = rd.getProductRating(rs.getLong("id"));
-				Product p = new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
-						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image"),
-						rs.getInt("discount"));
-				products.add(p);
+				
+				Product product = new Product().setId(rs.getLong("id"))
+											.setName(rs.getString("name"))
+											.setDescription(rs.getString("description"))
+											.setPrice(rs.getDouble("price"))
+											.setCategory(rs.getString("category"))
+											.setRating(rating)
+											.setImage(rs.getString("image"))
+											.setDiscount(rs.getInt("discount"));				
+				products.add(product);
 			}
 			return products;
 		} finally {
@@ -91,7 +105,7 @@ public class ProductDao {
 	}
 
 	// returns list of products for specific animal category type and sub-category id;
-	public List<Product> getProductsByAnimalAndSubCategory(long animalId, long categoryId) throws SQLException {
+	public List<Product> getProductsByAnimalAndSubCategory(long animalId, long categoryId) throws SQLException, IllegalDiscountException {
 		ArrayList<Product> products = new ArrayList<>();
 		Connection con = db.getConnection();
 		String query = "SELECT p.product_id as id, p.product_name as name , a.animal_name as animal, c.category_name as category , "
@@ -109,9 +123,15 @@ public class ProductDao {
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				double rating = rd.getProductRating(rs.getLong("id"));
-				products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
-						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image"),
-						rs.getInt("discount")));
+				Product product = new Product().setId(rs.getLong("id"))
+												.setName(rs.getString("name"))
+												.setDescription(rs.getString("description"))
+												.setPrice(rs.getDouble("price"))
+												.setCategory(rs.getString("category"))
+												.setRating(rating)
+												.setImage(rs.getString("image"))
+												.setDiscount(rs.getInt("discount"));						
+				products.add(product);
 			}
 			return products;
 		} finally {
@@ -122,7 +142,7 @@ public class ProductDao {
 	}
 
 	// this method returns a product by its ID;
-	public Product getProduct(long productId) throws SQLException, NoSuchProductException {
+	public Product getProduct(long productId) throws SQLException, NoSuchProductException, IllegalDiscountException {
 		Connection con = db.getConnection();
 		String query = "SELECT p.product_id as id , p.product_name as name, p.description as description, p.instock_count as unit, "
 						+ " c.category_name as category, a.animal_name as animal, p.price as price, p.discount as discount,"
@@ -140,12 +160,20 @@ public class ProductDao {
 			if (rs.next()) {
 				double rating = rs.getDouble("rating");
 
-				Product p = new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
-						rs.getInt("price"), rs.getString("animal"), rs.getString("category"), rs.getString("brand"),
-						rs.getString("brandlogo"), rating, rs.getInt("unit"), rs.getString("image"),
-						rs.getInt("discount"));
-				p.setCountRating(rd.getCountOfRatings(rs.getLong("id")));
-				return p;
+				Product product = new Product().setId(rs.getLong("id"))
+												.setName(rs.getString("name"))
+												.setDescription(rs.getString("description"))
+												.setPrice(rs.getDouble("price"))
+												.setAnimal(rs.getString("animal"))
+												.setCategory(rs.getString("category"))
+												.setBrand(rs.getString("brand"))
+												.setRating(rating)
+												.setInStock(rs.getInt("unit"))
+												.setImage(rs.getString("image"))
+												.setDiscount(rs.getInt("discount"));
+				
+				product.setCountRating(rd.getCountOfRatings(rs.getLong("id")));
+				return product;
 			} else {
 				throw new NoSuchProductException("Няма продукт с подадените данни.");
 			}
@@ -157,7 +185,7 @@ public class ProductDao {
 
 	}
 
-	public List<Product> getProductsByBrand(int brand_id) throws SQLException {
+	public List<Product> getProductsByBrand(int brand_id) throws SQLException, IllegalDiscountException {
 		ArrayList<Product> products = new ArrayList<>();
 		Connection con = db.getConnection();
 		String query = "SELECT p.product_id as id, p.product_name as name , a.animal_name as animal, c.category_name as category , "
@@ -173,9 +201,15 @@ public class ProductDao {
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				double rating = rd.getProductRating(rs.getLong("id"));
-				products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
-						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image"),
-						rs.getInt("discount")));
+				Product product = new Product().setId(rs.getLong("id"))
+												.setName(rs.getString("name"))
+												.setDescription(rs.getString("description"))
+												.setPrice(rs.getDouble("price"))
+												.setCategory(rs.getString("category"))
+												.setRating(rating)
+												.setImage(rs.getString("image"))
+												.setDiscount(rs.getInt("discount"));												
+				products.add(product);
 			}
 			return products;
 		} finally {
@@ -185,7 +219,7 @@ public class ProductDao {
 		}
 	}
 
-	public List<Product> getProductsInPromotion() throws SQLException {
+	public List<Product> getProductsInPromotion() throws SQLException, IllegalDiscountException {
 		ArrayList<Product> products = new ArrayList<>();
 		Connection con = db.getConnection();
 		String query = "SELECT p.product_id as id, p.product_name as name , a.animal_name as animal, c.category_name as category , "
@@ -200,9 +234,15 @@ public class ProductDao {
 			rs = stmt.executeQuery();
 			while (rs.next()) {
 				double rating = rd.getProductRating(rs.getLong("id"));
-				products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
-						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image"),
-						rs.getInt("discount")));
+				Product product = new Product().setId(rs.getLong("id"))
+												.setName(rs.getString("name"))
+												.setDescription(rs.getString("description"))
+												.setPrice(rs.getDouble("price"))
+												.setCategory(rs.getString("category"))
+												.setRating(rating)
+												.setImage(rs.getString("image"))
+												.setDiscount(rs.getInt("discount"));													
+				products.add(product);
 			}
 			return products;
 		} finally {
@@ -212,17 +252,17 @@ public class ProductDao {
 		}
 	}
 
-	public Set<Product> getFavorites(long userId) throws SQLException {
-		Set<Product> tempList = new HashSet<Product>();
+	public Set<Product> getFavorites(long userId) throws SQLException, IllegalDiscountException {
+		Set<Product> favorites = new HashSet<Product>();
 		Connection con = db.getConnection();
-		String query = " SELECT p.product_id as id , p.product_name as name, p.description as description,  "
-						+ " c.category_name as category, a.animal_name as animal, p.instock_count as isStock, p.price as price, "
-						+ " m.brand_name as brand, m.logo_image as brandImage, p.image_url as image, p.discount as discount  "
+		String query = " SELECT p.product_id AS id , p.product_name AS name, p.description AS description,  "
+						+ " c.category_name AS category, a.animal_name AS animal, p.instock_count AS inStock, p.price AS price, "
+						+ " m.brand_name AS brand, p.image_url AS image, p.discount AS discount  "
 						+ " FROM pisi.users_has_favorites AS cf " 
-						+ " JOIN pisi.products as p ON(cf.product_id = p.product_id )"
+						+ " JOIN pisi.products AS p ON(cf.product_id = p.product_id )"
 						+ " JOIN pisi.product_categories AS c ON (p.product_category_id = c.product_category_id) "
 						+ "	JOIN pisi.brands AS m ON (p.brand_id = m.brand_id)"
-						+ "	JOIN pisi.animals as a ON(p.animal_id = a.animal_id)" 
+						+ "	JOIN pisi.animals AS a ON(p.animal_id = a.animal_id)" 
 						+ " WHERE cf.user_id = ? ;";
 		ResultSet rs = null;
 
@@ -231,22 +271,21 @@ public class ProductDao {
 			rs = stmt.executeQuery();
 
 			while (rs.next()) {
-				double rating = rd.getProductRating(rs.getLong("id"));
-				long id = rs.getLong("id");
-				String name = rs.getString("name");
-				String description = rs.getString("description");
-				double price = rs.getLong("price");
-				String animal = rs.getString("animal");
-				String category = rs.getString("category");
-				String brand = rs.getString("brand");
-				String brandImage = rs.getString("brandImage");
-				int isStock = rs.getInt("isStock");
-				String image = rs.getString("image");
-				int discount = rs.getInt("discount");
-				tempList.add(new Product(id, name, description, price, animal, category, brand, brandImage, rating,
-						isStock, image, discount));
+				double rating = rd.getProductRating(rs.getLong("id"));				
+				Product product = new Product().setId(rs.getLong("id"))
+												.setName(rs.getString("name"))
+												.setDescription(rs.getString("description"))
+												.setPrice(rs.getLong("price"))
+												.setAnimal(rs.getString("animal"))
+												.setCategory(rs.getString("category"))
+												.setBrand(rs.getString("brand"))
+												.setRating(rating)
+												.setInStock(rs.getInt("inStock"))
+												.setImage(rs.getString("image"))
+												.setDiscount(rs.getInt("discount"));						
+				favorites.add(product);
 			}
-			return tempList;
+			return favorites;
 		} finally {
 			if(rs!= null){
 				rs.close();
@@ -257,12 +296,12 @@ public class ProductDao {
 	public List<Product> searchProductByWord(String[] word) throws SQLException {
 		ArrayList<Product> products = new ArrayList<>();
 		Connection con = db.getConnection();
-		String query = "SELECT p.product_id as id, p.product_name as name , a.animal_name as animal, c.category_name as category , "
-						+ "p.price, p.description, pc.category_name as parent_category, p.image_url as image "
-						+ "FROM pisi.products as p JOIN pisi.animals as a ON (p.animal_id = a.animal_id) "
-						+ "JOIN pisi.product_categories as c ON(p.product_category_id = c.product_category_id) "
-						+ "JOIN pisi.product_categories as pc ON(c.parent_category_id = pc.product_category_id) "
-						+ "JOIN pisi.brands as b ON(p.brand_id = b.brand_id)"
+		String query = "SELECT p.product_id AS id, p.product_name AS name , a.animal_name AS animal, c.category_name AS category , "
+						+ "p.price, p.description, pc.category_name AS parent_category, p.image_url AS image "
+						+ "FROM pisi.products AS p JOIN pisi.animals AS a ON (p.animal_id = a.animal_id) "
+						+ "JOIN pisi.product_categories AS c ON(p.product_category_id = c.product_category_id) "
+						+ "JOIN pisi.product_categories AS pc ON(c.parent_category_id = pc.product_category_id) "
+						+ "JOIN pisi.brands AS b ON(p.brand_id = b.brand_id)"
 						+ "WHERE p.product_name LIKE ? OR p.description LIKE ? ";
 
 		if (word.length != 1) {
@@ -285,10 +324,13 @@ public class ProductDao {
 			while (rs.next()) {
 
 				double rating = rd.getProductRating(rs.getLong("id"));
-				Product p = new Product().setName(rs.getString("name")).setDescription(rs.getString("description"))
-						.setPrice(rs.getDouble("price")).setCategory(rs.getString("category")).setRating(rating)
-						.setImage(rs.getString("image"));
-				p.setId(rs.getLong("id"));
+				Product p = new Product().setId(rs.getLong("id"))
+										.setName(rs.getString("name"))
+										.setDescription(rs.getString("description"))
+										.setPrice(rs.getDouble("price"))
+										.setCategory(rs.getString("category"))
+										.setRating(rating)
+										.setImage(rs.getString("image"));
 				products.add(p);
 			}
 			return products;
@@ -299,7 +341,7 @@ public class ProductDao {
 		}
 	}
 
-	public List<Product> getTopSoldProducts(int countLimit) throws SQLException {
+	public List<Product> getTopSoldProducts(int countLimit) throws SQLException, IllegalDiscountException {
 		ArrayList<Product> products = new ArrayList<>();
 		Connection con = db.getConnection();
 		String query = "SELECT  op.product_id as id, p.product_name as name , a.animal_name as animal, "
@@ -318,12 +360,17 @@ public class ProductDao {
 			stmt.setInt(1, countLimit);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
-				// check if there is a problem with returning a null from db for
-				// rating !!!
 				double rating = rd.getProductRating(rs.getLong("id"));
-				products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
-						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image"),
-						rs.getInt("discount")));
+				
+				Product product = new Product().setId(rs.getLong("id"))
+												.setName(rs.getString("name"))
+												.setDescription(rs.getString("description"))
+												.setPrice(rs.getDouble("price"))
+												.setCategory(rs.getString("category"))
+												.setRating(rating)
+												.setImage(rs.getString("image"))
+												.setDiscount(rs.getInt("discount"));				
+				products.add(product);
 			}
 			return products;
 		} finally {
@@ -333,7 +380,7 @@ public class ProductDao {
 		}
 	}
 
-	public List<Product> getTopSoldProductsByAnimal(int countLimit, int animalId) throws SQLException {
+	public List<Product> getTopSoldProductsByAnimal(int countLimit, int animalId) throws SQLException, IllegalDiscountException {
 		ArrayList<Product> products = new ArrayList<>();
 		Connection con = db.getConnection();
 		String query = "SELECT  op.product_id AS product_id, p.product_name AS name , a.animal_name AS animal,"
@@ -354,10 +401,16 @@ public class ProductDao {
 			stmt.setInt(1, countLimit);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
-				double rating = rd.getProductRating(rs.getLong("id"));
-				products.add(new Product(rs.getLong("id"), rs.getString("name"), rs.getString("description"),
-						rs.getDouble("price"), rs.getString("category"), rating, rs.getString("image"),
-						rs.getInt("discount")));
+				double rating = rd.getProductRating(rs.getLong("id"));				
+				Product product = new Product().setId(rs.getLong("id"))
+												.setName(rs.getString("name"))
+												.setDescription(rs.getString("description"))
+												.setPrice(rs.getDouble("price"))
+												.setCategory(rs.getString("category"))
+												.setRating(rating)
+												.setImage(rs.getString("image"))
+												.setDiscount(rs.getInt("discount"));				
+				products.add(product);
 			}
 			return products;
 		} finally {

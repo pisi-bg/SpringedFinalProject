@@ -2,6 +2,8 @@ package com.example.model.pojo;
 
 import java.io.Serializable;
 
+import com.example.utils.exceptions.IllegalDiscountException;
+
 public class Product implements Serializable {
 
 	private long id;
@@ -17,87 +19,7 @@ public class Product implements Serializable {
 	private String image;
 	private int discount; // in percent
 
-	public Product() {
-	}
-
-	public Product(long id, String name, String description, double price, String animal, String category, String brand,
-			String brandImage, double rating, int isStock, String image, int discount) {
-		this(id, name, description, price, discount, animal, category, image, rating, brand);
-		this.inStock = isStock;
-	}
-
-	// constructor to retrieve short info from DB for orders history
-
-	public Product(long id, String name, String description, double price, int discount, String animal, String category,
-			String image, double rating, String brand) {
-		this(id, name, description, price, category, rating, image, discount);
-		this.discount = discount;
-		this.animal = animal;
-		this.brand = brand;
-	}
-
-	public Product(long id, String name, String description, double price, String category, double rating, String image,
-			int discount) {
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.price = price;
-		this.category = category;
-		this.rating = rating;
-		this.image = image;
-		this.discount = discount;
-	}
-
-	public Product setId(long id) {
-		this.id = id;
-		return this;
-	}
-
-	public Product setDiscount(int discount) {
-		if (discount >= 0 && discount <= 100) {
-			this.discount = discount;
-		} else {
-			// throw e;
-		}
-		return this;
-	}
-
-	// for demo purpose
-	@Override
-	public String toString() {
-		return this.name + " " + this.description + " " + this.animal + " " + this.category + " " + this.price + " "
-				+ this.discount;
-	}
-
-	public double calcDiscountedPrice() {
-		double newPrice = price * ((100 - discount) / 100.0);
-
-		return newPrice;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (id ^ (id >>> 32));
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Product other = (Product) obj;
-		if (id != other.id)
-			return false;
-		return true;
-	}
-
-	// getters
+				//*** GETTERS ***//
 	public long getId() {
 		return id;
 	}
@@ -126,7 +48,6 @@ public class Product implements Serializable {
 		return brand;
 	}
 
-
 	public double getRating() {
 		return rating;
 	}
@@ -148,8 +69,6 @@ public class Product implements Serializable {
 	}
 
 	// ** SETTERS ****
-
-	// TODO VALIDATION !!!!!
 
 	public Product setName(String name) {
 		this.name = name;
@@ -181,8 +100,6 @@ public class Product implements Serializable {
 		return this;
 	}
 
-	
-
 	public Product setRating(double rating) {
 		this.rating = rating;
 		return this;
@@ -198,10 +115,59 @@ public class Product implements Serializable {
 		return this;
 	}
 
-	public void setCountRating(int countRating) {
+	public Product setCountRating(int countRating) {
 		if (countRating >= 0) {
 			this.countRating = countRating;
 		}
+		return this;
 	}
+	public Product setId(long id) {
+		this.id = id;
+		return this;
+	}
+
+	public Product setDiscount(int discount) throws IllegalDiscountException {
+		if (discount >= 0 && discount <= 100) {
+			this.discount = discount;
+		} else {
+			throw new IllegalDiscountException("Невалидни данни за отстъпка. Моля въведете стойност между 0-99");
+		}
+		return this;
+	}
+
+	
+				//*** ADDITTIONAL METHODS ***//
+		@Override
+		public String toString() {
+			return this.name + " " + this.description + " " + this.animal + " " + this.category + " " + this.price + " "
+					+ this.discount;
+		}
+
+		public double calcDiscountedPrice() {
+			double newPrice = price * ((100 - discount) / 100.0);
+			return newPrice;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + (int) (id ^ (id >>> 32));
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Product other = (Product) obj;
+			if (id != other.id)
+				return false;
+			return true;
+		}
 
 }

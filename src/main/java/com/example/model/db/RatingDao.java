@@ -23,12 +23,18 @@ public class RatingDao {
 	@Autowired
 	UserDao ud;
 
+	/**
+	 * Creates a <code>Collection</code> of <code>Rating</code> objects by given <code>Product</code> id;
+	 * @param productId id number of the product
+	 * @return <code>Collection</code>
+	 * @throws SQLException
+	 */
 	public Collection<Rating> getProductRatingAndComment(long productId) throws SQLException {
 		Collection<Rating> collection = new ArrayList<>();
 
 		Connection con = db.getConnection();
-		String query = "SELECT r.rating, r.comment AS comment, u.first_name as user, date_time AS time  "
-				+ "FROM pisi.ratings AS r JOIN pisi.users AS u USING (user_id) WHERE r.product_id = ? ORDER BY date_time ";
+		String query = "SELECT r.rating, r.comment AS comment, u.first_name AS user, date_time AS time  "
+					+ "FROM pisi.ratings AS r JOIN pisi.users AS u USING (user_id) WHERE r.product_id = ? ORDER BY date_time ";
 		ResultSet rs = null;
 
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
@@ -41,8 +47,6 @@ public class RatingDao {
 						.setUserName(rs.getString("user")).setDateTime(time));
 			}
 			return collection;
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			if (rs != null) {
 				rs.close();
@@ -50,6 +54,12 @@ public class RatingDao {
 		}
 	}
 
+	/**
+	 * Returns average rating for <code>Product</code>;
+	 * @param productId id number of the <code>Product</code>
+	 * @return <code>double</code>
+	 * @throws SQLException
+	 */
 	public double getProductRating(long productId) throws SQLException {
 
 		Connection con = db.getConnection();
@@ -61,8 +71,6 @@ public class RatingDao {
 			rs = stmt.executeQuery();
 			rs.next();
 			return rs.getDouble("rating");
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			if (rs != null) {
 				rs.close();
@@ -70,6 +78,12 @@ public class RatingDao {
 		}
 	}
 
+	/**
+	 * Returns counts of ratings for <code>Product</code>;
+	 * @param productId id number of the <code>Product</code>
+	 * @return Integer 
+	 * @throws SQLException
+	 */
 	public int getCountOfRatings(long productId) throws SQLException {
 
 		Connection con = db.getConnection();
@@ -90,6 +104,13 @@ public class RatingDao {
 		}
 	}
 
+	/**
+	 * Returns specific rating value for <code>Product</code> given by <code>User</code>
+	 * @param productId id number of <code>Product</code>
+	 * @param userId id number of <code>User</code>
+	 * @return <code>double</code>
+	 * @throws SQLException
+	 */
 	public double productHasRatingFromUser(long productId, long userId) throws SQLException {
 
 		Connection con = db.getConnection();
@@ -105,9 +126,6 @@ public class RatingDao {
 			} else {
 				return -1;
 			}
-
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			if (rs != null) {
 				rs.close();
@@ -115,7 +133,14 @@ public class RatingDao {
 		}
 	}
 
-	public boolean addProductRating(Rating rating, User u) throws SQLException {
+	/**
+	 * Add <code>Rating</code> to <code>Product</code> by <code>User</code>
+	 * @param rating POJO with info for <code>Product</code>, <code>User</code>, rating and comment;
+	 * @param user POJO of logged <code>User</code>;
+	 * @return <code>boolean</code>: true - if insert is complete, false - if there is no changes in the DB;
+	 * @throws SQLException
+	 */
+	public boolean addProductRating(Rating rating, User user) throws SQLException {
 
 		Connection con = db.getConnection();
 		String query = "INSERT INTO pisi.ratings (product_id, user_id, rating, comment, date_time ) VALUES (?,?,?,?,?)";
@@ -123,44 +148,15 @@ public class RatingDao {
 
 		try (PreparedStatement ps = con.prepareStatement(query);) {
 			ps.setLong(1, rating.getProductId());
-			ps.setLong(2, u.getId());
+			ps.setLong(2, user.getId());
 			ps.setDouble(3, rating.getRating());
 			ps.setString(4, rating.getComment());
 			ps.setString(5, DateTimeConvertor.localDateTimeToSql(rating.getDateTime()));
 			return (ps.executeUpdate() == 1);
-
-		} catch (SQLException e) {
-			throw e;
 		} finally {
 			if (rs != null) {
 				rs.close();
 			}
 		}
 	}
-
-	// public boolean addProductRating(long productId, long userId, double
-	// rating) throws SQLException {
-	//
-	// Connection con = db.getConnection();
-	// String query = "INSERT INTO pisi.ratings (product_id, user_id, rating)
-	// VALUES (?,?,?)";
-	// ResultSet rs = null;
-	//
-	// try (PreparedStatement ps = con.prepareStatement(query);) {
-	// ps.setInt(1, (int) productId);
-	// ps.setInt(2, (int) userId);
-	// ps.setDouble(3, rating);
-	// int result = ps.executeUpdate();
-	// return result == 1 ? true : false;
-	// } catch (SQLException e) {
-	// throw e;
-	// } finally {
-	// if (rs != null) {
-	// rs.close();
-	// }
-	// }
-	// }
-
-	// public ArrayList<Rating>
-
 }

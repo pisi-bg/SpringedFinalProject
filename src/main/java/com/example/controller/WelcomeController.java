@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.model.db.CategoryDao;
 import com.example.model.db.ProductDao;
 import com.example.model.pojo.Product;
+import com.example.utils.exceptions.IllegalDiscountException;
 
 @Controller
 public class WelcomeController {
@@ -58,6 +59,8 @@ public class WelcomeController {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините.");
+		} catch (IllegalDiscountException e) {
+			return CartController.discountError;
 		}
 
 		return new ModelAndView("index");
