@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import com.example.controller.UserController;
+
 public class Hasher {
 
 	public static String securePassword(String passwordToHash, String salt)

@@ -53,7 +53,8 @@ import com.example.utils.exceptions.NotSuchUserException;
 @RequestMapping(value = "/user")
 public class UserController {
 
-	public static final String ALL_DIGITS_REGEX = "[0-9]+";
+	public static final String ALL_DIGITS_REGEX = "[0-9]{6}+";
+	public static final String ALL_DIGITS_REGEX_DISCOUNT = "[0-9]{1,2}+";
 	public static final String ALL_DOUBLE_DIGIT_REGEX = "([0-9]{1,13}(\\.[0-9]*)?){1}";
 	private Validator validator;
 	
@@ -364,8 +365,6 @@ public class UserController {
 		try {
 			List<String> animals = pd.getAnimals();
 			sess.setAttribute("animals", animals);
-			// mainCategories = pd.getMainCategories();
-			// sess.setAttribute("mainCategories", mainCategories);
 			List<String> subCategories = pd.getCategories();
 			sess.setAttribute("subCategories", subCategories);
 			List<String> brands = pd.getBrands();
@@ -408,13 +407,13 @@ public class UserController {
 		
 		//validation
 		if(req.getParameter("price") == null || req.getParameter("instock_count") == null || req.getParameter("discount") == null){
-			if(!req.getParameter("price").matches(ALL_DOUBLE_DIGIT_REGEX) || !req.getParameter("instock_count").matches(ALL_DIGITS_REGEX) || !req.getParameter("discount").matches(ALL_DIGITS_REGEX)){
-				req.setAttribute("productError", "Моля, въведете валидни данни за продукта.");
-				return new ModelAndView("addproduct");
-			}
+			return new ModelAndView("addproduct");
+		}
+		if(!req.getParameter("price").matches(ALL_DOUBLE_DIGIT_REGEX) || !req.getParameter("instock_count").matches(ALL_DIGITS_REGEX) || !req.getParameter("discount").matches(ALL_DIGITS_REGEX_DISCOUNT)){
 			req.setAttribute("productError", "Моля, въведете валидни данни за продукта.");
 			return new ModelAndView("addproduct");
 		}
+		req.setAttribute("productError", "Моля, въведете валидни данни за продукта.");
 		
 		double price = Double.parseDouble(req.getParameter("price"));
 		int instock = Integer.parseInt(req.getParameter("instock_count"));
@@ -498,9 +497,12 @@ public class UserController {
 
 	@RequestMapping(value = "/admin/quantity", method = RequestMethod.POST)
 	public ModelAndView addQuantity(HttpSession sess, HttpServletRequest req) {
+		if(!req.getParameter("quantity").matches(ALL_DIGITS_REGEX)){
+			return new ModelAndView("error", "error", "Моля въвеждайте коректни данни спрямо изискванията.");
+		}
 		int quantity = Integer.parseInt(req.getParameter("quantity"));
 		if (quantity < 1) {
-			return new ModelAndView("productdetail", "error", "Моля не въвеждайте отрицателни стойности в полетата.");
+			return new ModelAndView("error", "error", "Моля не въвеждайте отрицателни стойности в полетата.");
 		}
 		Product pro = (Product) sess.getAttribute("productCurrent");
 		try {
@@ -513,9 +515,12 @@ public class UserController {
 
 	@RequestMapping(value = "/admin/discount", method = RequestMethod.POST)
 	public ModelAndView addDiscount(HttpSession sess, HttpServletRequest req) {
+		if(!req.getParameter("discount").matches(ALL_DIGITS_REGEX_DISCOUNT)){
+			return new ModelAndView("error", "error", "Моля въвеждайте коректни стойности за отстъпки.");
+		}
 		int discount = Integer.parseInt(req.getParameter("discount"));
 		if (discount < 0 || discount > 99) {
-			return new ModelAndView("productdetail", "error", "Моля въвеждайте коректни стойности за отстъпки.");
+			return new ModelAndView("error", "error", "Моля въвеждайте коректни стойности за отстъпки.");
 		}
 		Product pro = (Product) sess.getAttribute("productCurrent");
 		long id = pro.getId();
