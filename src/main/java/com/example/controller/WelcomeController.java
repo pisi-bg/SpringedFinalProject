@@ -20,7 +20,7 @@ import com.example.model.pojo.Product;
 @Controller
 public class WelcomeController {
 
-	private static final int LIMIT = 5;
+	private static final int LIMIT = 6;
 
 	@Autowired
 	CategoryDao ctd;

@@ -2,13 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="f" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
+
 
 	<jsp:include page="header.jsp"></jsp:include>
 
@@ -20,48 +14,52 @@
 		<!-- <h3 class="page-subheading">ФОРМА ЗА КОНТАКТИ</h3> -->
 
 
-		<div style="clear: both"></div>
-
-		<div class="form_content clearfix">
-			<div class="form-group">
-				<h5 class="has-error"><c:out value="${name }"></c:out></h5>
-				<label for="name">Име</label> <input type="text" name="name"
-					value="" class="account_input form-control" required>
+			<div class="container" >
+	
+				<div class="form_content clearfix">
+					<div class="form-group">
+						<h5 class="has-error">
+							<c:out value="${name }"></c:out>
+						</h5>
+						<label for="name">Име</label> 
+						<input type="text" name="name" value="" class="account_input form-control" required>
+					</div>
+					<div class="form-group">
+						<h5 class="has-error">
+							<c:out value="${phone }"></c:out>
+						</h5>
+						<label for="phone">Телефон</label> 
+						<input type="number" name="phone" value="" class="account_input form-control" required>
+					</div>
+					<div class="form-group">
+						<h5 class="has-error">
+							<c:out value="${email }"></c:out>
+						</h5>
+						<label for="email">Email</label>
+						 <input type="email" name="email" value="" class="account_input form-control" required>
+					</div>
+					<div class="form-group">
+						<h5 class="has-error">
+							<c:out value="${subject }"></c:out>
+						</h5>
+						<label for="subject">Относно</label> 
+						<input type="text" name="subject" value="" class="account_input form-control" required>
+					</div>
+					<div class="form-group">
+						<h5 class="has-error">
+							<c:out value="${describe }"></c:out>
+						</h5>
+						<label for="descr">Описание</label>
+		
+						<textarea name="descr" class="account_input form-control" style="height: 120px;" required>
+						</textarea>
+					</div>
+		
+					<p class="submit" align="center">
+						<input type="image" height="auto" src="<c:url value='/img/buttons/send.png'/>" alt="ИЗПРАТИ" title="ИЗПРАТИ" width="8%" height="auto"> 
+					</p>
+				</div>
 			</div>
-			<div class="form-group">
-				<h5 class="has-error"><c:out value="${phone }"></c:out></h5>
-				<label for="phone">Телефон</label> <input type="number" name="phone"
-					value="" class="account_input form-control" required>
-			</div>
-			<div class="form-group">
-				<h5 class="has-error"><c:out value="${email }"></c:out></h5>
-				<label for="email">Email</label> <input type="email" name="email"
-					value="" class="account_input form-control" required>
-			</div>
-			<div class="form-group">
-				<h5 class="has-error"><c:out value="${subject }"></c:out></h5>
-				<label for="subject">Относно</label> <input type="text"
-					name="subject" value="" class="account_input form-control" required>
-			</div>
-			<div class="form-group">
-				<h5 class="has-error"><c:out value="${describe }"></c:out></h5>
-				<label for="descr">Описание</label>
-
-				<textarea name="descr" class="account_input form-control"
-					style="height: 120px;" required></textarea>
-			</div>
-
-			<p class="submit" align="center">
-				
-				<input type="image" name="submit" width="8%" height="auto" src="<c:url value='/img/buttons/send.png'/>" alt="ИЗПРАТИ" title="ИЗПРАТИ" width="6%" height="auto"> 
-				
-				<%-- <button type="submit" name="submit">
-					<img src="<c:url value='/img/buttons/send.png'/>" alt="ИЗПРАТИ" title="ИЗПРАТИ" width="6%" height="auto" >
-				</button> --%>
-				
-
-			</p>
-		</div>
 	</form>
 
 </body>
