@@ -3,11 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-
-		<jsp:include page="header.jsp"></jsp:include>
-				
-		<jsp:include page="categories.jsp"></jsp:include>
-		
+		<jsp:include page="header.jsp"></jsp:include>				
+		<jsp:include page="categories.jsp"></jsp:include>		
 		
 		<!-- <div class="pisi-wrap-container"> -->			
 
@@ -76,27 +73,23 @@
 						</div>	<!-- pisi-grid_products -->
 					</div> <!-- pisi-wrap -->
 			
-					<div class="pisi-paging">
-					
+					<div class="pisi-paging .pisi-button_yellow">
+					    <c:choose>
+					        <c:when test="${productPage.firstPage}"></c:when>
+					        <c:otherwise><a href="${pageContext.request.contextPath}/${sessionScope.url }/-2" class="pisi-button_yellow">Prev</a></c:otherwise>
+					    </c:choose>
+				  		 &nbsp;
+					    <c:forEach begin="0" end="${productPage.pageCount-1}" varStatus="loop">
 						    <c:choose>
-						        <c:when test="${productPage.firstPage}"></c:when>
-						        <c:otherwise><a href="${pageContext.request.contextPath}/${sessionScope.url }/-2">Prev</a></c:otherwise>
+						        <c:when test="${loop.index == productPage.page}">${loop.index+1}</c:when>
+						        <c:otherwise><a href="${pageContext.request.contextPath}/${sessionScope.url }/${loop.index}" class="pisi-button_yellow">${loop.index+1}</a></c:otherwise>
 						    </c:choose>
-					  
-						    <c:forEach begin="0" end="${productPage.pageCount-1}" varStatus="loop">
-							    &nbsp;
-							    <c:choose>
-							        <c:when test="${loop.index == productPage.page}">${loop.index+1}</c:when>
-							        <c:otherwise><a href="${pageContext.request.contextPath}/${sessionScope.url }/${loop.index}">${loop.index+1}</a></c:otherwise>
-							    </c:choose>
-						    &nbsp;
-						    </c:forEach>
-					   
-						    <c:choose>
-						        <c:when test="${productPage.lastPage}"></c:when>
-						        <c:otherwise><a href="${pageContext.request.contextPath}/${sessionScope.url }/-1">Next</a></c:otherwise>
-						    </c:choose>
-					    
+					    </c:forEach>
+				   		&nbsp;
+					    <c:choose>
+					        <c:when test="${productPage.lastPage}"></c:when>
+					        <c:otherwise><a href="${pageContext.request.contextPath}/${sessionScope.url }/-1" class="pisi-button_yellow">Next</a></c:otherwise>
+					    </c:choose>
 				    </div><!-- pisi-paging -->
 	  		 </div>		<!-- w3-container -->					
 		</c:if>			

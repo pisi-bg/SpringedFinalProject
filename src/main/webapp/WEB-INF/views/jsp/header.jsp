@@ -5,14 +5,11 @@
 <!DOCTYPE html SYSTEM "about:legacy-compat">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>pisi bg</title>
-<%-- <link rel="stylesheet" href='<c:url value="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />' /> --%>
-<%-- <link rel="stylesheet" href='<c:url value="https://zeroattentionspan.net/pisi.css" />' /> --%>
-<link href="<c:url value="/css/bootstrap.css" />" rel="stylesheet" type="text/css">
-<link href="<c:url value="/css/pisi2.css" />" rel="stylesheet" type="text/css">
-
-
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>pisi bg</title>
+	<%-- <link rel="stylesheet" href='<c:url value="https://zeroattentionspan.net/pisi.css" />' /> --%>
+	<link href="<c:url value="/css/bootstrap.css" />" rel="stylesheet" type="text/css">
+	<link href="<c:url value="/css/pisi3.css" />" rel="stylesheet" type="text/css">
 
 </head>
 <body>
@@ -43,7 +40,7 @@
 		<div class="pisi-brand">
 			<div class="container">
 				<div class="col-xs-12 col-md-4 pisi-brand_logo no-padding">
-					<a href="<c:url value='/index'/>">
+					<a href="<c:url value='/index'/>" >
 						<img src="<c:url value='/img/buttons/pisi.png'/>" alt="HOME" title="HOME" >
 						<span class="logo-text">
 							<span class="pisi-title">Pisi.bg</span><br>
@@ -57,9 +54,12 @@
 						<input type="image" name="submit" 	src="<c:url value='/img/buttons/search2.png'/>" alt="ТЪРСИ" title="ТЪРСИ" >							
 					</form>					
 				</div>
+				<div class="col-xs-12 col-md-2 ">
+				</div>
 				<div class="col-xs-12 col-md-4 pisi-brand_cart">
-					<a href="<c:url value='/cart/view'/>" >
-						<img src="<c:url value='/img/buttons/catCart.png'/>" alt="КОЛИЧКА" title="cart">
+					<a href="<c:url value='/cart/view'/>" style="color:#440008;" >
+						<img src="<c:url value='/img/buttons/catCart.png'/>" alt="КОЛИЧКА" title="cart"  style="float: right;"><br><br><br>
+						<span class="text" style="float: right;">КОЛИЧКА</span>
 					</a>
 				</div>
 			</div>

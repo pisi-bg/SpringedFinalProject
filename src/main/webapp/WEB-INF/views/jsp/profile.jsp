@@ -3,14 +3,7 @@
 <%@ taglib prefix="f" uri="http://www.springframework.org/tags/form" %>	
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<!--!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"-->
-<!DOCTYPE html SYSTEM "about:legacy-compat">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
+
 
 	<c:if test="${ sessionScope.user == null }">
 		<c:redirect url="login">
@@ -19,164 +12,116 @@
 
 	<jsp:include page="header.jsp"></jsp:include>
 	
-	<h3 style="has-error"><c:out value="${error }"></c:out></h3>
-	<h3 style="neshto-zelenichko"><c:out value="${requestScope.success }"></c:out></h3>
-	
-	<c:if test="${sessionScope.user.getId() == 1 || sessionScope.user.getId() == 2 }">
-		<form action="${pageContext.request.contextPath}/user/admin/changeStatus" method="post style="display:inline">
-			Имейл на потребител, чийто статут искате да смените: <input type="email" name="email" required><br>
-			<input type="submit" value="Промени">
-		</form>
-	</c:if>
-
-	<!-- <h2>Your previous orders:</h2>
-
-	<a href="sortOrders?sort=desc"><button>Newest to oldest</button></a>
-	<a href="sortOrders?sort=asc"><button>Oldest to newest</button></a>
-	<hr> -->
-		<form action="${pageContext.request.contextPath}/user/profile/showOrders" method="post" style="display:inline;">		
-			<h2 >	ПРЕДИШНИ 10 ПОРЪЧКИ 		
-				<input type="image" name="submit"	src="<c:url value='/img/buttons/arrow.png'/>" alt="ЦЪК" title="drop down" width="50" height="auto" >	
-			</h2>
-		</form>			
-	 	<%-- <c:if test="${empty sessionScope.orders}">
+	<div class="container">
+		<h3 class="has-error"><c:out value="${error }"></c:out></h3>
+		<h3 style="color:#3CB371;font-size: 16px "><c:out value="${requestScope.success }"></c:out></h3>
+		<h5 style="text-align: center">
+			<c:if test="${sessionScope.user.getId() == 1 || sessionScope.user.getId() == 2 }">
+				<form action="${pageContext.request.contextPath}/user/admin/changeStatus" method="post" style="display:inline">
+					Имейл на потребител, чийто статут искате да смените: <br>
+					<input type="email" name="email" required><br><br>
+					<input type="submit" value="Промени">
+				</form>
+			</c:if>
+		</h5>
+		<%--  <c:if test="${empty sessionScope.orders}">
 			<h4 >	НЯМА ПРЕДИШНИ ПОРЪЧКИ 	</h4>
-		</c:if>  --%>
+		</c:if>   --%>
 		
-		<c:if test="${not empty sessionScope.orders}">
-				<%-- <form action="deliveryInfo" method="get" >	 --%>	
-						
-			<table border="1">
-							<thead class="">
-								<tr>
-									<th class="col-xs-12 col-md-1">Дата</th>
-									<th class="col-xs-12 col-md-1">Цена</th>											
-									<th class="col-xs-12 col-md-8">Продукти</th>
-									<th class="col-xs-12 col-md-2">Доставка</th>
-								</tr>
-							</thead>						
-							<tbody>			
-								<c:forEach items="${ sessionScope.orders }" var="order">
-									<tr>
-									
-										<td>
-											<fmt:parseDate value="${ order.dateTime }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
-											<fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${ parsedDateTime }" />
-										</td>
-										<td>${order.finalPrice }</td>
-										<td>
-											<!-- <ul>  style="list-style-type: none" -->
-											
-												<table  style="border-color:#FFF8DC; border:0;">
-													<thead class="light">
-														<tr>
-															<th class="col-xs-12 col-md-2" style="font-size: 12px; text-transform: lowercase; width:100%">име</th>
-															<th class="col-xs-12 col-md-2" style="font-size: 12px; text-transform: lowercase; width:100%">к-во</th>																				
-															<th class="col-xs-12 col-md-2" style="font-size: 12px; text-transform: lowercase; width:100%">марка</th>	
-															<th class="col-xs-12 col-md-2" style="font-size: 12px; text-transform: lowercase; width:100%">категория</th>
-														</tr>
-													</thead>						
-													<tbody>			
-														<c:forEach items="${ order.products }" var="productEntry">
-															<tr class="light">
-																<td class="col-xs-12 col-md-2" style="font-weight: lighter; width:100%">${productEntry.key.name }</td>
-																<td class="col-xs-12 col-md-2" style="font-weight: lighter; width:100%">${productEntry.value }</td>
-																<td class="col-xs-12 col-md-2" style="font-weight: lighter; width:100%">${productEntry.key.brand }</td>
-																<td class="col-xs-12 col-md-2" style="font-weight: lighter; width:100%">${productEntry.key.category }</td>														
-															</tr>                                    
-														</c:forEach>	
-													</tbody>
-												</table>
-										</td>
-										
-										<td>
-											<ul >
-												<li>
-													 Име 
-													<span style="font-weight:lighter">${order.deliveryInfo.recieverFirstName} ${order.deliveryInfo.recieverLastName}</span>
-												</li>
-												<li>
-													Телефон 
-													<span style="font-weight:lighter">${order.deliveryInfo.recieverPhone}</span> 
-												</li>                                           
-												<li>                                            
-													Град 
-													<span style="font-weight:lighter">${order.deliveryInfo.city}</span>   
-													 ПK
-													<span style="font-weight:lighter">${order.deliveryInfo.zipCode}</span> 
-												</li>                                           
-												<li>                                            
-													Адрес													
-													<span style="font-weight:lighter">${order.deliveryInfo.address}</span>
-												</li>                                           
-												<li>                                            
-													Бележка
-													<span style="font-weight:lighter">${order.deliveryInfo.notes}</span>   
-												</li>  												
-											</ul>
-										
-										</td>
-									</tr>
-								</c:forEach>	
-							</tbody>
-						</table>
-						
-						
-								<%-- <table border="1">
-									<thead class="">
-										<tr>
-											<th class="cart_product first_item">Дата</th>
-											<th class="cart_description item">Цена</th>											
-											<th class="cart_quantity item text-center">Продукти</th>
-										</tr>
-									</thead>						
-									<tbody>			
-										<c:forEach items="${ sessionScope.orders }" var="order">
-											<tr>										
-												<td>
-													<fmt:parseDate value="${ order.dateTime }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
-													<fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${ parsedDateTime }" />	
-												</td>
-												<td>${order.finalPrice }</td>
-												<td>
-													<ul style="list-style-type: none">
-														<c:forEach items="${ order.products }" var="productEntry">
-															<li>	
-																	${productEntry.key.name } - ${productEntry.value }
-															</li>
-														</c:forEach>														
-													</ul>			
-												</td>
-											</tr>
-										</c:forEach>	
-									</tbody>
-								</table> --%>
-							<br>
-										
-				<%-- </form> --%>
-		</c:if>	
-<!-- 
-	<h1>Please update all fields:</h1>
-	<form action="register" method="post">
-		First name<input type="text" name="first_name" required><br>
-		Last name<input type="text" name="last_name" required><br>
-		Email<input type="email" name="email" required><br>
-		Password<input type="password" name="password" required><br>
-		Gender: <input type="radio" name="gender" value="true" checked>
-		Male <input type="radio" name="gender" value="false"> Female<br>
-		<input type="submit" value="Update">
-	</form> -->
-	
-		<%-- <form action="${request.contextPath}/user/update" method="get" style="display:inline;">		
-				<h2 >	ПРОМЕНИ ИНФОРМАЦИЯ В ПРОФИЛА 		
+			<form action="${pageContext.request.contextPath}/user/profile/showOrders" method="post" style="display:inline;">		
+				<h2 >	ПРЕДИШНИ 10 ПОРЪЧКИ 		
 					<input type="image" name="submit"	src="<c:url value='/img/buttons/arrow.png'/>" alt="ЦЪК" title="drop down" width="50" height="auto" >	
 				</h2>
-		</form>	 --%>
-		<%-- <c:if test="${requestScope.update ==1}"> --%>
+			</form>			
+		 <c:if test="${not empty sessionScope.orders}">		
+			<table border="1" >
+				<thead class="">
+					<tr>
+						<th class="col-xs-12 col-md-1">Дата</th>
+						<th class="col-xs-12 col-md-1">Цена</th>											
+						<th class="col-xs-12 col-md-8">Продукти</th>
+						<th class="col-xs-12 col-md-2">Доставка</th>
+					</tr>
+				</thead>						
+				<tbody>			
+					<c:forEach items="${ sessionScope.orders }" var="order">
+						<tr>
+						
+							<td>
+								<fmt:parseDate value="${ order.dateTime }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
+								<fmt:formatDate pattern="dd.MM.yyyy HH:mm" value="${ parsedDateTime }" />
+							</td>
+							<td>${order.finalPrice }</td>
+							<td style="vertical-align: top; ">
+								<!-- <ul>  style="list-style-type: none" -->
+								
+									<table  style="border-color:#FFF8DC; border:0; width:100%; table-layout: fixed; ">
+										<thead class="light">
+											<tr>
+												<th class="col-xs-12 col-md-3" style="font-size: 14px; text-transform: lowercase; width:100%; text-transform: uppercase;font-weight: bold;" >име</th>
+												<th class="col-xs-12 col-md-1" style="font-size: 14px; text-transform: lowercase; width:100%; text-transform: uppercase;font-weight: bold;" >к-во</th>																				
+												<th class="col-xs-12 col-md-2" style="font-size: 14px; text-transform: lowercase; width:100%; text-transform: uppercase;font-weight: bold;" >марка</th>	
+												<th class="col-xs-12 col-md-2" style="font-size: 14px; text-transform: lowercase; width:100%; text-transform: uppercase;font-weight: bold;" >категория</th>
+											</tr>
+										</thead>						
+										<tbody>			
+											<c:forEach items="${ order.products }" var="productEntry">
+												<tr class="light">
+													<td class="col-xs-12 col-md-3" style="font-weight: lighter; width:100%">${productEntry.key.name }</td>
+													<td class="col-xs-12 col-md-1" style="font-weight: lighter; width:100%">${productEntry.value }</td>
+													<td class="col-xs-12 col-md-2" style="font-weight: lighter; width:100%">${productEntry.key.brand }</td>
+													<td class="col-xs-12 col-md-2" style="font-weight: lighter; width:100%">${productEntry.key.category }</td>														
+												</tr>                                    
+											</c:forEach>	
+										</tbody>
+									</table>
+							</td>
+							
+							<td>
+								<ul >
+									<li>
+										<p  style="font-size: 14px; text-transform: lowercase; width:100%; text-transform: uppercase;font-weight: bold; text-align:left"> Име 
+											<span style="font-weight:lighter;text-transform: capitalize;">${order.deliveryInfo.recieverFirstName} ${order.deliveryInfo.recieverLastName}</span>
+										 </p>
+									</li>
+									<li>
+										<p  style="font-size: 14px; text-transform: lowercase; width:100%; text-transform: uppercase;font-weight: bold; text-align:left">Телефон
+											<span style="font-weight:lighter; text-transform: capitalize;">${order.deliveryInfo.recieverPhone}</span>
+										 </p>	 
+									</li>                                           
+									<li>                                            
+										<p  style="font-size: 14px; text-transform: lowercase; width:100%; text-transform: uppercase;font-weight: bold; text-align:left">Град 
+										<span style="font-weight:lighter; text-transform: capitalize;">${order.deliveryInfo.city}</span>   
+										<!-- <p  style="font-size: 14px; text-transform: lowercase; width:100%; text-transform: uppercase;font-weight: bold; align:left"> --> ПK
+										<span style="font-weight:lighter; text-transform: capitalize;">${order.deliveryInfo.zipCode}</span> 
+										</p>
+									</li>                                           
+									<li>                                            
+										<p  style="font-size: 14px; text-transform: lowercase; width:100%; text-transform: uppercase;font-weight: bold;text-align:left">Адрес											
+											<span style="font-weight:lighter; text-transform: capitalize;">${order.deliveryInfo.address}</span>
+										 </p>
+									</li>                                           
+									<li>                                            
+										<p  style="font-size: 14px; text-transform: lowercase; width:100%; text-transform: uppercase;font-weight: bold; text-align:left">Бележка
+											<span style="font-weight:lighter; text-transform: capitalize;">${order.deliveryInfo.notes}</span> 
+										 </p>	
+							  
+									</li>  												
+								</ul>
+							
+							</td>
+						</tr>
+					</c:forEach>	
+				</tbody>
+			</table>
+			<br>
+					
+			</c:if>	
+	
+			
+		 		<jsp:include page="${request.contextPath}/user/update"></jsp:include>
+		 </div> <!-- contanier -->	
 		
-	 		<jsp:include page="${request.contextPath}/user/update"></jsp:include>
-	 		
-	<%-- 	</c:if> --%>
 
 </body>
 </html>

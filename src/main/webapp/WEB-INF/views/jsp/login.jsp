@@ -2,61 +2,35 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-
-
-<!-- <style type="text/css">	
-		h1 {
-			    display: block;
-			    font-size: 1.8em;
-			 	/*  margin-top: 0.83em;
-			    margin-bottom: 0.83em;
-			    margin-left: 0;
-			    margin-right: 0; */
-			    font-weight: bold;
-			    line-height:3;
-			}
-		p {
-	    
-	    font-size: 0.8em;
-	     margin-top: 0;
-	 	/*  margin-top: 0.83em;
-	    margin-bottom: 0.83em;
-	    margin-left: 0;
-	    margin-right: 0; */
-	    font-weight: bold;	    
-	}
-		
-</style>  -->
-
-
-</head>
-<body>
 <jsp:include page="header.jsp"></jsp:include>
-	<h1 style="background-color: #d99232;   align: center;  padding-top: 10px; padding-bottom: 10px; " >
+	<h1 style="background-color: #d99232;   align: center; padding-top: 10px;  padding-bottom: 10px; margin-top: 0px;" >
 		 pisi.bg 
 		<!--  <br>  your pet's favorite mall -->
-		<p style="font-size: 28px;"> your pal's favorite mall </p>
+		<span style="font-size: 28px;"> your pal's favorite mall </span>
 	</h1>	
 
 	<c:if test="${ requestScope.wrongUser }"><h3 class="has-error"> ГРЕШЕН ПOТРЕБИТЕЛ</h3></c:if>
 	
 	
 	<form action="login" method= "POST" style="text-align: center;">
-		<h2  align="center">
+		<h3  align="center">
 			Здравей, влез с твоя майл и парола!
-		</h2>
-		Email<input type="email" name = "email" value="dim@abv.bg" required><br>
-		Password<input type="password" name ="password" value="dim" required><br>
-		<input type="image" name="submit" width="8%" height="auto" src="<c:url value='/img/buttons/profile.png'/>" alt="ВЛЕЗ" title="ВЛЕЗ"> 
-		<br>ВЛЕЗ
-		<!-- <input type="submit" value="Login">  -->
+		</h3>
+		<h4>
+			Email <input type="email" name = "email" value="dimdim@abv.bg" required><br><br>
+			Password <input type="password" name ="password" value="dimanas" required><br>
+			<input type="image" name="submit" width="8%" height="auto" src="<c:url value='/img/buttons/profile.png'/>" alt="ВЛЕЗ" title="ВЛЕЗ"> 
+			<br>ВЛЕЗ
+		</h4>
 	</form>
 		
 	<div align="center">	
-		<a href="<c:url value='/user/register'/>" title="Register" class="nav_user" style="text-decoration: none" >
-			<img src="<c:url value='/img/buttons/register.png'/>" alt="РЕГИСТРИРАЙ СЕ" title="РЕГИСТРИРАЙ СЕ" width="6%" height="auto" >
-			<br>РЕГИСТРИРАЙ СЕ
-		</a> &nbsp;
+		<h4 style="    color: #440008;">
+			<a href="<c:url value='/user/register'/>" title="Register" class="nav_user" style="text-decoration: none" >
+				<img src="<c:url value='/img/buttons/register.png'/>" alt="РЕГИСТРИРАЙ СЕ" title="РЕГИСТРИРАЙ СЕ" width="6%" height="auto" >
+				<br>РЕГИСТРИРАЙ СЕ
+			</a> &nbsp;
+		</h4>
 	</div>
 		
  <%-- 	<form action="<c:url value='/user/register'/>" method="POST"  style="text-align: center;">
