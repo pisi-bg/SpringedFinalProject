@@ -514,7 +514,7 @@ public class UserController {
 		try {
 			pd.setInPromotion(id, discount);
 			if(discount > 0){
-				List<String> users = ud.userEmailsLiked(id);
+				List<String> users = ud.emailsOfUsersLiked(id);
 				for(String email : users){
 					EmailSender.toPromotion(email, id);
 				}
