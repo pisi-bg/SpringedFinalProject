@@ -549,7 +549,7 @@ h5 .center{
 
 .pisi-grid_products ul li .wrap .products_title{
 	display: table;
-	height:40px;	
+	height:60px;	
 }
 
 
@@ -568,7 +568,6 @@ h5 .center{
 }
 
 
-
 .pisi-grid_products ul li h3{
 	margin: 15px 0px 15px!important;
 	color: #222;	
@@ -579,7 +578,7 @@ h5 .center{
 }
 
 .pisi-grid_products ul li .more-info .price{
-	/*float: center;*/
+	float: center;
 	text-align: center;
 	font-size: 24px;
 	color: #40020a;
@@ -588,7 +587,7 @@ h5 .center{
 }
 
 .pisi-grid_products ul li .more-info .old-price{	
-	/*float: center;*/
+	float: center;
 	text-align: center;
 	font-size: 20px;
 	color: #40020a;
@@ -597,7 +596,7 @@ h5 .center{
 }
 
 .pisi-grid_products ul li .more-info .special-price{
-	/*float: center;*/
+	float: center;
 	text-align: center;
 	font-size: 24px;	
 	line-height: 30px;
@@ -610,9 +609,15 @@ h5 .center{
 	margin: 0px;
 }
 
+.pic-buffer {
+	height: 50px;
+	
+}
+
 /* LINE_PRODUCTS */
 .pisi-line_products{	
-	padding: 40px;
+	padding: 5px;
+	/*padding-top: 5px;*/
 
 }
 
@@ -630,8 +635,8 @@ h5 .center{
 	height:100px;
 	max-height: 100px;
 	min-height: 100px;
-	width: "auto";
-	align: "center";
+	width: auto;
+	float: center;
 	display: block;
 }
 
@@ -642,14 +647,14 @@ h5 .center{
 
 .pisi-line_products ul li .wrap_line .products_title{
 	display: table;
-	height:40px;	
+	height:60px;	
 }
 
-.pisi-line_products ul li .wrap_line .products_title .table-view{
+/*.pisi-line_products ul li .wrap_line .products_title .table-view{
 	display: table-cell;
 	vertical-align: middle;
 	height:50px;
-}
+}*/
 
 .table-view:hover{	
 	color: #c4463e;
@@ -677,7 +682,7 @@ h5 .center{
 }
 
 .pisi-line_products ul li .more-info .old-price{	
-	/*float: center;*/
+	float: center;
 	text-align: center;
 	font-size: 14px;
 	color: #40020a;
@@ -686,7 +691,7 @@ h5 .center{
 }
 
 .pisi-line_products ul li .more-info .special-price{
-	/*float: center;*/
+	float: center;
 	text-align: center;
 	font-size: 16px;	
 	line-height: 20px;

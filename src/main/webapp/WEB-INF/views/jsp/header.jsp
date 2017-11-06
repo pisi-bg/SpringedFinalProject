@@ -9,7 +9,7 @@
 	<title>pisi bg</title>
 	<%-- <link rel="stylesheet" href='<c:url value="https://zeroattentionspan.net/pisi.css" />' /> --%>
 	<link href="<c:url value="/css/bootstrap.css" />" rel="stylesheet" type="text/css">
-	<link href="<c:url value="/css/pisi3.css" />" rel="stylesheet" type="text/css">
+	<link href="<c:url value="/css/pisi2.css" />" rel="stylesheet" type="text/css">
 
 </head>
 <body>
@@ -34,7 +34,6 @@
 					<a href="${pageContext.request.contextPath}/user/admin/addProduct" title="Add Product">ДОБАВИ ПРОДУКТ</a> 
 				</c:if>
 			</nav>
-
 		</div>
 		
 		<div class="pisi-brand">

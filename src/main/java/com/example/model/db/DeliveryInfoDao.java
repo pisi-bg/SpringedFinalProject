@@ -6,14 +6,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.model.pojo.DeliveryInfo;
 import com.example.utils.exceptions.NoSuchCityException;
-import com.example.utils.exceptions.NotEnoughQuantityException;
 
 @Component
 public class DeliveryInfoDao {

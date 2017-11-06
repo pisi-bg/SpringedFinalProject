@@ -25,21 +25,23 @@
 				<div class="col-xs-12 col-md-5 more-info">
 					<div class="description">
 						<h2 class="left" style="color: #c4463e;">Описание:</h2>
-						<h3 class="left">${productCurrent.description }</h3>
-						<br><br><br>
-						<c:if test="${ productCurrent.discount == 0 }">
-							<span class="price">			
-								<fmt:formatNumber type="number" pattern="#####.##" value="${ productCurrent.price }" />лв.
-							</span>								
-						</c:if>
-						<c:if test="${ productCurrent.discount != 0 }">
-							<span class="old-price"> 														
-								<fmt:formatNumber type="number" pattern="#####.##" value="${ productCurrent.price }" />лв.														
-							</span>								
-							<span class="special-price">												
-									<fmt:formatNumber type="number" pattern="#####.##" value="${productCurrent.calcDiscountedPrice() }" /> лв.													
-							</span>						
-						</c:if>
+						<h3 class="left">${productCurrent.description }</h3>						
+						<h4 class="" style="color: #c4463e; text-align:left;">Цена:</h4>
+						 <div  style="text-align: left;"> 
+							<c:if test="${ productCurrent.discount == 0 }">
+								<span class="price">			
+									<fmt:formatNumber type="number" pattern="#####.##" value="${ productCurrent.price }" />лв.
+								</span>								
+							</c:if>
+							<c:if test="${ productCurrent.discount != 0 }">
+								<span class="old-price"> 														
+									<fmt:formatNumber type="number" pattern="#####.##" value="${ productCurrent.price }" />лв.														
+								</span>								
+								<span class="special-price">												
+										<fmt:formatNumber type="number" pattern="#####.##" value="${productCurrent.calcDiscountedPrice() }" /> лв.													
+								</span>						
+							</c:if>
+						 </div>
 					</div>
 					<br><br><br>
 					<div class="rating">
