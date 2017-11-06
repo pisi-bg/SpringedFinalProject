@@ -652,6 +652,35 @@ public class ProductDao {
 			}
 		}
 	}
+	
+	
+	
+	// this method returns the id of brand if it exists in the database
+		/**
+		 * Returns logo URL of a brand by given name;
+		 * @param brandName name of the brand
+		 * @return <code>String</code> 
+		 * @throws SQLException
+		 */	
+		public String getBrandImageUrl(String brandName) throws SQLException {
+			Connection con = db.getConnection();
+			String query = "SELECT logo_image AS image FROM pisi.brands WHERE brand_name = ? ";
+			ResultSet rs = null;
+			String url = "";
+
+			try (PreparedStatement stmt = con.prepareStatement(query);) {
+				stmt.setString(1, brandName);
+				rs = stmt.executeQuery();
+				if (rs.next()) {
+					return rs.getString("image");
+				}
+				return url;
+			} finally {
+				if (rs != null) {
+					rs.close();
+				}
+			}
+		}
 
 	// inserts new brand used when inserting new product if necessary
 	/**

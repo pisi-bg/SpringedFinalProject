@@ -322,13 +322,13 @@ public class UserController {
 	public ModelAndView removeProduct(HttpSession sess) {
 
 		if (sess.getAttribute("user") == null) {
-			return new ModelAndView("index");
+			return new ModelAndView("redirect:/index");
 		}
 
 		User user = (User) sess.getAttribute("user");
 
 		if (user == null || !user.isAdmin()) {
-			return new ModelAndView("forward:index");
+			return new ModelAndView("redirect:/index");
 		}
 
 		Product pro = (Product) sess.getAttribute("productCurrent");
@@ -338,7 +338,8 @@ public class UserController {
 			} catch (SQLException e) {
 				return CartController.sqlError;
 			}
-			return new ModelAndView("index");
+			System.out.println("predi index v pro != null");
+			return new ModelAndView("redirect:/index");
 		} else {
 			return new ModelAndView("error", "error", "Проблем с конкретният продукт. Може би сесията е изтекла. Пробвайте отново.");
 		}

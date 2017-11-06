@@ -445,6 +445,18 @@ public class ProductController {
 		return new ModelAndView("products", "productPage", productList);
 
 	}
+	
+	@RequestMapping(value = "/brand/{name}", method=RequestMethod.GET)
+	public void showBrandPicture(HttpServletResponse resp, @PathVariable String name){
+		try {
+			String url = pd.getBrandImageUrl(name);
+			ImageProvider.proceedBrandPicture(url, resp);
+		} catch (IOException e) {
+			// in jsp will be shown atl value
+		} catch (SQLException e) {
+			// in jsp will be shown atl value
+		}  
+	}
 
 	@RequestMapping(value = "/image/{id}")
 	public void showPicture(HttpServletResponse resp, @PathVariable Integer id) throws IllegalDiscountException {
@@ -460,5 +472,5 @@ public class ProductController {
 			// in jsp will be shown atl value
 		}
 	}
-
+	
 }

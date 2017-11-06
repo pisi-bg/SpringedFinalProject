@@ -74,20 +74,28 @@ public class CartController {
 	public ModelAndView removeFromCart(HttpSession session, @PathVariable("productId") Integer productId) {
 		Product productCurrent = null;
 		HashMap<Product, Integer> cart = (HashMap<Product, Integer>) session.getAttribute("cart");
-		try {
-			productCurrent = productDao.getProduct(productId);
-			if (productCurrent.equals((Product) session.getAttribute("productNotEnoughQuantity"))) {
-				session.removeAttribute("productNotEnoughQuantity");
+		Iterator<Entry<Product, Integer>> it = cart.entrySet().iterator();
+		while(it.hasNext()){
+			Entry<Product, Integer> entry = it.next();
+			if (entry.getKey().getId()==productId){
+				it.remove();
+				break;
 			}
-			cart.remove(productCurrent);
-			session.setAttribute("cart", cart);
-		} catch (SQLException e) {
-			return sqlError;
-		} catch (NoSuchProductException e) {
-			return new ModelAndView("error","error", e.getMessage());
-		} catch (IllegalDiscountException e) {
-			return discountError;
 		}
+//		try {
+//			productCurrent = productDao.getProduct(productId);
+//			if (productCurrent.equals((Product) session.getAttribute("productNotEnoughQuantity"))) {
+//				session.removeAttribute("productNotEnoughQuantity");
+//			}
+//			cart.remove(productCurrent);
+//			session.setAttribute("cart", cart);
+//		} catch (SQLException e) {
+//			return sqlError;
+//		} catch (NoSuchProductException e) {
+//			return new ModelAndView("error","error", e.getMessage());
+//		} catch (IllegalDiscountException e) {
+//			return discountError;
+//		}
 		return new ModelAndView("redirect:/cart/view");
 	}
 
