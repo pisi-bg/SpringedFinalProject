@@ -407,7 +407,7 @@ public class ProductController {
 		String[] words = keyword.split(" ");
 
 		if (words[0].isEmpty()) {
-			return new ModelAndView("index");
+			return new ModelAndView("redirect:/index");
 		}
 
 		try {

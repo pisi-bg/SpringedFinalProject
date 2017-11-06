@@ -98,7 +98,7 @@ public class UserController {
 				user = ud.getUser(email);
 				session.setAttribute("user", user);
 				session.setMaxInactiveInterval(-1); // infinity session
-				return new ModelAndView("index");
+				return new ModelAndView("redirect:/index");
 			} else {
 				request.setAttribute("wrongUser", true);
 				return new ModelAndView("login");
@@ -149,13 +149,13 @@ public class UserController {
 		if (sess.getAttribute("regError") != null) {
 			sess.removeAttribute("regError");
 		}
-		return new ModelAndView("index");
+		return new ModelAndView("redirect:/index");
 	}
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public ModelAndView logout(HttpSession sess) {
 		sess.invalidate();
-		return new ModelAndView("index");
+		return new ModelAndView("redirect:/index");
 	}
 
 	
@@ -217,7 +217,7 @@ public class UserController {
 		
 		ModelAndView m = this.updateProfile(user, sess);
 		if(m.getViewName().equals("redirect:/user/profile")){
-			m.setViewName("index");
+			m.setViewName("redirect:/index");
 		}
 		return m;
 	}
@@ -315,20 +315,20 @@ public class UserController {
 		User user = new User().setEmail(email).setFirstName(name);
 		
 		EmailSender.contactUs(user, subject, describe);
-		return new ModelAndView("index");
+		return new ModelAndView("redirect:/index");
 	}
 
 	@RequestMapping(value = "/admin/removeProduct", method = RequestMethod.GET)
 	public ModelAndView removeProduct(HttpSession sess) {
 
 		if (sess.getAttribute("user") == null) {
-			return new ModelAndView("index");
+			return new ModelAndView("redirect:/index");
 		}
 
 		User user = (User) sess.getAttribute("user");
 
 		if (user == null || !user.isAdmin()) {
-			return new ModelAndView("forward:index");
+			return new ModelAndView("redirect:/index");
 		}
 
 		Product pro = (Product) sess.getAttribute("productCurrent");
@@ -338,7 +338,7 @@ public class UserController {
 			} catch (SQLException e) {
 				return CartController.sqlError;
 			}
-			return new ModelAndView("index");
+			return new ModelAndView("redirect:/index");
 		} else {
 			return new ModelAndView("error", "error", "Проблем с конкретният продукт. Може би сесията е изтекла. Пробвайте отново.");
 		}
@@ -479,7 +479,7 @@ public class UserController {
 		} catch (SQLException e) {
 			return CartController.sqlError;
 		}
-		// return "index";
+		// return "redirect:/index";
 		return new ModelAndView("redirect:/user/admin/addProduct");
 	}
 
@@ -554,7 +554,7 @@ public class UserController {
 		} catch (IllegalDiscountException e) {
 			return CartController.discountError;
 		}
-		return new ModelAndView("index");
+		return new ModelAndView("redirect:/index");
 	}
 	
 	@RequestMapping(value="/admin/changeStatus")
