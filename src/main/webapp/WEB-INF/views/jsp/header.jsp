@@ -9,7 +9,7 @@
 	<title>pisi bg</title>
 	<%-- <link rel="stylesheet" href='<c:url value="https://zeroattentionspan.net/pisi.css" />' /> --%>
 	<link href="<c:url value="/css/bootstrap.css" />" rel="stylesheet" type="text/css">
-	<link href="<c:url value="/css/pisi1.css" />" rel="stylesheet" type="text/css">
+	<link href="<c:url value="/css/pisi2.css" />" rel="stylesheet" type="text/css">
 
 </head>
 <body>

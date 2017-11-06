@@ -17,8 +17,8 @@
 			Здравей, влез с твоя майл и парола!
 		</h3>
 		<h4>
-			Email <input type="email" name = "email" value="dimdim@abv.bg" required><br><br>
-			Password <input type="password" name ="password" value="dimanas" required><br>
+			Email <input type="email" name = "email" value="" required><br><br>
+			Password <input type="password" name ="password" value="" required><br>
 			<input type="image" name="submit" width="8%" height="auto" src="<c:url value='/img/buttons/profile.png'/>" alt="ВЛЕЗ" title="ВЛЕЗ"> 
 			<br>ВЛЕЗ
 		</h4>
