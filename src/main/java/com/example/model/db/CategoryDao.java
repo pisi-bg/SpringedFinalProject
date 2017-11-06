@@ -24,11 +24,11 @@ public class CategoryDao {
 	 * @throws SQLException
 	 */
 	public Map<String, Integer> getTopBrands(int limit) throws SQLException {
-		String query = "SELECT b.brand_name AS name, b.brand_id AS id FROM pisi.brands AS b "
+		String query = "SELECT b.brand_name AS name, b.brand_id AS id, SUM(op.product_quantity) AS sum  FROM pisi.brands AS b "
 					+ "JOIN pisi.products AS p ON (b.brand_id = p.brand_id) "
 					+ "JOIN pisi.orders_has_products AS op ON(p.product_id = op.product_id) " 
 					+ " GROUP BY b.brand_name "
-					+ "ORDER BY op.product_quantity DESC LIMIT ?";
+					+ "ORDER BY sum DESC LIMIT ?";
 		Map<String, Integer> brands = new LinkedHashMap();
 		Connection con = db.getConnection();
 		ResultSet rs = null;

@@ -43,12 +43,12 @@
 	<!-- 	<h3 style="padding:10px;  background-color: #d99232; text-align: center; color:#c4463e;" >ТОП ПРОДУКТИ</h3> -->
 	<!-- </div>  -->
 	<div class="pic-buffer"></div> 
-<!-- 	<div class="row">
-		<h2 style="padding:10px;  background-color: #d99232;" >ТОП ПРОДУКТИ</h2>
-	</div> -->
 	<div class="row">
-		<span style=" float:center; padding:10px;  background-color: #d99232; font-size: 24px; text-align: center; color:#40020a;font-weight: bold;" >ТОП ПРОДУКТИ</span>
+		<h2>ТОП ПРОДУКТИ</h2>
 	</div>
+<!-- 	<div class="row">
+		<span style=" float:center; padding:10px;  font-size: 24px; text-align: center; color:#40020a;font-weight: bold;" >ТОП ПРОДУКТИ</span>
+	</div> -->
 	<div class="pisi-line_products">
 		<!--  <div class="container">  -->
 			<ul>
