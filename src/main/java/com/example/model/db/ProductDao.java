@@ -373,7 +373,7 @@ public class ProductDao {
 						+ "JOIN pisi.product_categories AS c ON(p.product_category_id = c.product_category_id) "
 						+ "JOIN pisi.product_categories AS pc ON(c.parent_category_id = pc.product_category_id) "
 						+ "JOIN pisi.brands AS b ON(p.brand_id = b.brand_id) "
-						+ "GROUP by op.product_id ORDER BY SUM(op.product_quantity) desc LIMIT ?;";
+						+ "GROUP by op.product_id ORDER BY countSold desc LIMIT ?;";
 		ResultSet rs = null;
 
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
