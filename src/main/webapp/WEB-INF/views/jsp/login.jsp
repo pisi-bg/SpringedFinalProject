@@ -9,7 +9,7 @@
 		<span style="font-size: 28px;"> your pal's favorite mall </span>
 	</h1>	
 
-	<c:if test="${ requestScope.wrongUser }"><h3 class="has-error"> ГРЕШЕН ПOТРЕБИТЕЛ</h3></c:if>
+	<c:if test="${ requestScope.wrongUser }"><h3 class="has-error"> ГРЕШЕН ПOТРЕБИТЕЛ ИЛИ ПАРОЛА</h3></c:if>
 	
 	
 	<form action="login" method= "POST" style="text-align: center;">
