@@ -39,7 +39,7 @@ public class WelcomeController {
 		Map<String, Integer> lizzards = null;
 		try {
 			// <brand name, brand logo>
-			Map<String, String> brands = ctd.getTopBrands(LIMIT);
+			Map<String, Integer> brands = ctd.getTopBrands(LIMIT);
 			List<Product> topProducts = pd.getTopSoldProducts(LIMIT);
 			aqua = ctd.getCategoriesForAnimal(1);
 			cats = ctd.getCategoriesForAnimal(2);

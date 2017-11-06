@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +23,13 @@ public class CategoryDao {
 	 * @return <code>Map<String , String></code>
 	 * @throws SQLException
 	 */
-	public Map<String, String> getTopBrands(int limit) throws SQLException {
-		String query = "SELECT b.brand_name AS name, b.logo_image AS logo FROM pisi.brands AS b "
+	public Map<String, Integer> getTopBrands(int limit) throws SQLException {
+		String query = "SELECT b.brand_name AS name, b.brand_id AS id FROM pisi.brands AS b "
 					+ "JOIN pisi.products AS p ON (b.brand_id = p.brand_id) "
 					+ "JOIN pisi.orders_has_products AS op ON(p.product_id = op.product_id) " 
 					+ " GROUP BY b.brand_name "
 					+ "ORDER BY op.product_quantity DESC LIMIT ?";
-		Map<String, String> brands = new HashMap<>();
+		Map<String, Integer> brands = new LinkedHashMap();
 		Connection con = db.getConnection();
 		ResultSet rs = null;
 
@@ -36,7 +37,7 @@ public class CategoryDao {
 			stmt.setInt(1, limit);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
-				brands.put(rs.getString("name"), rs.getString("logo"));
+				brands.put(rs.getString("name"), rs.getInt("id"));
 			}
 		} finally {
 			if (rs != null) {
