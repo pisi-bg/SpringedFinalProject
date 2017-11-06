@@ -28,6 +28,7 @@ public class Hasher {
 		String a = Hasher.securePassword("xxx", "xxx@xxx.xxx");
 		System.out.println(a);
 		System.out.println(a.length());
+		System.out.println("    asdasdasd ".matches("[A-Za-z]{1,128}"));
 
 	}
 }

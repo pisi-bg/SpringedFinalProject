@@ -14,14 +14,14 @@ import org.springframework.stereotype.Component;
 public class User {
 	
 	private long id;
-	@NotBlank(message="Ivalid input.")
+	@Pattern(regexp="[A-Za-z]{1,128}", message="Ivalid input.")
 	private String firstName;
-	@NotBlank(message="Ivalid input.")
+	@Pattern(regexp="[A-Za-z]{1,128}", message="Ivalid input.")
 	private String lastName;
 	@NotBlank(message="Please enter an email")
 	@Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "Please enter a valid email.")
 	private String email;
-	@NotBlank(message="")
+	@NotBlank(message="Ivalid password. Length must be more than 6 characters.")
 	@Size(min=6,max=50 , message="Ivalid password. Length must be more than 6 characters.")
 	private String password;
 	private boolean isMale;

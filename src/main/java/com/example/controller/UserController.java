@@ -78,13 +78,10 @@ public class UserController {
 		m.addAttribute("user", u);
 		return new ModelAndView("login");
 	}
-
-	// this method check if login form is correctly filled and then check if
-	// user exist in the database
+	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ModelAndView loginUser(@ModelAttribute User user, HttpServletRequest request, HttpServletResponse response,
-			HttpSession ses) {
-
+	public ModelAndView loginUser(@ModelAttribute User user, HttpServletRequest request, HttpSession session) {
+		
 		String email = user.getEmail();
 		if (!UserDao.isValidEmailAddress(email)) {
 			request.setAttribute("wrongEmail", true);
@@ -99,8 +96,8 @@ public class UserController {
 			user.setPassword(password);
 			if (ud.userExist(user)) {
 				user = ud.getUser(email);
-				ses.setAttribute("user", user);
-				ses.setMaxInactiveInterval(-1); // infinity session
+				session.setAttribute("user", user);
+				session.setMaxInactiveInterval(-1); // infinity session
 				return new ModelAndView("index");
 			} else {
 				request.setAttribute("wrongUser", true);
@@ -298,7 +295,7 @@ public class UserController {
 			return model;
 		}
 		
-		if(name == null || name.isEmpty()){
+		if(name == null || name.isEmpty() || !name.matches("[A-Za-z]{1,128}")){
 			model.setViewName("contactForm");
 			model.addObject("name", "Моля попълнете вашето име.");
 			return model;
