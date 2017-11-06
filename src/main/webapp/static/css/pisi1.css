@@ -549,7 +549,7 @@ h5 .center{
 
 .pisi-grid_products ul li .wrap .products_title{
 	display: table;
-	height:40px;	
+	height:60px;	
 }
 
 
@@ -566,7 +566,6 @@ h5 .center{
 .pisi-grid_products ul li .wrap .products_title .table-view:hover{	
 	color: #c4463e;
 }
-
 
 
 .pisi-grid_products ul li h3{
@@ -610,9 +609,15 @@ h5 .center{
 	margin: 0px;
 }
 
+.pic-buffer {
+	height: 50px;
+	
+}
+
 /* LINE_PRODUCTS */
 .pisi-line_products{	
-	padding: 40px;
+	padding: 5px;
+	/*padding-top: 5px;*/
 
 }
 
@@ -630,8 +635,8 @@ h5 .center{
 	height:100px;
 	max-height: 100px;
 	min-height: 100px;
-	width: "auto";
-	align: "center";
+	width: auto;
+	float: center;
 	display: block;
 }
 
@@ -642,14 +647,14 @@ h5 .center{
 
 .pisi-line_products ul li .wrap_line .products_title{
 	display: table;
-	height:40px;	
+	height:60px;	
 }
 
-.pisi-line_products ul li .wrap_line .products_title .table-view{
+/*.pisi-line_products ul li .wrap_line .products_title .table-view{
 	display: table-cell;
 	vertical-align: middle;
 	height:50px;
-}
+}*/
 
 .table-view:hover{	
 	color: #c4463e;

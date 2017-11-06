@@ -25,9 +25,9 @@
 				</a> 
 			</h3>
 		</div>
-		<div class="col-xs-12 col-md-1">
+		
 		<div class="col-xs-12 col-md-6">
-			<img src="<c:url value='/img/delivery_cat.jpg'/>" alt="" title="DELIVERY MAN" width="100%" height="auto" >
+			<img src="<c:url value='/img/delivery_cat2.jpg'/>" alt=""  width="auto" height="600px" >
 		</div>	
 			
 	</div>	<!-- container -->

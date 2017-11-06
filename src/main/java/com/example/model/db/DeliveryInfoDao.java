@@ -6,14 +6,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.model.pojo.DeliveryInfo;
 import com.example.utils.exceptions.NoSuchCityException;
-import com.example.utils.exceptions.NotEnoughQuantityException;
 
 @Component
 public class DeliveryInfoDao {
@@ -92,7 +90,7 @@ public class DeliveryInfoDao {
 		ArrayList<DeliveryInfo> arr = new ArrayList<>();
 		String temp = "SELECT c.city_id , d.delivery_info_id, d.address, d.zip_code, d.reciever_first_name, d.reciever_last_name, d.reciever_phone, d.notes, c.city_name "
 						+ "FROM pisi.deliveries AS d " + "JOIN pisi.orders AS o ON(d.delivery_info_id = o.delivery_info_id) "
-						+ "JOIN pisi.cities AS c USING (city_id) " + "WHERE o.user_id = ?";
+						+ "JOIN pisi.cities AS c USING (city_id) " + "WHERE o.user_id = ? GROUP BY d.address";
 		ResultSet rs = null;
 		try (PreparedStatement stmt = con.prepareStatement(temp);) {
 			stmt.setLong(1, userId);

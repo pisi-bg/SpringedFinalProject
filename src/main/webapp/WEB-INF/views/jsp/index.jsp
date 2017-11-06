@@ -7,9 +7,11 @@
 	
 	
 	<div class="pisi-banner">
-		<img src="<c:url value='/img/pisi_bg_image.jpg'/>" alt="BRAND" title="BRAND" />
+		<img src="<c:url value='/img/pisi_bg_image.jpg'/>" alt="BRAND"  />
 	</div>
-	
+	<div class="pisi-banner">
+		<h2>ТОП ПРОДУКТИ</h2>
+	</div>
 	<!-- <div class="container"> -->
 		<div class="pisi-line_products">
 			<ul>
@@ -26,6 +28,7 @@
 										</span>
 									</a>
 								</div>
+								<div class="pic-buffer"></div>
 								<div class="more-info">
 									<c:if test="${ pro.discount == 0 }">
 										<span class="price">			
