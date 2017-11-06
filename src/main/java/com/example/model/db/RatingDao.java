@@ -34,7 +34,7 @@ public class RatingDao {
 
 		Connection con = db.getConnection();
 		String query = "SELECT r.rating, r.comment AS comment, u.first_name AS user, date_time AS time  "
-					+ "FROM pisi.ratings AS r JOIN pisi.users AS u USING (user_id) WHERE r.product_id = ? ORDER BY date_time ";
+					+ "FROM pisi.ratings AS r JOIN pisi.users AS u USING (user_id) WHERE r.product_id = ? ORDER BY date_time DESC";
 		ResultSet rs = null;
 
 		try (PreparedStatement stmt = con.prepareStatement(query);) {
