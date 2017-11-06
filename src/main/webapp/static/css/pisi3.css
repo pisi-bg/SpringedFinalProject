@@ -146,8 +146,6 @@ tr .light{
 			padding: 6px 12px;
 			margin: 15px 0px;
 }
-
-
 .pisi-button_dark:hover,
 .pisi-button_dark:focus{
 			background-color: #222;
@@ -169,38 +167,6 @@ tr .light{
 			text-decoration: none;
 }
 
-/* custom file input button */
-
-/*
-	label.myLabel input[type="file"] {
-		position: fixed;
-		top: -1000px;
-	}
-	.pisi-input_file {
-		border: 2px solid #AAA;
-		border-radius: 4px;
-		padding: 2px 5px;
-		margin: 2px;
-		background: #DDD;
-		display: inline-block;
-	}
-	.pisi-input_file:hover {
-		background: #CCC;
-	}
-	.pisi-input_file:active {
-		background: #CCF;
-	}
-	.pisi-input_file:invalid + span {
-		color: #A44;
-	}
-	.pisi-input_file:valid + span {
-		color: #4A4;
-	}
-*/
-
-/* ERRORS */
-
-
 
 /* HEADINGS */
 h1{
@@ -218,6 +184,7 @@ h2{
 	font-weight: bold;
 	color: #440008;
 }
+
 h2 .left{	
 	text-align: left;
 	color: #c4463e;
@@ -257,22 +224,21 @@ h5 .center{
 	float: center;
 	text-align: center;
 }
+.small_product_name{
+	font-size: 14px;
+	text-align: left;
+	font-weight: bold;
+	color: #440008;
+	height:40px;
+	max-height:40px;
+	min-height:40px;
+}
 
 /* ERRORS */
 
 .has-error{
 	color:#c4463e;
 }
-
-/* HEADER */
-/*
-.header {
-   // position: fixed;
-	//overflow: hidden;
-	// display:block;
-
-}
-*/
 
 /* NAV - UPPER */
 
@@ -353,12 +319,7 @@ h5 .center{
 	float: left;
 	
 }
-/*
-.pisi-brand_search .search-rounded {
-	background:  url("/img/rounded_text_input.png") no-repeat left top;
-	padding: 8px;
-	float: left;
-}*/
+
 .pisi-brand_search form input[type="image"]{
 	height: 30px;
 	margin-left: 10px;
@@ -529,7 +490,7 @@ h5 .center{
 
 
 
-/* CONTEINER */
+/* CONTAINER */
 
 .w3-container{
 	/*position:relative;*/    
@@ -554,7 +515,6 @@ h5 .center{
 }
 
 /* GRID_PRODUCTS */
-
 .pisi-sort_buttons {
 	margin-top: 10px;
 }
@@ -576,10 +536,9 @@ h5 .center{
 .pisi-grid_products ul li .wrap .products_img{
 	float: center;
 	height:150px;
-	width: "auto";
-	align: "center";
+	width: auto;
+	float: center;
 	display: block;
-	
 }
 
 .pisi-grid_products ul li{
@@ -666,7 +625,7 @@ h5 .center{
 	width:250px;
 }
 
-.pisi-line_products ul li .wrap_line .products_img{
+/*.pisi-line_products ul li .wrap_line*/ .products_img{
 	float: center;
 	height:100px;
 	max-height: 100px;
@@ -711,9 +670,9 @@ h5 .center{
 .pisi-line_products ul li .more-info .price{
 	/*float: center;*/
 	text-align: center;
-	font-size: 16px;
+	font-size: 12px;
 	color: #40020a;
-	line-height: 20px;
+	line-height: 16px;
 	font-weight: bold;
 }
 

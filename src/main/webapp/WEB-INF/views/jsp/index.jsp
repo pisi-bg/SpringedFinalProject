@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 	 <jsp:include page="header.jsp"></jsp:include>
 
 	
@@ -16,15 +17,13 @@
 					<li class="col-xs-12 col-md-2">
 						<div class="wrap-line">											
 								<a href="<c:url value='/products/productdetail/productId/${pro.id}'/>" >
-									<img src="<c:url value="/products/image/${ pro.id }"/>"  alt="${ pro.description }" class="products_img" />
+									<img src="<c:url value="/products/image/${ pro.id }"/>"  alt="${ pro.description }" class="products_img" style="height: 100"/>
 								</a>
 								<div class="products_title">
 									<a href="<c:url value='/products/productdetail/productId/${pro.id}'/>" >
-										<h5>
-											<p class="table-view">
-												${pro.name}
-											</p>
-										</h5>
+										<span class="small_product_name">
+											${pro.name}
+										</span>
 									</a>
 								</div>
 								<div class="more-info">
