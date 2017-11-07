@@ -122,7 +122,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public ModelAndView registerUser(HttpSession sess, @ModelAttribute User user, BindingResult result) {
+	public ModelAndView registerUser(HttpSession session, @ModelAttribute User user, BindingResult result) {
 		Set<ConstraintViolation<User>> violations = validator.validate(user);
 		for(ConstraintViolation<User> cv : violations){
 			String propertyPath = cv.getPropertyPath().toString();
@@ -136,18 +136,17 @@ public class UserController {
 			String userpass = user.getPassword();
 			userpass = Hasher.securePassword(userpass, user.getEmail());
 			user.setPassword(userpass);
-			ud.insertUser(user);
-			sess.setAttribute("user", user);
+			ud.insertUser(user);			
 		} catch (SQLException e) {
-			sess.setAttribute("regError", true);
+			session.setAttribute("regError", true);
 			return new ModelAndView("redirect:/user/register");
 		} catch (NoSuchAlgorithmException e) {
 			return CartController.sqlError;
 		} catch (UnsupportedEncodingException e) {
 			return CartController.sqlError;
 		}
-		if (sess.getAttribute("regError") != null) {
-			sess.removeAttribute("regError");
+		if (session.getAttribute("regError") != null) {
+			session.removeAttribute("regError");
 		}
 		return new ModelAndView("redirect:/index");
 	}

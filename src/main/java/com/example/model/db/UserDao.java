@@ -178,8 +178,7 @@ public class UserDao {
 		}
 	}
 
-	// update user data, no need to return User because we will already have it
-	// in the servlet
+	
 	/**
 	 * Update <code>User</code> data in DB by given <code>User</code> ID;
 	 * @param user POJO of logged <code>User</code>;

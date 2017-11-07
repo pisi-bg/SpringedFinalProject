@@ -33,7 +33,7 @@
 										<li class="col-xs-12 col-md-4">
 											<div class="wrap" >											
 													<a href="<c:url value='/products/productdetail/productId/${pro.id}'/>" >
-														<img src="<c:url value="/products/image/${ pro.id }"/>"  alt="${ pro.description }" class="products_img" />
+														<img src="<c:url value="/products/image/${ pro.id }"/>"  alt="${ pro.description }" class="products_imgg" />
 													</a>
 													
 													<div class="products_title">

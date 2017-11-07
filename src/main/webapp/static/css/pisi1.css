@@ -533,12 +533,15 @@ h5 .center{
 	/*max-height: 30%;*/
 }
 
-.pisi-grid_products ul li .wrap .products_img{
+/*.pisi-grid_products ul li .wrap*/ .products_imgg{
 	float: center;
 	height:150px;
 	width: auto;
 	float: center;
 	display: block;
+	max-height: 150x;
+	min-height: 150px;
+	
 }
 
 .pisi-grid_products ul li{
@@ -633,8 +636,8 @@ h5 .center{
 /*.pisi-line_products ul li .wrap_line*/ .products_img{
 	float: center;
 	height:100px;
-	max-height: 100px;
-	min-height: 100px;
+	max-height: 120px;
+	min-height: 120px;
 	width: auto;
 	float: center;
 	display: block;

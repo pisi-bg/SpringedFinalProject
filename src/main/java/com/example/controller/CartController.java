@@ -65,14 +65,14 @@ public class CartController {
 	public CartController() {
 		ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
 		validator = validatorFactory.getValidator();
-		this.sqlError = new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
-		this.discountError = new ModelAndView("error", "error", "Не валидни данни за отстъпка на продукт!");
-		this.urlError = new ModelAndView("error", "error", "Моля не пишете в адрес бара сами. Пробвайте отново.");
+		CartController.sqlError = new ModelAndView("error", "error", "Вътрешна грешка, моля да ни извините. Пробвайте отново.");
+		CartController.discountError = new ModelAndView("error", "error", "Невалидни данни за отстъпка на продукт!");
+		CartController.urlError = new ModelAndView("error", "error", "Моля, не пишете в адрес бара сами. Пробвайте отново.");
 	}
 
 	@RequestMapping(value = "/removeFromCart/{productId}", method = RequestMethod.POST)
 	public ModelAndView removeFromCart(HttpSession session, @PathVariable("productId") Integer productId) {
-		Product productCurrent = null;
+		//Product productCurrent = null;
 		HashMap<Product, Integer> cart = (HashMap<Product, Integer>) session.getAttribute("cart");
 		Iterator<Entry<Product, Integer>> it = cart.entrySet().iterator();
 		while(it.hasNext()){

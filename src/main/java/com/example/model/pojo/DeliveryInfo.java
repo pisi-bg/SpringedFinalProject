@@ -19,8 +19,8 @@ public class DeliveryInfo {
 	private String recieverFirstName;
 	@NotBlank(message="Моля, попълнете валидно име.")
 	private String recieverLastName;
-	@Min(value= 111111111 , message="Моля, въведете валиден телефонен номер без 0 отпед.")
-	@Max(value= 999999999 , message="Моля, въведете валиден телефонен номер без 0 отпед.")
+	@Min(value= 111111111 , message="Моля, въведете валиден телефонен номер без 0 отпред.")
+	@Max(value= 999999999 , message="Моля, въведете валиден телефонен номер без 0 отпред.")
 	private long recieverPhone = 8;
 	private String notes;
 
